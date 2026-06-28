@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luvia Press — Article</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+       /* =========================================
+           CONTENEUR LECTURE ARTICLE (ÉLÉGANT)
+           ========================================= */
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #1a1a1a; 
+            --text-muted: #757575;
+            --accent: #0046e4; 
+            --border: #f0f0f0;
+            --max-width: 720px; 
+            --skeleton-base: #f8f9fa;
+            --skeleton-shimmer: #e9ecef;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+        /* Navigation & Header (INTACT) */
+        header { border-bottom: 1px solid var(--border); background: #ffffff; position: sticky; top: 0; z-index: 100; height: 75px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; height: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .logo-wrap { display: flex; align-items: center; height: 100%; text-decoration: none; }
+        .logo-img { height: 52px; width: auto; object-fit: contain; }
+        
+        nav.nav-desktop { display: flex; gap: 2.5rem; align-items: center; }
+        nav.nav-desktop a { text-decoration: none; color: var(--text-main); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        nav.nav-desktop a:hover { color: var(--accent); }
+        .cta-main-site { background-color: var(--accent); color: #ffffff !important; padding: 0.65rem 1.4rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+        .cta-main-site:hover { opacity: 0.9; }
+
+        /* Burger Menu & Mobile (INTACT) */
+        .lang-dropdown { background: #ffffff; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.2s; }
+        .lang-dropdown:hover { border-color: var(--text-main); }
+        .lang-selector-wrap { display: flex; align-items: center; }
+
+        .burger-menu { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 110; }
+        .burger-menu span { display: block; width: 22px; height: 2px; background: var(--text-main); margin: 5px 0; transition: 0.3s ease; }
+        
+        .nav-mobile { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #ffffff; z-index: 105; padding: 6rem 2rem 2rem 2rem; flex-direction: column; gap: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .nav-mobile a { text-decoration: none; color: var(--text-main); font-size: 1.3rem; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+        .nav-mobile .cta-mobile-site { color: var(--accent); border: none; margin-top: 1rem; font-size: 1.4rem; }
+        .nav-mobile.open { display: flex; }
+        
+        .burger-menu.open span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 5px); }
+        .burger-menu.open span:nth-child(2) { opacity: 0; }
+        .burger-menu.open span:nth-child(3) { transform: rotate(45deg) translate(-5px, -5px); }
+
+        @media (max-width: 992px) {
+            nav.nav-desktop { display: none; }
+            .burger-menu { display: block; }
+        }
+
+        /* --- ARTICLE STYLES --- */
+        .article-container { 
+            max-width: var(--max-width); 
+            margin: 4rem auto; 
+            padding: 0 1.5rem; 
+        }
+        
+        .article-meta { 
+            display: flex; 
+            align-items: center; 
+            gap: 1.5rem; 
+            margin-bottom: 1.5rem; 
+        }
+        
+        .tag-badge { 
+            background: transparent; 
+            color: var(--accent); 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            padding: 0.2rem 0; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .article-date { 
+            font-size: 0.95rem; 
+            color: var(--text-muted); 
+            font-weight: 500;
+        }
+        
+        h1.article-title { 
+            font-size: 3.2rem; 
+            font-weight: 800; 
+            line-height: 1.15; 
+            margin-bottom: 2.5rem; 
+            letter-spacing: -0.03em; 
+            color: #111111;
+        }
+        
+        /* IMAGE PLEIN ÉCRAN (Full Bleed) */
+        .article-main-img { 
+            width: 100vw; 
+            max-width: 100vw;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            height: 70vh; /* Hauteur dynamique pour effet plein écran */
+            min-height: 400px;
+            object-fit: cover; 
+            border-radius: 0; /* Pas d'arrondi sur les bords d'écran */
+            margin-bottom: 2rem; 
+        }
+
+        /* BOUTONS ACTIONS (Partage / Sauvegarde) */
+        .article-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 1px solid #dcdcdc;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .action-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #f4f7ff;
+        }
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        #error-message { 
+            display: none; 
+            text-align: center; 
+            margin-top: 5rem; 
+            color: var(--text-muted); 
+            font-weight: 500; 
+            font-size: 1.2rem;
+        }
+
+        /* STYLES INTERNES DU TEXTE TRADUIT (MARKDOWN) */
+        .article-body { 
+            font-size: 1.18rem; 
+            line-height: 1.85; 
+            color: #333333; 
+            font-weight: 400;
+        }
+        
+        .article-body > p:first-of-type::first-letter {
+            float: left;
+            font-size: 4.5rem;
+            line-height: 0.8;
+            padding-right: 0.8rem;
+            padding-top: 0.4rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .article-body p { margin-bottom: 2rem; }
+        
+        .article-body img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 3.5rem auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .article-body blockquote {
+            border-left: none;
+            padding: 2rem 2.5rem;
+            margin: 3.5rem 0;
+            background: #f9fbff; 
+            border-radius: 0 16px 16px 0;
+            font-style: italic;
+            color: #1a1a1a;
+            font-size: 1.35rem;
+            line-height: 1.7;
+            position: relative;
+        }
+        
+        .article-body blockquote::before {
+            content: "“";
+            position: absolute;
+            left: -15px;
+            top: -15px;
+            font-size: 5rem;
+            color: var(--accent);
+            opacity: 0.15;
+            font-family: serif;
+            line-height: 1;
+        }
+        
+        .article-body h1, .article-body h2 { 
+            font-size: 1.9rem; 
+            font-weight: 800; 
+            margin: 3.5rem 0 1.5rem 0; 
+            letter-spacing: -0.02em; 
+            color: #111111; 
+        }
+        
+        .article-body h3 { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            margin: 2.5rem 0 1rem 0; 
+        }
+        
+        .article-body ul, .article-body ol { 
+            margin-bottom: 2rem; 
+            padding-left: 1.5rem; 
+        }
+        
+        .article-body li { margin-bottom: 0.8rem; }
+        
+        .article-body a { 
+            color: var(--accent); 
+            text-decoration: none; 
+            border-bottom: 1px solid rgba(0, 70, 228, 0.3);
+            transition: border-bottom-color 0.2s ease;
+        }
+        
+        .article-body a:hover { 
+            border-bottom-color: var(--accent); 
+        }
+
+        /* SKELETON ANIMATION PREMIUM */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+            border-radius: 6px;
+        }
+
+        /* RESPONSIVE DESIGN (MOBILE) */
+        @media (max-width: 768px) {
+            .article-container { margin: 2rem auto; padding: 0 1.2rem; }
+            h1.article-title { font-size: 2.2rem; margin-bottom: 1.5rem; }
+            .article-main-img { height: 45vh; margin-bottom: 1.5rem; min-height: 300px; }
+            .article-actions { margin-bottom: 2.5rem; padding-bottom: 1.5rem; }
+            .article-body { font-size: 1.05rem; }
+            .article-body > p:first-of-type::first-letter { font-size: 3.5rem; }
+            .article-meta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo-wrap">
+                <img src="https://ukbekfcjfcjcqrpxfpmq.supabase.co/storage/v1/object/public/logo%20luvia/LUVIA%20PRESS%20LOGO.png" alt="Luvia Press" class="logo-img">
+            </a>
+            
+            <nav class="nav-desktop">
+                <a href="https://about.luviaplace.com" target="_blank" data-i18n="nav-about">About</a>
+                <a href="https://insurance.luviaplace.com" target="_blank" data-i18n="nav-insurance">Insurance</a>
+                <a href="https://tiqets.luviaplace.com" target="_blank" data-i18n="nav-tiqets">Luvia+Tiqets</a>
+                <a href="https://activites.luviaplace.com" target="_blank" data-i18n="nav-gyg">Luvia+GYG</a>
+                
+                <div class="lang-selector-wrap">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="lang-dropdown">
+                        <option value="fr">FR</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
+                <a href="https://luviaplace.com" class="cta-main-site" target="_blank" data-i18n="nav-cta">Get in touch</a>
+            </nav>
+
+            <button class="burger-menu" id="burgerToggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+            
+            <nav class="nav-mobile" id="mobileMenu">
+                <div style="padding-bottom: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600; font-size: 0.9rem;" data-i18n="lang-label">Langue / Language</span>
+                    <select id="langSelectMobile" onchange="changeLanguage(this.value)" class="lang-dropdown">
+                        <option value="fr">FR</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
+                <a href="https://about.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-about">About</a>
+                <a href="https://insurance.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-insurance">Insurance</a>
+                <a href="https://tiqets.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-tiqets">Luvia+Tiqets</a>
+                <a href="https://activites.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-gyg">Luvia+GYG</a>
+                <a href="https://luviaplace.com" target="_blank" class="cta-mobile-site" data-i18n="nav-cta-mobile">Get in touch →</a>
+            </nav>
+        </div>
+    </header>
+
+    <div id="error-message" data-i18n="error-not-found">Article introuvable.</div>
+
+    <div id="skeleton-view" class="article-container">
+        <div class="article-meta">
+            <div class="skeleton" style="width: 80px; height: 24px; border-radius: 4px;"></div>
+            <div class="skeleton" style="width: 120px; height: 18px;"></div>
+        </div>
+        <div class="skeleton" style="width: 100%; height: 48px; margin-bottom: 10px;"></div>
+        <div class="skeleton" style="width: 65%; height: 48px; margin-bottom: 2rem;"></div>
+        
+        <div class="skeleton" style="width: 100vw; max-width: 100vw; margin-left: -50vw; margin-right: -50vw; position: relative; left: 50%; right: 50%; height: 70vh; border-radius: 0; margin-bottom: 2rem;"></div>
+        
+        <div class="skeleton" style="width: 100%; height: 20px; margin-bottom: 1.2rem;"></div>
+        <div class="skeleton" style="width: 95%; height: 20px; margin-bottom: 1.2rem;"></div>
+        <div class="skeleton" style="width: 40%; height: 20px;"></div>
+    </div>
+
+    <main class="article-container" id="article-view" style="display:none;">
+        <div class="article-meta">
+            <span class="tag-badge" id="article-cat">Category</span>
+            <span class="article-date" id="article-date">Date</span>
+        </div>
+        <h1 class="article-title" id="article-title"></h1>
+        
+        <img class="article-main-img" id="article-img" src="" alt="Featured image">
+        
+        <div class="article-actions">
+            <button class="action-btn" aria-label="Share">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16 6 12 2 8 6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                </svg>
+                <span data-i18n="btn-share">Partager</span>
+            </button>
+            <button class="action-btn" aria-label="Save">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span data-i18n="btn-save">Sauvegarder</span>
+            </button>
+        </div>
+
+        <div class="article-body" id="article-body"></div>
+    </main>
+
+    <script>
+        const translations = {
+            fr: {
+                "nav-about": "À propos",
+                "nav-insurance": "Assurances",
+                "nav-tiqets": "Luvia+Tiqets",
+                "nav-gyg": "Luvia+GYG",
+                "nav-cta": "Nous contacter",
+                "nav-cta-mobile": "Nous contacter →",
+                "lang-label": "Langue",
+                "error-not-found": "Article introuvable.",
+                "btn-share": "Partager",
+                "btn-save": "Sauvegarder"
+            },
+            en: {
+                "nav-about": "About",
+                "nav-insurance": "Insurance",
+                "nav-tiqets": "Luvia+Tiqets",
+                "nav-gyg": "Luvia+GYG",
+                "nav-cta": "Get in touch",
+                "nav-cta-mobile": "Get in touch →",
+                "lang-label": "Language",
+                "error-not-found": "Article not found.",
+                "btn-share": "Share",
+                "btn-save": "Save"
+            }
+        };
+
+        let currentLang = localStorage.getItem('luvia-lang') || 'fr';
+        let cachedPostData = null;
+
+        function applyStaticTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+            if(document.getElementById('langSelect')) document.getElementById('langSelect').value = currentLang;
+            if(document.getElementById('langSelectMobile')) document.getElementById('langSelectMobile').value = currentLang;
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('luvia-lang', lang);
+            applyStaticTranslations();
+            if (cachedPostData) {
+                renderPost(cachedPostData);
+            }
+        }
+
+        function toggleMenu() {
+            document.getElementById('burgerToggle').classList.toggle('open');
+            document.getElementById('mobileMenu').classList.toggle('open');
+        }
+
+        const SUPABASE_URL = 'https://ukbekfcjfcjcqrpxfpmq.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function fetchPost() {
+            applyStaticTranslations();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (!postId) {
+                showError();
+                return;
+            }
+
+            const { data: post, error } = await supabaseClient
+                .from('posts')
+                .select('*')
+                .eq('id', postId)
+                .single();
+
+            if (error || !post) {
+                showError();
+                return;
+            }
+
+            cachedPostData = post;
+            renderPost(post);
+        }
+
+        function renderPost(post) {
+            document.title = `${post.title} — Luvia Press`;
+            document.getElementById('article-title').innerText = post.title;
+            document.getElementById('article-cat').innerText = post.category || 'News';
+            document.getElementById('article-img').src = post.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200';
+            
+            document.getElementById('article-date').innerText = new Date(post.created_at).toLocaleDateString(
+                currentLang === 'fr' ? 'fr-FR' : 'en-US', 
+                { month: 'long', day: 'numeric', year: 'numeric' }
+            );
+            
+            document.getElementById('article-body').innerHTML = marked.parse(post.content || ''); 
+
+            document.getElementById('skeleton-view').style.display = 'none';
+            document.getElementById('article-view').style.display = 'block';
+        }
+
+        function showError() {
+            document.getElementById('skeleton-view').style.display = 'none';
+            applyStaticTranslations(); 
+            document.getElementById('error-message').style.display = 'block';
+        }
+
+        window.onload = fetchPost;
+   fetch('footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer-placeholder').innerHTML = data;
+        });
+    </script>
+<div id="footer-placeholder"></div>
+
+</body>
+</html>
