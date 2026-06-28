@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luvia Press — Media Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #121212;
+            --text-muted: #6a6a6a;
+            --accent: #0046e4; 
+            --accent-bg: #e6eefc;
+            --border: #e8e8e8;
+            --max-width: 1200px;
+            --skeleton-base: #f2f2f2;
+            --skeleton-shimmer: #e4e4e4;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); -webkit-font-smoothing: antialiased; }
+        
+        /* Navigation & Header */
+        header { border-bottom: 1px solid var(--border); background: #ffffff; position: sticky; top: 0; z-index: 100; height: 75px; }
+        .nav-container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; height: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .logo-wrap { display: flex; align-items: center; height: 100%; text-decoration: none; }
+        .logo-img { height: 52px; width: auto; object-fit: contain; }
+        
+        nav.nav-desktop { display: flex; gap: 2.5rem; align-items: center; }
+        nav.nav-desktop a { text-decoration: none; color: var(--text-main); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        nav.nav-desktop a:hover { color: var(--accent); }
+        .cta-main-site { background-color: var(--accent); color: #ffffff; padding: 0.65rem 1.4rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+        .cta-main-site:hover { opacity: 0.9; }
+
+        /* Fil d'actualités / Ticker */
+        .ticker-bar { background: #fcfcfc; border-bottom: 1px solid var(--border); padding: 0.6rem 2rem; font-size: 0.8rem; overflow: hidden; white-space: nowrap; }
+        .ticker-container { max-width: var(--max-width); margin: 0 auto; display: flex; gap: 2rem; align-items: center; }
+        .ticker-badge { background: #0046e4; color: white; padding: 0.2rem 0.5rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; font-size: 0.75rem; }
+        .ticker-text { font-weight: 500; color: var(--text-main); text-overflow: ellipsis; overflow: hidden; }
+
+        /* --- CONTENEUR HERO --- */
+        .hero-section { max-width: var(--max-width); margin: 2rem auto; padding: 0 2rem; }
+        .hero-banner-bg { width: 100%; min-height: 440px; background-size: cover; background-position: center; border-radius: 16px; position: relative; display: flex; align-items: center; padding: 4rem; overflow: visible; }
+        .hero-banner-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0) 80%); border-radius: 16px; }
+        
+        .hero-left-content { position: relative; z-index: 2; max-width: 50%; color: #ffffff; }
+        .hero-left-content h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        .hero-left-content p { font-size: 1.05rem; color: rgba(255,255,255,0.85); font-weight: 400; line-height: 1.5; }
+
+        /* Carte Flottante "À la Une" */
+        .featured-floating-card { position: absolute; right: 4rem; top: 3rem; bottom: -3rem; width: 380px; background: #ffffff; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 1.5rem; display: flex; flex-direction: column; text-decoration: none; color: inherit; z-index: 5; transition: transform 0.2s; }
+        .featured-floating-card:hover { transform: translateY(-4px); }
+        .featured-card-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
+        .tag-badge { display: inline-block; background: #121212; color: #ffffff; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px; text-transform: uppercase; margin-bottom: 0.75rem; align-self: flex-start; }
+        .featured-card-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .featured-card-title { font-size: 1.15rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* --- FILTRES DE RECHERCHE --- */
+        .filter-section { max-width: var(--max-width); margin: 6rem auto 2rem auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .filter-section h2 { font-size: 1.4rem; font-weight: 700; }
+        .filter-controls { display: flex; gap: 1rem; }
+        .search-input { padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; width: 220px; outline: none; font-family: inherit; }
+        .category-select { padding: 0.6rem 1.5rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; background: #fff; cursor: pointer; outline: none; font-family: inherit; }
+
+        /* --- GRILLE D'ARTICLES --- */
+        .journal-grid { max-width: var(--max-width); margin: 0 auto 5rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .article-card { background: #ffffff; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.2s; }
+        .article-card:hover { transform: translateY(-2px); }
+        .article-img-wrap { width: 100%; height: 210px; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; background: #f0f0f0; }
+        .article-img { width: 100%; height: 100%; object-fit: cover; }
+        .article-info { display: flex; flex-direction: column; }
+        .meta-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .article-title { font-size: 1rem; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Style du Sélecteur de langue */
+        .lang-dropdown { background: #ffffff; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.2s; }
+        .lang-dropdown:hover { border-color: var(--text-main); }
+        .lang-selector-wrap { display: flex; align-items: center; }
+
+        /* --- ANIMATION SKELETON LOADER --- */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton { background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: 4px; }
+
+        /* États d'affichage */
+        .skeleton-view { display: block; }
+        .real-view { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .real-view.ready { display: block; opacity: 1; }
+
+        /* Menu Burger Mobile */
+        .burger-menu { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 110; }
+        .burger-menu span { display: block; width: 22px; height: 2px; background: var(--text-main); margin: 5px 0; transition: 0.3s ease; }
+        
+        .nav-mobile { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #ffffff; z-index: 105; padding: 6rem 2rem 2rem 2rem; flex-direction: column; gap: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .nav-mobile a { text-decoration: none; color: var(--text-main); font-size: 1.3rem; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+        .nav-mobile .cta-mobile-site { color: var(--accent); border: none; margin-top: 1rem; font-size: 1.4rem; }
+        .nav-mobile.open { display: flex; }
+        
+        .burger-menu.open span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 5px); }
+        .burger-menu.open span:nth-child(2) { opacity: 0; }
+        .burger-menu.open span:nth-child(3) { transform: rotate(45deg) translate(-5px, -5px); }
+
+        @media (max-width: 992px) {
+            nav.nav-desktop { display: none; }
+            .burger-menu { display: block; }
+            .hero-banner-bg { min-height: auto; flex-direction: column; padding: 2.5rem 1.5rem; align-items: flex-start; margin-bottom: 4rem; }
+            .hero-left-content { max-width: 100%; margin-bottom: 2rem; }
+            .hero-left-content h1 { font-size: 2rem; }
+            .featured-floating-card { position: relative; right: auto; top: auto; bottom: -5rem; width: 100%; }
+            .filter-section { margin-top: 6rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .journal-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .journal-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo-wrap">
+                <img src="https://ukbekfcjfcjcqrpxfpmq.supabase.co/storage/v1/object/public/logo%20luvia/LUVIA%20PRESS%20LOGO.png" alt="Luvia Press" class="logo-img">
+            </a>
+            
+            <nav class="nav-desktop">
+                <a href="https://about.luviaplace.com" target="_blank" data-i18n="nav-about">About</a>
+                <a href="https://insurance.luviaplace.com" target="_blank" data-i18n="nav-insurance">Insurance</a>
+                <a href="https://tiqets.luviaplace.com" target="_blank" data-i18n="nav-tiqets">Luvia+Tiqets</a>
+                <a href="https://activites.luviaplace.com" target="_blank" data-i18n="nav-gyg">Luvia+GYG</a>
+                
+                <div class="lang-selector-wrap">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="lang-dropdown">
+                        <option value="fr">FR</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
+                <a href="https://luviaplace.com" class="cta-main-site" target="_blank" data-i18n="nav-cta">Get in touch</a>
+            </nav>
+
+            <button class="burger-menu" id="burgerToggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+            
+            <nav class="nav-mobile" id="mobileMenu">
+                <div style="padding-bottom: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600; font-size: 0.9rem;" data-i18n="lang-label">Langue / Language</span>
+                    <select id="langSelectMobile" onchange="changeLanguage(this.value)" class="lang-dropdown">
+                        <option value="fr">FR</option>
+                        <option value="en">EN</option>
+                    </select>
+                </div>
+                <a href="https://about.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-about">About</a>
+                <a href="https://insurance.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-insurance">Insurance</a>
+                <a href="https://tiqets.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-tiqets">Luvia+Tiqets</a>
+                <a href="https://activites.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-gyg">Luvia+GYG</a>
+                <a href="https://luviaplace.com" target="_blank" class="cta-mobile-site" data-i18n="nav-cta-mobile">Get in touch →</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="ticker-bar">
+        <div class="ticker-container">
+            <span class="ticker-badge" data-i18n="ticker-badge">Latest releases</span>
+            <span class="ticker-text" id="ticker-headline" data-i18n="loading-news">Chargement des dernières dépêches...</span>
+        </div>
+    </div>
+
+    <!-- VUE CHARGEMENT (SKELETON) -->
+    <div id="skeleton-view" class="skeleton-view">
+        <div class="hero-section">
+            <div class="skeleton" style="width: 100%; height: 440px; border-radius: 16px; position: relative;">
+                <div style="position: absolute; left: 4rem; top: 35%; width: 45%;">
+                    <div class="skeleton" style="height: 35px; width: 90%; background: #e2e2e2; margin-bottom: 10px;"></div>
+                    <div class="skeleton" style="height: 35px; width: 60%; background: #e2e2e2; margin-bottom: 20px;"></div>
+                    <div class="skeleton" style="height: 15px; width: 100%; background: #e2e2e2;"></div>
+                </div>
+                <div style="position: absolute; right: 4rem; top: 3rem; width: 380px; height: 380px; background: #ffffff; border-radius: 12px; padding: 1.5rem;">
+                    <div class="skeleton" style="width: 100%; height: 180px; border-radius: 8px;"></div>
+                    <div class="skeleton" style="width: 80px; height: 18px; margin-top: 1rem;"></div>
+                    <div class="skeleton" style="width: 100%; height: 20px; margin-top: 1rem;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="filter-section">
+            <div class="skeleton" style="width: 250px; height: 24px;"></div>
+            <div class="filter-controls">
+                <div class="skeleton" style="width: 220px; height: 35px; border-radius: 20px;"></div>
+                <div class="skeleton" style="width: 120px; height: 35px; border-radius: 20px;"></div>
+            </div>
+        </div>
+        <div class="journal-grid">
+            <div class="article-card"><div class="skeleton" style="width:100%; height:210px; border-radius:12px;"></div></div>
+            <div class="article-card"><div class="skeleton" style="width:100%; height:210px; border-radius:12px;"></div></div>
+            <div class="article-card"><div class="skeleton" style="width:100%; height:210px; border-radius:12px;"></div></div>
+        </div>
+    </div>
+
+    <!-- VUE RÉELLE (DYNAMIQUE) -->
+    <div id="real-view" class="real-view">
+        <div id="hero-container"></div>
+        
+        <div class="filter-section">
+            <h2 id="grid-title-count" data-i18n="latest-news">Latest News</h2>
+            <div class="filter-controls">
+                <input type="text" id="searchInput" class="search-input" oninput="filterPosts()" placeholder="Search articles..." data-i18n-placeholder="search-placeholder">
+                <select class="category-select" id="categoryFilter" onchange="filterPosts()">
+                    <option value="all" data-i18n="cat-all">Categories</option>
+                </select>
+            </div>
+        </div>
+
+        <main class="journal-grid" id="posts-grid-container"></main>
+    </div>
+
+    <script>
+        const translations = {
+            fr: {
+                "nav-about": "À propos",
+                "nav-insurance": "Assurances",
+                "nav-tiqets": "Luvia+Tiqets",
+                "nav-gyg": "Luvia+GYG",
+                "nav-cta": "Nous contacter",
+                "nav-cta-mobile": "Nous contacter →",
+                "lang-label": "Langue",
+                "ticker-badge": "Dernières minutes",
+                "loading-news": "Chargement des derniers récits...",
+                "latest-news": "Toutes les actualités Luvia",
+                "search-placeholder": "Rechercher un article...",
+                "cat-all": "Toutes les catégories",
+                "hero-welcome": "Bienvenue sur le<br>Luvia Media Center",
+                "hero-desc": "Suivez en temps réel les annonces officielles, communiqués de presse, analyses de luxe et carnets de bord exclusifs."
+            },
+            en: {
+                "nav-about": "About",
+                "nav-insurance": "Insurance",
+                "nav-tiqets": "Luvia+Tiqets",
+                "nav-gyg": "Luvia+GYG",
+                "nav-cta": "Get in touch",
+                "nav-cta-mobile": "Get in touch →",
+                "lang-label": "Language",
+                "ticker-badge": "Latest releases",
+                "loading-news": "Loading current company announcements...",
+                "latest-news": "Latest News by Luvia",
+                "search-placeholder": "Search articles...",
+                "cat-all": "Categories",
+                "hero-welcome": "Welcome to the<br>Luvia Media Center",
+                "hero-desc": "Stay up to date on current company announcements, press releases, luxury insights, and reports."
+            }
+        };
+
+        let currentLang = localStorage.getItem('luvia-lang') || 'fr';
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang][key]) {
+                    el.setAttribute('placeholder', translations[currentLang][key]);
+                }
+            });
+
+            if (document.getElementById('langSelect')) document.getElementById('langSelect').value = currentLang;
+            if (document.getElementById('langSelectMobile')) document.getElementById('langSelectMobile').value = currentLang;
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('luvia-lang', lang);
+            applyTranslations();
+            if (window.allPostsData) {
+                renderDynamicContent(window.allPostsData);
+            }
+        }
+
+        function toggleMenu() {
+            document.getElementById('burgerToggle').classList.toggle('open');
+            document.getElementById('mobileMenu').classList.toggle('open');
+        }
+
+        const SUPABASE_URL = 'https://ukbekfcjfcjcqrpxfpmq.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function initMediaCenter() {
+            applyTranslations();
+
+            const { data: posts, error } = await supabaseClient
+                .from('posts')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error || !posts || posts.length === 0) {
+                const container = document.getElementById('posts-grid-container');
+                if (container) {
+                    container.innerHTML = `<div>${currentLang === 'fr' ? 'Aucun article disponible.' : 'No articles available.'}</div>`;
+                }
+                return;
+            }
+
+            window.allPostsData = posts;
+            
+            // Populer le filtre des catégories dynamiquement
+            const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
+            const selectFilter = document.getElementById('categoryFilter');
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerText = cat;
+                selectFilter.appendChild(opt);
+            });
+
+            renderDynamicContent(posts);
+        }
+
+        function renderDynamicContent(posts) {
+            if(!posts.length) return;
+
+            const tickerHeadline = document.getElementById('ticker-headline');
+            if (tickerHeadline) {
+                tickerHeadline.innerText = posts[0].title;
+            }
+
+            let featuredPost = posts.find(p => p.is_featured === true) || posts[0];
+            window.featuredPostId = featuredPost.id; // Stocké pour le filtrage de la grille inférieure
+
+            const heroContainer = document.getElementById('hero-container');
+            if (heroContainer) {
+                heroContainer.innerHTML = `
+                    <section class="hero-section">
+                        <div class="hero-banner-bg" style="background-image: url('${featuredPost.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}');">
+                            <div class="hero-left-content">
+                                <h1>${translations[currentLang]['hero-welcome']}</h1>
+                                <p>${translations[currentLang]['hero-desc']}</p>
+                            </div>
+                            
+                            <a href="post.html?id=${featuredPost.id}" class="featured-floating-card">
+                                <img class="featured-card-img" src="${featuredPost.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}" alt="Cover">
+                                <span class="tag-badge">${featuredPost.category || 'Press'}</span>
+                                <div class="featured-card-date">${new Date(featuredPost.created_at).toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-US', {month:'short', day:'numeric', year:'numeric'})}</div>
+                                <h3 class="featured-card-title">${featuredPost.title}</h3>
+                            </a>
+                        </div>
+                    </section>
+                `;
+            }
+
+            buildGrid(posts);
+
+            document.getElementById('skeleton-view').style.display = 'none';
+            document.getElementById('real-view').classList.add('ready');
+        }
+
+        function buildGrid(postsList) {
+            // Exclure l'article à la une de la liste inférieure
+            let normalGridPosts = postsList.filter(p => p.id !== window.featuredPostId);
+
+            const gridTitleCount = document.getElementById('grid-title-count');
+            if (gridTitleCount) {
+                gridTitleCount.innerText = currentLang === 'fr' 
+                    ? `Dernières actualités Luvia (${normalGridPosts.length})` 
+                    : `Latest News by Luvia (${normalGridPosts.length})`;
+            }
+
+            const gridContainer = document.getElementById('posts-grid-container');
+            if (gridContainer) {
+                if(normalGridPosts.length === 0) {
+                    gridContainer.innerHTML = `<div style="grid-column: span 3; color: var(--text-muted); padding: 2rem 0;">Aucun autre article ne correspond à votre recherche.</div>`;
+                    return;
+                }
+                gridContainer.innerHTML = normalGridPosts.map(post => `
+                    <a href="post.html?id=${post.id}" class="article-card">
+                        <div class="article-img-wrap">
+                            <img class="article-img" src="${post.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600'}" alt="Thumb">
+                        </div>
+                        <div class="article-info">
+                            <div class="meta-row">
+                                <span class="tag-badge" style="background:#e6eefc; color:var(--accent);">${post.category || 'News'}</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${new Date(post.created_at).toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-US', {month:'short', day:'numeric', year:'numeric'})}</span>
+                            </div>
+                            <h3 class="article-title">${post.title}</h3>
+                        </div>
+                    </a>
+                `).join('');
+            }
+        }
+
+        function filterPosts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCat = document.getElementById('categoryFilter').value;
+
+            let filtered = window.allPostsData.filter(post => {
+                const matchesSearch = post.title.toLowerCase().includes(query) || (post.content && post.content.toLowerCase().includes(query));
+                const matchesCat = selectedCat === 'all' || post.category === selectedCat;
+                return matchesSearch && matchesCat;
+            });
+
+            buildGrid(filtered);
+        }
+
+        window.onload = initMediaCenter;
+// Script pour charger le footer dynamiquement
+    fetch('footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer-placeholder').innerHTML = data;
+        });
+    </script>
+<div id="footer-placeholder"></div>
+</body>
+</html>
