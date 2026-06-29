@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luvia Press - Article</title>
     
-    <!-- Open Graph statiques (fallback) -->
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Luvia Press">
     <meta property="og:image:width" content="1200">
@@ -19,13 +18,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    
     <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WD4WP29Q');</script>
-<!-- End Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WD4WP29Q');</script>
+    <!-- End Google Tag Manager -->
+    
     <style>
         :root {
             --bg-color: #ffffff;
@@ -39,13 +40,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html, body { height: 100%; }
+        
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-main); 
             -webkit-font-smoothing: antialiased; 
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
         }
 
         .skip-link {
@@ -67,6 +81,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             top: 0; 
             z-index: 100; 
             height: 75px; 
+            flex-shrink: 0;
         }
         .nav-container { 
             max-width: 1200px; 
@@ -244,7 +259,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             font-family: inherit;
         }
 
-        /* Style uniforme */
         .article-body { 
             font-size: 1.18rem; 
             line-height: 1.85; 
@@ -301,6 +315,38 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .article-body a:hover { border-bottom-color: var(--accent); }
         .article-body strong { font-weight: 700; color: #111111; }
 
+        /* Styles tableaux */
+        .article-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+        .article-body thead {
+            background: #f8f9fa;
+        }
+        .article-body th {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #111;
+            border-bottom: 2px solid #e5e5e5;
+        }
+        .article-body td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+        .article-body tr:hover td {
+            background: #fafbff;
+        }
+        .article-body tbody tr:last-child td {
+            border-bottom: 2px solid #e5e5e5;
+        }
+
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -346,14 +392,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             .article-actions { margin-bottom: 2.5rem; padding-bottom: 1.5rem; flex-wrap: wrap; }
             .article-body { font-size: 1.05rem; }
             .article-meta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+            
+            footer {
+                margin-top: 3rem;
+                padding: 1.5rem 1rem;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD4WP29Q"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD4WP29Q"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
     <a href="#main-content" class="skip-link" data-i18n="skip-link">Aller au contenu principal</a>
 
     <header>
@@ -594,10 +647,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
                 state.currentPostId = rawId;
 
-                // Rediriger vers la page article statique pour le partage si on n'y est pas deja
                 if (!window.location.pathname.includes('/articles/')) {
                     const articleUrl = SITE_URL + '/articles/' + state.currentPostId + '.html';
-                    // Mettre a jour l'URL canonique pour les robots
                     var canonical = document.querySelector('link[rel="canonical"]');
                     if (canonical) {
                         canonical.href = articleUrl;
@@ -721,7 +772,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
 
             async function handleShare() {
-                // URL a partager : la page statique avec les balises meta
                 const shareUrl = state.currentPostId ? 
                     SITE_URL + '/articles/' + state.currentPostId + '.html' : 
                     window.location.href;
