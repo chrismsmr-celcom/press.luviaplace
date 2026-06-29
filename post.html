@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luvia Press - Article</title>
+    
+    <!-- Open Graph statiques (fallback) -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Luvia Press">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -441,6 +449,7 @@
 
             const SUPABASE_URL = 'https://ukbekfcjfcjcqrpxfpmq.supabase.co';
             const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
+            const SITE_URL = 'https://press.luviaplace.com';
             
             const CONFIG = {
                 DEFAULT_LANG: 'fr',
@@ -509,7 +518,6 @@
                 toast.hideTimeout = setTimeout(() => toast.classList.remove('show'), duration);
             }
 
-            // Application des traductions statiques
             function applyTranslations(lang) {
                 document.querySelectorAll('[data-i18n]').forEach(el => {
                     const key = el.getAttribute('data-i18n');
@@ -518,7 +526,6 @@
                     }
                 });
                 
-                // Synchroniser les deux selects de langue
                 const langSelect = document.getElementById('langSelect');
                 const langSelectMobile = document.getElementById('langSelectMobile');
                 if (langSelect) langSelect.value = lang;
@@ -528,15 +535,13 @@
                 updateSaveButtonUI();
             }
 
-            // Changement de langue declenche par les selects
             function changeLanguage(lang) {
-                if (lang === state.currentLang) return; // Evite les re-rendus inutiles
+                if (lang === state.currentLang) return;
                 
                 state.currentLang = lang;
                 localStorage.setItem(CONFIG.STORAGE_PREFIX + 'lang', lang);
                 applyTranslations(lang);
                 
-                // Re-afficher l'article dans la nouvelle langue
                 if (state.cachedPostData) {
                     renderPost(state.cachedPostData);
                 }
@@ -578,6 +583,21 @@
                 }
                 
                 state.currentPostId = rawId;
+
+                // Rediriger vers la page article statique pour le partage si on n'y est pas deja
+                if (!window.location.pathname.includes('/articles/')) {
+                    const articleUrl = SITE_URL + '/articles/' + state.currentPostId + '.html';
+                    // Mettre a jour l'URL canonique pour les robots
+                    var canonical = document.querySelector('link[rel="canonical"]');
+                    if (canonical) {
+                        canonical.href = articleUrl;
+                    } else {
+                        canonical = document.createElement('link');
+                        canonical.rel = 'canonical';
+                        canonical.href = articleUrl;
+                        document.head.appendChild(canonical);
+                    }
+                }
 
                 try {
                     const { data: post, error } = await supabaseClient
@@ -631,7 +651,6 @@
 
             function renderPost(post) {
                 try {
-                    // SELECTION DE LA LANGUE
                     const isEnglish = state.currentLang === 'en';
                     
                     const displayTitle = (isEnglish && post.title_en) ? post.title_en : post.title;
@@ -652,7 +671,6 @@
                         { month: 'long', day: 'numeric', year: 'numeric' }
                     );
                     
-                    // Rendu Markdown securise
                     const rawHtml = marked.parse(displayContent || '');
                     const cleanHtml = DOMPurify.sanitize(rawHtml, {
                         ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
@@ -693,26 +711,32 @@
             }
 
             async function handleShare() {
+                // URL a partager : la page statique avec les balises meta
+                const shareUrl = state.currentPostId ? 
+                    SITE_URL + '/articles/' + state.currentPostId + '.html' : 
+                    window.location.href;
+                
                 if (navigator.share) {
                     try {
                         await navigator.share({
                             title: document.title,
-                            url: window.location.href
+                            url: shareUrl
                         });
                     } catch (err) {
-                        if (err.name !== 'AbortError') copyToClipboard();
+                        if (err.name !== 'AbortError') copyToClipboard(shareUrl);
                     }
                 } else {
-                    copyToClipboard();
+                    copyToClipboard(shareUrl);
                 }
             }
 
-            function copyToClipboard() {
-                navigator.clipboard.writeText(window.location.href).then(() => {
+            function copyToClipboard(url) {
+                url = url || window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
                     showToast(translations[state.currentLang]['toast-copied']);
                 }).catch(() => {
                     const textarea = document.createElement('textarea');
-                    textarea.value = window.location.href;
+                    textarea.value = url;
                     textarea.style.position = 'fixed';
                     textarea.style.opacity = '0';
                     document.body.appendChild(textarea);
@@ -780,18 +804,15 @@
                     });
             }
 
-            // Evenements sur les selects de langue
             document.getElementById('langSelect')?.addEventListener('change', function(e) {
                 changeLanguage(e.target.value);
             });
             
             document.getElementById('langSelectMobile')?.addEventListener('change', function(e) {
-                // Synchroniser le select desktop avec le mobile
                 document.getElementById('langSelect').value = e.target.value;
                 changeLanguage(e.target.value);
             });
             
-            // Fermeture menu avec Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     const menu = document.getElementById('mobileMenu');
@@ -801,7 +822,6 @@
                 }
             });
 
-            // Fermeture menu avec clic exterieur
             document.addEventListener('click', function(e) {
                 const menu = document.getElementById('mobileMenu');
                 const burger = document.getElementById('burgerToggle');
@@ -812,7 +832,6 @@
                 }
             });
 
-            // Demarrage
             window.addEventListener('DOMContentLoaded', function() {
                 fetchPost();
                 loadFooter();
