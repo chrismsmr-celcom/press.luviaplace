@@ -1,6 +1,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://ukbekfcjfcjcqrpxfpmq.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
@@ -8,7 +9,7 @@ const SITE_URL = process.env.SITE_URL || 'https://press.luviaplace.com';
 
 function fetchPosts() {
     return new Promise((resolve, reject) => {
-        const url = `${SUPABASE_URL}/rest/v1/posts?select=id,title,excerpt,image_url,category&order=created_at.desc`;
+        const url = `${SUPABASE_URL}/rest/v1/posts?select=id,title,excerpt,image_url,category,created_at&order=created_at.desc`;
         const options = {
             headers: {
                 'apikey': SUPABASE_KEY,
@@ -35,14 +36,22 @@ function escape(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// Créer un hash du contenu de l'article pour détecter les changements
+function getArticleHash(article) {
+    const content = `${article.title}|${article.excerpt}|${article.image_url}|${article.category}`;
+    return crypto.createHash('md5').update(content).digest('hex');
+}
+
 function generatePage(article) {
     const title = article.title || 'Travel Press';
     const desc = (article.excerpt || article.title || '').substring(0, 160);
     const img = article.image_url || `${SITE_URL}/og-default.jpg`;
     const redirectUrl = `${SITE_URL}/post.html?id=${article.id}`;
     const category = article.category || 'News';
+    const hash = getArticleHash(article);
     
-    return `<!DOCTYPE html>
+    return {
+        html: `<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -67,6 +76,7 @@ function generatePage(article) {
     <meta name="twitter:image" content="${img}">
     <meta http-equiv="refresh" content="0; url=${redirectUrl}">
     <link rel="canonical" href="${redirectUrl}">
+    <!-- hash: ${hash} -->
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#fafafa;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:1.5rem}
@@ -83,10 +93,7 @@ function generatePage(article) {
     </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD4WP29Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    
     <div class="card">
         <img class="card-img" src="${img}" alt="${escape(title)}" onerror="this.style.display='none'">
         <div class="card-body">
@@ -99,13 +106,26 @@ function generatePage(article) {
     </div>
     <script>window.location.href="${redirectUrl}"</script>
 </body>
-</html>`;
+</html>`,
+        hash: hash
+    };
+}
+
+// Lire le hash stocké dans le fichier existant
+function getExistingHash(filePath) {
+    try {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const match = content.match(/<!-- hash: ([a-f0-9]+) -->/);
+        return match ? match[1] : null;
+    } catch (e) {
+        return null;
+    }
 }
 
 async function main() {
     console.log('📡 Récupération des articles depuis Supabase...');
     const articles = await fetchPosts();
-    console.log(`✅ ${articles.length} articles trouvés`);
+    console.log(`✅ ${articles.length} articles trouvés dans Supabase`);
     
     const dir = path.join(__dirname, 'articles');
     
@@ -114,16 +134,46 @@ async function main() {
         console.log('📁 Dossier articles/ créé');
     }
     
+    // Compter les fichiers existants
+    const existingFiles = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.endsWith('.html')) : [];
+    console.log(`📄 ${existingFiles.length} fichiers existants dans articles/`);
+    
     let generated = 0;
+    let skipped = 0;
+    const generatedIds = [];
+    
     articles.forEach(article => {
-        const html = generatePage(article);
         const filePath = path.join(dir, `${article.id}.html`);
-        fs.writeFileSync(filePath, html);
-        console.log(`  ✅ articles/${article.id}.html - ${(article.title || '').substring(0, 50)}`);
-        generated++;
+        const { html, hash } = generatePage(article);
+        const existingHash = getExistingHash(filePath);
+        
+        // Ne générer que si le fichier n'existe pas OU si le contenu a changé
+        if (!existingHash || existingHash !== hash) {
+            fs.writeFileSync(filePath, html);
+            const reason = !existingHash ? 'NOUVEAU' : 'MODIFIÉ';
+            console.log(`  ✅ articles/${article.id}.html - ${reason} - ${(article.title || '').substring(0, 40)}`);
+            generated++;
+        } else {
+            console.log(`  ⏭️  articles/${article.id}.html - inchangé`);
+            skipped++;
+        }
+        generatedIds.push(article.id);
     });
     
-    console.log(`🎉 ${generated} pages générées !`);
+    // Supprimer les fichiers d'articles qui n'existent plus dans Supabase
+    existingFiles.forEach(file => {
+        const id = parseInt(file.replace('.html', ''));
+        if (!generatedIds.includes(id)) {
+            const filePath = path.join(dir, file);
+            fs.unlinkSync(filePath);
+            console.log(`  🗑️  Supprimé: articles/${file} (article supprimé de Supabase)`);
+        }
+    });
+    
+    console.log('');
+    console.log(`🎉 ${generated} pages générées/mises à jour`);
+    console.log(`⏭️  ${skipped} pages inchangées (non regénérées)`);
+    console.log(`📄 Total: ${generatedIds.length} pages actives`);
 }
 
 main().catch(err => {
