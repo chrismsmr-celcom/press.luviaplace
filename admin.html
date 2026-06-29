@@ -382,20 +382,53 @@
         document.getElementById('btnCancel').style.display = 'none';
     }
 
-    function getFormData() {
-        return {
-            title: document.getElementById('title').value,
-            title_en: document.getElementById('title_en').value,
-            excerpt: document.getElementById('excerpt').value,
-            image_url: document.getElementById('image_url').value,
-            reading_time: document.getElementById('reading_time').value,
-            category: document.getElementById('category').value,
-            category_en: document.getElementById('category_en').value,
-            is_featured: document.getElementById('is_featured').checked,
-            content: simplemdeFR.value(), // Markdown FR
-            content_en: simplemdeEN.value() // Markdown EN
-        };
-    }
+function getFormData() {
+    // Récupérer le contenu brut
+    let contentFR = simplemdeFR.value();
+    let contentEN = simplemdeEN.value();
+    
+    // Nettoyer le Markdown : forcer les sauts de ligne
+    contentFR = cleanMarkdown(contentFR);
+    contentEN = cleanMarkdown(contentEN);
+    
+    return {
+        title: document.getElementById('title').value,
+        title_en: document.getElementById('title_en').value,
+        excerpt: document.getElementById('excerpt').value,
+        image_url: document.getElementById('image_url').value,
+        reading_time: document.getElementById('reading_time').value,
+        category: document.getElementById('category').value,
+        category_en: document.getElementById('category_en').value,
+        is_featured: document.getElementById('is_featured').checked,
+        content: contentFR,
+        content_en: contentEN
+    };
+}
+    // Fonction pour nettoyer le Markdown
+function cleanMarkdown(md) {
+    // Remplacer les sauts de ligne simples par des doubles avant les titres
+    md = md.replace(/([^\n])\n(#{1,6}\s)/g, '$1\n\n$2');
+    
+    // Remplacer les sauts de ligne simples par des doubles avant les listes
+    md = md.replace(/([^\n])\n(- |\d+\. )/g, '$1\n\n$2');
+    
+    // Remplacer les sauts de ligne simples par des doubles avant les tableaux
+    md = md.replace(/([^\n])\n(\|)/g, '$1\n\n$2');
+    
+    // Remplacer les sauts de ligne simples par des doubles avant les séparateurs
+    md = md.replace(/([^\n])\n(---)/g, '$1\n\n$2');
+    
+    // S'assurer qu'il y a une ligne vide après chaque titre
+    md = md.replace(/^(#{1,6}\s.+)$/gm, '$1\n');
+    
+    // Supprimer les espaces en fin de ligne
+    md = md.replace(/[ \t]+$/gm, '');
+    
+    // Remplacer les 3 retours à la ligne ou plus par 2
+    md = md.replace(/\n{3,}/g, '\n\n');
+    
+    return md.trim();
+}
 
     async function handleFeaturedStatus(is_featured) {
         if (is_featured) {
