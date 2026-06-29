@@ -302,6 +302,92 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="footer-placeholder"></div>
 
     <script>
+        // ============================================
+// REAL-TIME avec limite (<500 changements/sec)
+// ============================================
+let realtimeDebounceTimer = null;
+const REALTIME_DEBOUNCE_MS = 30000; // 30 secondes minimum entre chaque rafraîchissement
+
+function setupRealtime() {
+    supabaseClient
+        .channel('posts-realtime')
+        .on('postgres_changes', 
+            { 
+                event: '*',           // INSERT, UPDATE, DELETE
+                schema: 'public', 
+                table: 'posts',
+                filter: undefined     // Pas de filtre, mais limité par le debounce
+            },
+            (payload) => {
+                console.log('Changement détecté:', payload.eventType);
+                
+                // Debounce : annule le timer précédent
+                if (realtimeDebounceTimer) {
+                    clearTimeout(realtimeDebounceTimer);
+                }
+                
+                // Attend 30 secondes avant de rafraîchir
+                realtimeDebounceTimer = setTimeout(() => {
+                    console.log('Rafraîchissement des articles...');
+                    refreshArticles();
+                    realtimeDebounceTimer = null;
+                }, REALTIME_DEBOUNCE_MS);
+            }
+        )
+        .subscribe((status) => {
+            console.log('Real-time status:', status);
+        });
+}
+
+async function refreshArticles() {
+    const { data: posts, error } = await supabaseClient
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error || !posts || posts.length === 0) return;
+
+    window.allPostsData = posts;
+    
+    // Mettre à jour la catégorie "à la une"
+    let featuredPost = posts.find(p => p.is_featured === true) || posts[0];
+    window.featuredPostId = featuredPost.id;
+
+    // Rafraîchir le hero
+    const heroContainer = document.getElementById('hero-container');
+    if (heroContainer) {
+        heroContainer.innerHTML = `
+            <section class="hero-section">
+                <div class="hero-banner-bg" style="background-image: url('${featuredPost.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}');">
+                    <div class="hero-left-content">
+                        <h1>${translations[currentLang]['hero-welcome']}</h1>
+                        <p>${translations[currentLang]['hero-desc']}</p>
+                    </div>
+                    <a href="post.html?id=${featuredPost.id}" class="featured-floating-card">
+                        <img class="featured-card-img" src="${featuredPost.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}" alt="Cover">
+                        <span class="tag-badge">${featuredPost.category || 'Press'}</span>
+                        <div class="featured-card-date">${new Date(featuredPost.created_at).toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-US', {month:'short', day:'numeric', year:'numeric'})}</div>
+                        <h3 class="featured-card-title">${featuredPost.title}</h3>
+                    </a>
+                </div>
+            </section>
+        `;
+    }
+
+    // Rafraîchir la grille
+    buildGrid(posts);
+    
+    // Mettre à jour les catégories du filtre
+    const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
+    const selectFilter = document.getElementById('categoryFilter');
+    selectFilter.innerHTML = '<option value="all" data-i18n="cat-all">Categories</option>';
+    categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.innerText = cat;
+        selectFilter.appendChild(opt);
+    });
+}
         const NEWS_API_KEY = 'pub_1ea29e57ce7b48fb8cfecae994edc791';
         const NEWS_API_URL = 'https://newsdata.io/api/1/latest';
 
@@ -428,37 +514,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function initMediaCenter() {
-            applyTranslations();
-            
-            // Lancer le ticker
-            startTickerRefresh();
+    applyTranslations();
+    startTickerRefresh();
+    setupRealtime(); // ✅ AJOUTE CETTE LIGNE
 
-            const { data: posts, error } = await supabaseClient
-                .from('posts')
-                .select('*')
-                .order('created_at', { ascending: false });
+    const { data: posts, error } = await supabaseClient
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-            if (error || !posts || posts.length === 0) {
-                const container = document.getElementById('posts-grid-container');
-                if (container) {
-                    container.innerHTML = `<div>${currentLang === 'fr' ? 'Aucun article disponible.' : 'No articles available.'}</div>`;
-                }
-                return;
-            }
-
-            window.allPostsData = posts;
-            
-            const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
-            const selectFilter = document.getElementById('categoryFilter');
-            categories.forEach(cat => {
-                const opt = document.createElement('option');
-                opt.value = cat;
-                opt.innerText = cat;
-                selectFilter.appendChild(opt);
-            });
-
-            renderDynamicContent(posts);
+    if (error || !posts || posts.length === 0) {
+        const container = document.getElementById('posts-grid-container');
+        if (container) {
+            container.innerHTML = `<div>${currentLang === 'fr' ? 'Aucun article disponible.' : 'No articles available.'}</div>`;
         }
+        return;
+    }
+
+    window.allPostsData = posts;
+    
+    const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
+    const selectFilter = document.getElementById('categoryFilter');
+    categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.innerText = cat;
+        selectFilter.appendChild(opt);
+    });
+
+    renderDynamicContent(posts);
+}
 
         function renderDynamicContent(posts) {
             if(!posts.length) return;
