@@ -87,7 +87,6 @@
         
         .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
         
-        /* Onglets langue */
         .lang-tabs { 
             display: flex; 
             gap: 0; 
@@ -116,7 +115,6 @@
             color: white; 
         }
         
-        /* Info aide Markdown */
         .markdown-help {
             background: #f9f9f9;
             padding: 0.75rem 1rem;
@@ -139,6 +137,10 @@
             overflow: hidden;
         }
 
+        .CodeMirror-lines {
+            line-height: 1.8 !important;
+        }
+
         .checkbox-group { 
             display: flex; 
             align-items: center; 
@@ -156,13 +158,11 @@
     <h1>Luvia Journal - Editeur</h1>
     <p class="subtitle">Redigez en Markdown, publiez en deux langues</p>
     
-    <!-- Onglets langue -->
     <div class="lang-tabs">
         <button class="lang-tab active" onclick="switchTab('fr')">Francais</button>
         <button class="lang-tab" onclick="switchTab('en')">English</button>
     </div>
 
-    <!-- Mode chargement article existant -->
     <div class="edit-section">
         <h2>Modifier un article existant</h2>
         <div class="form-row" style="align-items: flex-end;">
@@ -175,7 +175,6 @@
         <small style="display:block; margin-top:0.5rem;">Laissez vide pour creer un nouvel article.</small>
     </div>
 
-    <!-- Champs FR -->
     <div id="tab-fr">
         <div class="form-group">
             <label>Titre (Francais)</label>
@@ -205,7 +204,6 @@
         </div>
     </div>
 
-    <!-- Champs EN -->
     <div id="tab-en" style="display:none;">
         <div class="form-group">
             <label>Titre (English)</label>
@@ -235,7 +233,6 @@
         </div>
     </div>
 
-    <!-- Champs communs -->
     <div class="form-group">
         <label>Extrait / Description courte</label>
         <input type="text" id="excerpt" placeholder="Une courte phrase d'accroche...">
@@ -269,11 +266,11 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Initialisation SimpleMDE pour le francais
     const simplemdeFR = new SimpleMDE({ 
         element: document.getElementById("content"),
         spellChecker: false,
         status: false,
+        lineWrapping: true,
         placeholder: "Redigez votre article en Markdown...",
         toolbar: [
             "bold", "italic", "heading", "|",
@@ -284,11 +281,11 @@
         ]
     });
 
-    // Initialisation SimpleMDE pour l'anglais
     const simplemdeEN = new SimpleMDE({ 
         element: document.getElementById("content_en"),
         spellChecker: false,
         status: false,
+        lineWrapping: true,
         placeholder: "Write your article in Markdown...",
         toolbar: [
             "bold", "italic", "heading", "|",
@@ -302,20 +299,14 @@
     let currentEditId = null;
     let currentTab = 'fr';
 
-    // Changement d'onglet de langue
     function switchTab(lang) {
         currentTab = lang;
-        
-        // Mise a jour des onglets
         document.querySelectorAll('.lang-tab').forEach(tab => tab.classList.remove('active'));
         event.target.classList.add('active');
-        
-        // Afficher/masquer les champs
         document.getElementById('tab-fr').style.display = lang === 'fr' ? 'block' : 'none';
         document.getElementById('tab-en').style.display = lang === 'en' ? 'block' : 'none';
     }
 
-    // Charger un article existant
     async function loadArticle() {
         const idInput = document.getElementById('edit_id').value.trim();
         const btnLoad = document.getElementById('btnLoad');
@@ -342,7 +333,6 @@
             return;
         }
 
-        // Remplir les champs
         document.getElementById('title').value = data.title || '';
         document.getElementById('title_en').value = data.title_en || '';
         document.getElementById('excerpt').value = data.excerpt || '';
@@ -352,7 +342,6 @@
         document.getElementById('category_en').value = data.category_en || '';
         document.getElementById('is_featured').checked = data.is_featured || false;
         
-        // Remplir le contenu Markdown
         simplemdeFR.value(data.content || '');
         simplemdeEN.value(data.content_en || '');
 
@@ -382,53 +371,53 @@
         document.getElementById('btnCancel').style.display = 'none';
     }
 
-function getFormData() {
-    // Récupérer le contenu brut
-    let contentFR = simplemdeFR.value();
-    let contentEN = simplemdeEN.value();
-    
-    // Nettoyer le Markdown : forcer les sauts de ligne
-    contentFR = cleanMarkdown(contentFR);
-    contentEN = cleanMarkdown(contentEN);
-    
-    return {
-        title: document.getElementById('title').value,
-        title_en: document.getElementById('title_en').value,
-        excerpt: document.getElementById('excerpt').value,
-        image_url: document.getElementById('image_url').value,
-        reading_time: document.getElementById('reading_time').value,
-        category: document.getElementById('category').value,
-        category_en: document.getElementById('category_en').value,
-        is_featured: document.getElementById('is_featured').checked,
-        content: contentFR,
-        content_en: contentEN
-    };
-}
-    // Fonction pour nettoyer le Markdown
-function cleanMarkdown(md) {
-    // Remplacer les sauts de ligne simples par des doubles avant les titres
-    md = md.replace(/([^\n])\n(#{1,6}\s)/g, '$1\n\n$2');
-    
-    // Remplacer les sauts de ligne simples par des doubles avant les listes
-    md = md.replace(/([^\n])\n(- |\d+\. )/g, '$1\n\n$2');
-    
-    // Remplacer les sauts de ligne simples par des doubles avant les tableaux
-    md = md.replace(/([^\n])\n(\|)/g, '$1\n\n$2');
-    
-    // Remplacer les sauts de ligne simples par des doubles avant les séparateurs
-    md = md.replace(/([^\n])\n(---)/g, '$1\n\n$2');
-    
-    // S'assurer qu'il y a une ligne vide après chaque titre
-    md = md.replace(/^(#{1,6}\s.+)$/gm, '$1\n');
-    
-    // Supprimer les espaces en fin de ligne
-    md = md.replace(/[ \t]+$/gm, '');
-    
-    // Remplacer les 3 retours à la ligne ou plus par 2
-    md = md.replace(/\n{3,}/g, '\n\n');
-    
-    return md.trim();
-}
+    function cleanMarkdown(md) {
+        if (!md) return '';
+        
+        // Saut de ligne avant les titres
+        md = md.replace(/([^\n])\n(#{1,6}\s)/g, '$1\n\n$2');
+        
+        // Saut de ligne avant les listes
+        md = md.replace(/([^\n])\n(- |\d+\. )/g, '$1\n\n$2');
+        
+        // Saut de ligne avant les tableaux
+        md = md.replace(/([^\n])\n(\|)/g, '$1\n\n$2');
+        
+        // Saut de ligne avant les separateurs
+        md = md.replace(/([^\n])\n(---)/g, '$1\n\n$2');
+        
+        // Ligne vide apres chaque titre
+        md = md.replace(/^(#{1,6}\s.+)$/gm, '$1\n');
+        
+        // Supprimer espaces en fin de ligne
+        md = md.replace(/[ \t]+$/gm, '');
+        
+        // Max 2 retours a la ligne
+        md = md.replace(/\n{3,}/g, '\n\n');
+        
+        return md.trim();
+    }
+
+    function getFormData() {
+        let contentFR = simplemdeFR.value();
+        let contentEN = simplemdeEN.value();
+        
+        contentFR = cleanMarkdown(contentFR);
+        contentEN = cleanMarkdown(contentEN);
+        
+        return {
+            title: document.getElementById('title').value,
+            title_en: document.getElementById('title_en').value,
+            excerpt: document.getElementById('excerpt').value,
+            image_url: document.getElementById('image_url').value,
+            reading_time: document.getElementById('reading_time').value,
+            category: document.getElementById('category').value,
+            category_en: document.getElementById('category_en').value,
+            is_featured: document.getElementById('is_featured').checked,
+            content: contentFR,
+            content_en: contentEN
+        };
+    }
 
     async function handleFeaturedStatus(is_featured) {
         if (is_featured) {
