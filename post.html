@@ -62,21 +62,6 @@
             max-width: 100vw;
         }
 
-        footer {
-            flex-shrink: 0;
-            width: 100%;
-            max-width: 100vw;
-            margin-top: 5rem;
-            border-top: 1px solid var(--border);
-            padding: 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            position: relative;
-            left: 0;
-            right: 0;
-        }
-
         .skip-link {
             position: absolute;
             top: -100%;
@@ -419,14 +404,7 @@
             .article-body table { font-size: 0.8rem; }
             .article-body th, .article-body td { padding: 0.5rem 0.6rem; }
             .article-meta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-            footer { 
-                margin-top: 3rem; 
-                padding: 1.5rem 1rem; 
-                font-size: 0.8rem; 
-                width: 100%; 
-                text-align: center; 
-            }
-        }
+                    }
     </style>
     </head>
 <body>
@@ -530,7 +508,7 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <footer id="footer-placeholder" role="contentinfo"></footer>
+     <div id="footer-placeholder"></div>
 
     <script>
         (function() {
@@ -815,7 +793,14 @@
                     copyToClipboard(shareUrl);
                 }
             }
-
+fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(() => {
+                document.getElementById('footer-placeholder').innerHTML = '<footer style="text-align:center;padding:2rem;color:#999;">© 2024 Luvia Press</footer>';
+            });
             function copyToClipboard(url) {
                 url = url || window.location.href;
                 navigator.clipboard.writeText(url).then(() => {
@@ -871,25 +856,9 @@
                 }
             }
 
-            function loadFooter() {
-                const footer = document.getElementById('footer-placeholder');
-                if (!footer) return;
+           
                 
-                if (window.location.protocol === 'file:') {
-                    footer.innerHTML = '<p>2024 Luvia Press</p>';
-                    return;
-                }
                 
-                fetch('footer.html')
-                    .then(response => response.ok ? response.text() : null)
-                    .then(data => {
-                        footer.innerHTML = data || '<p>2024 Luvia Press</p>';
-                    })
-                    .catch(() => {
-                        footer.innerHTML = '<p>2024 Luvia Press</p>';
-                    });
-            }
-
             // Écouteur burger menu
             document.getElementById('burgerToggle')?.addEventListener('click', toggleMenu);
 
@@ -937,10 +906,11 @@
             // Démarrage
             window.addEventListener('DOMContentLoaded', function() {
                 fetchPost();
-                loadFooter();
+                
             });
 
         })();
+        
     </script>
 </body>
 </html>
