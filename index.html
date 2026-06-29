@@ -38,10 +38,66 @@
         .cta-main-site:hover { opacity: 0.9; }
 
         /* Fil d'actualités / Ticker */
-        .ticker-bar { background: #fcfcfc; border-bottom: 1px solid var(--border); padding: 0.6rem 2rem; font-size: 0.8rem; overflow: hidden; white-space: nowrap; }
-        .ticker-container { max-width: var(--max-width); margin: 0 auto; display: flex; gap: 2rem; align-items: center; }
-        .ticker-badge { background: #0046e4; color: white; padding: 0.2rem 0.5rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; font-size: 0.75rem; }
-        .ticker-text { font-weight: 500; color: var(--text-main); text-overflow: ellipsis; overflow: hidden; }
+        .ticker-bar { 
+            background: #fcfcfc; 
+            border-bottom: 1px solid var(--border); 
+            padding: 0.6rem 2rem; 
+            font-size: 0.8rem; 
+            overflow: hidden; 
+            white-space: nowrap;
+            position: relative;
+        }
+        .ticker-container { 
+            max-width: var(--max-width); 
+            margin: 0 auto; 
+            display: flex; 
+            gap: 2rem; 
+            align-items: center; 
+        }
+        .ticker-badge { 
+            background: #0046e4; 
+            color: white; 
+            padding: 0.2rem 0.5rem; 
+            font-weight: 700; 
+            border-radius: 3px; 
+            text-transform: uppercase; 
+            font-size: 0.75rem; 
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .ticker-scroll-wrap {
+            overflow: hidden;
+            flex: 1;
+            position: relative;
+            height: 20px;
+        }
+        .ticker-text { 
+            font-weight: 500; 
+            color: var(--text-main); 
+            display: inline-block;
+            animation: ticker-scroll 90s linear infinite;
+            white-space: nowrap;
+            padding-left: 100%;
+        }
+        .ticker-text:hover {
+            animation-play-state: paused;
+        }
+        .ticker-separator {
+            margin: 0 2rem;
+            color: #999;
+        }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-loading {
+            font-weight: 500;
+            color: var(--text-muted);
+        }
 
         /* --- CONTENEUR HERO --- */
         .hero-section { max-width: var(--max-width); margin: 2rem auto; padding: 0 2rem; }
@@ -52,7 +108,7 @@
         .hero-left-content h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -1px; }
         .hero-left-content p { font-size: 1.05rem; color: rgba(255,255,255,0.85); font-weight: 400; line-height: 1.5; }
 
-        /* Carte Flottante "À la Une" */
+        /* Carte Flottante */
         .featured-floating-card { position: absolute; right: 4rem; top: 3rem; bottom: -3rem; width: 380px; background: #ffffff; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 1.5rem; display: flex; flex-direction: column; text-decoration: none; color: inherit; z-index: 5; transition: transform 0.2s; }
         .featured-floating-card:hover { transform: translateY(-4px); }
         .featured-card-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
@@ -60,14 +116,14 @@
         .featured-card-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem; }
         .featured-card-title { font-size: 1.15rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* --- FILTRES DE RECHERCHE --- */
+        /* --- FILTRES --- */
         .filter-section { max-width: var(--max-width); margin: 6rem auto 2rem auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
         .filter-section h2 { font-size: 1.4rem; font-weight: 700; }
         .filter-controls { display: flex; gap: 1rem; }
         .search-input { padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; width: 220px; outline: none; font-family: inherit; }
         .category-select { padding: 0.6rem 1.5rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; background: #fff; cursor: pointer; outline: none; font-family: inherit; }
 
-        /* --- GRILLE D'ARTICLES --- */
+        /* --- GRILLE --- */
         .journal-grid { max-width: var(--max-width); margin: 0 auto 5rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
         .article-card { background: #ffffff; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.2s; }
         .article-card:hover { transform: translateY(-2px); }
@@ -77,24 +133,20 @@
         .meta-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
         .article-title { font-size: 1rem; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Style du Sélecteur de langue */
-        .lang-dropdown { background: #ffffff; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.2s; }
+        .lang-dropdown { background: #ffffff; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; }
         .lang-dropdown:hover { border-color: var(--text-main); }
         .lang-selector-wrap { display: flex; align-items: center; }
 
-        /* --- ANIMATION SKELETON LOADER --- */
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
         .skeleton { background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: 4px; }
 
-        /* États d'affichage */
         .skeleton-view { display: block; }
         .real-view { display: none; opacity: 0; transition: opacity 0.4s ease; }
         .real-view.ready { display: block; opacity: 1; }
 
-        /* Menu Burger Mobile */
         .burger-menu { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 110; }
         .burger-menu span { display: block; width: 22px; height: 2px; background: var(--text-main); margin: 5px 0; transition: 0.3s ease; }
         
@@ -110,14 +162,27 @@
         @media (max-width: 992px) {
             nav.nav-desktop { display: none; }
             .burger-menu { display: block; }
-            .hero-banner-bg { min-height: auto; flex-direction: column; padding: 2.5rem 1.5rem; align-items: flex-start; margin-bottom: 4rem; }
-            .hero-left-content { max-width: 100%; margin-bottom: 2rem; }
-            .hero-left-content h1 { font-size: 2rem; }
-            .featured-floating-card { position: relative; right: auto; top: auto; bottom: -5rem; width: 100%; }
-            .filter-section { margin-top: 6rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .journal-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        @media (max-width: 600px) {
+
+        @media (max-width: 768px) {
+            .hero-section { max-width: 100%; margin: 0; padding: 0; }
+            .hero-banner-bg { border-radius: 0; min-height: 100vh; min-height: 100svh; flex-direction: column; padding: 6rem 1.5rem 2rem 1.5rem; align-items: flex-start; justify-content: flex-start; margin-bottom: 0; }
+            .hero-banner-bg::before { border-radius: 0; background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.7) 100%); }
+            .hero-left-content { max-width: 100%; margin-bottom: 2rem; padding-top: 2rem; }
+            .hero-left-content h1 { font-size: 2.2rem; }
+            .hero-left-content p { font-size: 0.95rem; }
+            .featured-floating-card { position: relative; right: auto; top: auto; bottom: auto; width: 100%; margin-top: auto; flex-shrink: 0; }
+            .hero-banner-bg { display: flex; flex-direction: column; }
+            .filter-section { margin-top: 2rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .filter-controls { flex-direction: column; width: 100%; }
+            .search-input { width: 100%; }
+            .journal-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .ticker-bar { padding: 0.5rem 1rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-banner-bg { min-height: 100vh; min-height: 100svh; padding: 5rem 1rem 1.5rem 1rem; }
+            .hero-left-content h1 { font-size: 1.8rem; }
             .journal-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -166,10 +231,15 @@
         </div>
     </header>
 
+    <!-- TICKER BAR avec NewsData.io -->
     <div class="ticker-bar">
         <div class="ticker-container">
-            <span class="ticker-badge" data-i18n="ticker-badge">Latest releases</span>
-            <span class="ticker-text" id="ticker-headline" data-i18n="loading-news">Chargement des dernières dépêches...</span>
+            <span class="ticker-badge" data-i18n="ticker-badge">Dernières minutes</span>
+            <div class="ticker-scroll-wrap">
+                <span class="ticker-text" id="ticker-headline">
+                    <span class="ticker-loading">Chargement des actualités travel...</span>
+                </span>
+            </div>
         </div>
     </div>
 
@@ -203,7 +273,7 @@
         </div>
     </div>
 
-    <!-- VUE RÉELLE (DYNAMIQUE) -->
+    <!-- VUE RÉELLE -->
     <div id="real-view" class="real-view">
         <div id="hero-container"></div>
         
@@ -220,7 +290,12 @@
         <main class="journal-grid" id="posts-grid-container"></main>
     </div>
 
+    <div id="footer-placeholder"></div>
+
     <script>
+        const NEWS_API_KEY = 'pub_1ea29e57ce7b48fb8cfecae994edc791';
+        const NEWS_API_URL = 'https://newsdata.io/api/1/latest';
+
         const translations = {
             fr: {
                 "nav-about": "À propos",
@@ -231,12 +306,13 @@
                 "nav-cta-mobile": "Nous contacter →",
                 "lang-label": "Langue",
                 "ticker-badge": "Dernières minutes",
-                "loading-news": "Chargement des derniers récits...",
+                "loading-news": "Chargement des actualités...",
                 "latest-news": "Toutes les actualités Luvia",
                 "search-placeholder": "Rechercher un article...",
                 "cat-all": "Toutes les catégories",
                 "hero-welcome": "Bienvenue sur le<br>Luvia Media Center",
-                "hero-desc": "Suivez en temps réel les annonces officielles, communiqués de presse, analyses de luxe et carnets de bord exclusifs."
+                "hero-desc": "Suivez en temps réel les annonces officielles, communiqués de presse, analyses de luxe et carnets de bord exclusifs.",
+                "ticker-no-news": "Aucune actualité travel disponible pour le moment."
             },
             en: {
                 "nav-about": "About",
@@ -246,13 +322,14 @@
                 "nav-cta": "Get in touch",
                 "nav-cta-mobile": "Get in touch →",
                 "lang-label": "Language",
-                "ticker-badge": "Latest releases",
-                "loading-news": "Loading current company announcements...",
+                "ticker-badge": "Breaking News",
+                "loading-news": "Loading latest news...",
                 "latest-news": "Latest News by Luvia",
                 "search-placeholder": "Search articles...",
                 "cat-all": "Categories",
                 "hero-welcome": "Welcome to the<br>Luvia Media Center",
-                "hero-desc": "Stay up to date on current company announcements, press releases, luxury insights, and reports."
+                "hero-desc": "Stay up to date on current company announcements, press releases, luxury insights, and reports.",
+                "ticker-no-news": "No travel news available at the moment."
             }
         };
 
@@ -291,12 +368,61 @@
             document.getElementById('mobileMenu').classList.toggle('open');
         }
 
+        // ============================================
+        // TICKER : Récupération des news via NewsData.io
+        // ============================================
+        async function fetchLatestNews() {
+            const tickerHeadline = document.getElementById('ticker-headline');
+            
+            try {
+                const response = await fetch(`${NEWS_API_URL}?apikey=${NEWS_API_KEY}&q=travel&language=fr,en&size=10`);
+                
+                if (!response.ok) {
+                    throw new Error('Erreur API NewsData');
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.results && data.results.length > 0) {
+                    // Construire le texte du ticker avec les titres
+                    const headlines = data.results
+                        .filter(article => article.title && article.title.length > 10)
+                        .map(article => article.title)
+                        .slice(0, 10);
+                    
+                    if (headlines.length > 0) {
+                        const tickerText = headlines.join(' <span class="ticker-separator">|</span> ');
+                        tickerHeadline.innerHTML = tickerText + ' <span class="ticker-separator">|</span> ' + tickerText;
+                    } else {
+                        tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
+                    }
+                } else {
+                    tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
+                }
+            } catch (error) {
+                console.error('Erreur ticker:', error);
+                tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
+            }
+        }
+
+        // Rafraîchir le ticker toutes les 5 minutes
+        function startTickerRefresh() {
+            fetchLatestNews();
+            setInterval(fetchLatestNews, 5 * 60 * 1000); // 5 minutes
+        }
+
+        // ============================================
+        // SUPABASE
+        // ============================================
         const SUPABASE_URL = 'https://ukbekfcjfcjcqrpxfpmq.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function initMediaCenter() {
             applyTranslations();
+            
+            // Lancer le ticker
+            startTickerRefresh();
 
             const { data: posts, error } = await supabaseClient
                 .from('posts')
@@ -313,7 +439,6 @@
 
             window.allPostsData = posts;
             
-            // Populer le filtre des catégories dynamiquement
             const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
             const selectFilter = document.getElementById('categoryFilter');
             categories.forEach(cat => {
@@ -329,13 +454,8 @@
         function renderDynamicContent(posts) {
             if(!posts.length) return;
 
-            const tickerHeadline = document.getElementById('ticker-headline');
-            if (tickerHeadline) {
-                tickerHeadline.innerText = posts[0].title;
-            }
-
             let featuredPost = posts.find(p => p.is_featured === true) || posts[0];
-            window.featuredPostId = featuredPost.id; // Stocké pour le filtrage de la grille inférieure
+            window.featuredPostId = featuredPost.id;
 
             const heroContainer = document.getElementById('hero-container');
             if (heroContainer) {
@@ -365,7 +485,6 @@
         }
 
         function buildGrid(postsList) {
-            // Exclure l'article à la une de la liste inférieure
             let normalGridPosts = postsList.filter(p => p.id !== window.featuredPostId);
 
             const gridTitleCount = document.getElementById('grid-title-count');
@@ -412,13 +531,15 @@
         }
 
         window.onload = initMediaCenter;
-// Script pour charger le footer dynamiquement
-    fetch('footer.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('footer-placeholder').innerHTML = data;
-        });
+
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(() => {
+                document.getElementById('footer-placeholder').innerHTML = '<footer style="text-align:center;padding:2rem;color:#999;">© 2024 Luvia Press</footer>';
+            });
     </script>
-<div id="footer-placeholder"></div>
 </body>
 </html>
