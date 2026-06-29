@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /editeur.html
+Disallow: /generer-articles.html
+
+Sitemap: https://press.luviaplace.com/sitemap.xml
