@@ -315,16 +315,13 @@
         .article-body a:hover { border-bottom-color: var(--accent); }
         .article-body strong { font-weight: 700; color: #111111; }
 
-        /* Styles tableaux */
         .article-body table {
             width: 100%;
             border-collapse: collapse;
             margin: 2rem 0;
             font-size: 0.95rem;
         }
-        .article-body thead {
-            background: #f8f9fa;
-        }
+        .article-body thead { background: #f8f9fa; }
         .article-body th {
             padding: 0.8rem 1rem;
             text-align: left;
@@ -340,12 +337,8 @@
             border-bottom: 1px solid #f0f0f0;
             color: #333;
         }
-        .article-body tr:hover td {
-            background: #fafbff;
-        }
-        .article-body tbody tr:last-child td {
-            border-bottom: 2px solid #e5e5e5;
-        }
+        .article-body tr:hover td { background: #fafbff; }
+        .article-body tbody tr:last-child td { border-bottom: 2px solid #e5e5e5; }
 
         .toast {
             position: fixed;
@@ -392,20 +385,13 @@
             .article-actions { margin-bottom: 2.5rem; padding-bottom: 1.5rem; flex-wrap: wrap; }
             .article-body { font-size: 1.05rem; }
             .article-meta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-            
-            footer {
-                margin-top: 3rem;
-                padding: 1.5rem 1rem;
-                font-size: 0.8rem;
-            }
+            footer { margin-top: 3rem; padding: 1.5rem 1rem; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD4WP29Q"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     
     <a href="#main-content" class="skip-link" data-i18n="skip-link">Aller au contenu principal</a>
 
@@ -430,7 +416,7 @@
                 <a href="https://luviaplace.com" class="cta-main-site" target="_blank" rel="noopener noreferrer" data-i18n="nav-cta">Get in touch</a>
             </nav>
 
-            <button class="burger-menu" id="burgerToggle" aria-label="Menu" aria-expanded="false" onclick="toggleMenu()">
+            <button class="burger-menu" id="burgerToggle" aria-label="Menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
             
@@ -442,10 +428,10 @@
                         <option value="en">EN</option>
                     </select>
                 </div>
-                <a href="https://about.luviaplace.com" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" data-i18n="nav-about">About</a>
-                <a href="https://insurance.luviaplace.com" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" data-i18n="nav-insurance">Insurance</a>
-                <a href="https://tiqets.luviaplace.com" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" data-i18n="nav-tiqets">Luvia+Tiqets</a>
-                <a href="https://activites.luviaplace.com" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" data-i18n="nav-gyg">Luvia+GYG</a>
+                <a href="https://about.luviaplace.com" target="_blank" rel="noopener noreferrer" data-i18n="nav-about">About</a>
+                <a href="https://insurance.luviaplace.com" target="_blank" rel="noopener noreferrer" data-i18n="nav-insurance">Insurance</a>
+                <a href="https://tiqets.luviaplace.com" target="_blank" rel="noopener noreferrer" data-i18n="nav-tiqets">Luvia+Tiqets</a>
+                <a href="https://activites.luviaplace.com" target="_blank" rel="noopener noreferrer" data-i18n="nav-gyg">Luvia+GYG</a>
                 <a href="https://luviaplace.com" target="_blank" rel="noopener noreferrer" class="cta-mobile-site" data-i18n="nav-cta-mobile">Get in touch</a>
             </nav>
         </div>
@@ -864,6 +850,20 @@
                     });
             }
 
+            // Écouteur burger menu
+            document.getElementById('burgerToggle')?.addEventListener('click', toggleMenu);
+
+            // Écouteurs liens menu mobile (fermer le menu au clic)
+            document.querySelectorAll('.nav-mobile a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    const menu = document.getElementById('mobileMenu');
+                    if (menu && menu.classList.contains('open')) {
+                        toggleMenu();
+                    }
+                });
+            });
+
+            // Sélecteurs de langue
             document.getElementById('langSelect')?.addEventListener('change', function(e) {
                 changeLanguage(e.target.value);
             });
@@ -873,6 +873,7 @@
                 changeLanguage(e.target.value);
             });
             
+            // Fermeture menu avec Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     const menu = document.getElementById('mobileMenu');
@@ -882,6 +883,7 @@
                 }
             });
 
+            // Fermeture menu avec clic extérieur
             document.addEventListener('click', function(e) {
                 const menu = document.getElementById('mobileMenu');
                 const burger = document.getElementById('burgerToggle');
@@ -892,6 +894,7 @@
                 }
             });
 
+            // Démarrage
             window.addEventListener('DOMContentLoaded', function() {
                 fetchPost();
                 loadFooter();
