@@ -2,93 +2,240 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Luvia Journal — Éditeur WYSIWYG</title>
+    <title>Luvia Journal - Editeur</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- TinyMCE au lieu de SimpleMDE -->
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fafafa; padding: 3rem 1rem; color: #111; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 2.5rem; border: 1px solid #e5e5e5; border-radius: 12px; }
-        h1 { font-size: 1.8rem; margin-bottom: 2rem; letter-spacing: -1px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #fafafa; 
+            padding: 3rem 1rem; 
+            color: #111; 
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 2.5rem; 
+            border: 1px solid #e5e5e5; 
+            border-radius: 12px; 
+        }
+        h1 { 
+            font-size: 1.8rem; 
+            margin-bottom: 0.5rem; 
+            letter-spacing: -1px; 
+        }
+        .subtitle {
+            color: #757575;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
         
-        .edit-section { background: #f0f4ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #cce0ff; }
-        .edit-section h2 { font-size: 1.1rem; margin-bottom: 1rem; margin-top: 0; }
+        .edit-section { 
+            background: #f0f4ff; 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            margin-bottom: 2rem; 
+            border: 1px solid #cce0ff; 
+        }
+        .edit-section h2 { 
+            font-size: 1.1rem; 
+            margin-bottom: 1rem; 
+            margin-top: 0; 
+        }
         
         .form-group { margin-bottom: 1.5rem; }
         .form-row { display: flex; gap: 1.5rem; }
         .form-row .form-group { flex: 1; }
-        label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; }
-        input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 6px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
+        label { 
+            display: block; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            margin-bottom: 0.5rem; 
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border: 1px solid #e5e5e5; 
+            border-radius: 6px; 
+            font-family: inherit; 
+            font-size: 0.95rem; 
+            box-sizing: border-box; 
+        }
         input:focus { outline: none; border-color: #000; }
         
-        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; }
-        .checkbox-group input { width: auto; cursor: pointer; }
-        
-        button { background: #000; color: #fff; border: none; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 6px; cursor: pointer; font-family: inherit; margin-top: 1.5rem; transition: opacity 0.2s; }
+        button { 
+            background: #000; 
+            color: #fff; 
+            border: none; 
+            padding: 0.75rem 1.5rem; 
+            font-weight: 600; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-family: inherit; 
+            transition: opacity 0.2s; 
+        }
         button:hover { opacity: 0.85; }
         button:disabled { background: #ccc; cursor: not-allowed; }
         
-        .btn-secondary { background: #e5e5e5; color: #111; margin-top: 0; }
+        .btn-secondary { background: #e5e5e5; color: #111; }
         .btn-update { background: #0046e4; display: none; }
+        .btn-cancel { background: #fff; color: #111; border: 1px solid #e5e5e5; display: none; }
         
-        .actions { display: flex; gap: 1rem; }
-        .tox-tinymce { border-radius: 6px; }
+        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
         
-        .tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e5e5e5; }
-        .tab { padding: 0.8rem 1.5rem; cursor: pointer; border: none; background: none; font-weight: 600; color: #757575; font-family: inherit; }
-        .tab.active { color: #0046e4; border-bottom: 2px solid #0046e4; margin-bottom: -2px; }
+        /* Onglets langue */
+        .lang-tabs { 
+            display: flex; 
+            gap: 0; 
+            margin-bottom: 2rem; 
+            border: 1px solid #e5e5e5; 
+            border-radius: 8px; 
+            overflow: hidden;
+        }
+        .lang-tab { 
+            flex: 1; 
+            padding: 0.8rem; 
+            text-align: center; 
+            cursor: pointer; 
+            border: none; 
+            background: white; 
+            font-weight: 600; 
+            font-family: inherit; 
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .lang-tab:not(:last-child) {
+            border-right: 1px solid #e5e5e5;
+        }
+        .lang-tab.active { 
+            background: #0046e4; 
+            color: white; 
+        }
+        
+        /* Info aide Markdown */
+        .markdown-help {
+            background: #f9f9f9;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #757575;
+            margin-top: 0.5rem;
+            border-left: 3px solid #0046e4;
+        }
+        .markdown-help code {
+            background: #e5e5e5;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+
+        .editor-wrapper {
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .checkbox-group { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            margin: 1.5rem 0; 
+        }
+        .checkbox-group input { width: auto; cursor: pointer; }
+        
+        small { color: #757575; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Luvia Journal — Éditeur WYSIWYG</h1>
+    <h1>Luvia Journal - Editeur</h1>
+    <p class="subtitle">Redigez en Markdown, publiez en deux langues</p>
     
+    <!-- Onglets langue -->
+    <div class="lang-tabs">
+        <button class="lang-tab active" onclick="switchTab('fr')">Francais</button>
+        <button class="lang-tab" onclick="switchTab('en')">English</button>
+    </div>
+
+    <!-- Mode chargement article existant -->
     <div class="edit-section">
-        <h2>Modifier un article existant (Optionnel)</h2>
+        <h2>Modifier un article existant</h2>
         <div class="form-row" style="align-items: flex-end;">
             <div class="form-group" style="margin-bottom: 0;">
-                <label>ID de l'article à modifier</label>
-                <input type="text" id="edit_id" placeholder="Ex: 5f1b2a...">
+                <label>ID de l'article</label>
+                <input type="text" id="edit_id" placeholder="Ex: 1, 4, 5, 6...">
             </div>
-            <button class="btn-secondary" id="btnLoad" onclick="loadArticle()">Charger l'article</button>
+            <button class="btn-secondary" id="btnLoad" onclick="loadArticle()">Charger</button>
         </div>
-        <small style="display:block; margin-top:0.5rem; color:#666;">Laissez vide si vous créez un nouvel article.</small>
+        <small style="display:block; margin-top:0.5rem;">Laissez vide pour creer un nouvel article.</small>
     </div>
 
-    <!-- Onglets pour les langues -->
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab('fr')">🇫🇷 Français</button>
-        <button class="tab" onclick="switchTab('en')">🇬🇧 English</button>
-    </div>
-
+    <!-- Champs FR -->
     <div id="tab-fr">
         <div class="form-group">
-            <label>Titre de l'article (FR)</label>
-            <input type="text" id="title" placeholder="Ex: Échappée Premium en Namibie...">
+            <label>Titre (Francais)</label>
+            <input type="text" id="title" placeholder="Ex: Escapee Premium en Namibie...">
         </div>
         
         <div class="form-group">
-            <label>Catégorie (FR)</label>
-            <input type="text" id="category" placeholder="Ex: Expérience, Conseils, Top 10" value="Expérience">
+            <label>Categorie (Francais)</label>
+            <input type="text" id="category" placeholder="Ex: Experience, Conseils, News" value="Experience">
+        </div>
+
+        <div class="form-group">
+            <label>Contenu (Francais)</label>
+            <div class="editor-wrapper">
+                <textarea id="content"></textarea>
+            </div>
+            <div class="markdown-help">
+                <strong>Aide Markdown :</strong> 
+                <code>**gras**</code> 
+                <code>*italique*</code> 
+                <code># Titre</code> 
+                <code>## Sous-titre</code> 
+                <code>![alt](url_image)</code> 
+                <code>[lien](url)</code>
+                <code>---</code> pour une ligne de separation
+            </div>
         </div>
     </div>
 
+    <!-- Champs EN -->
     <div id="tab-en" style="display:none;">
         <div class="form-group">
-            <label>Article Title (EN)</label>
+            <label>Titre (English)</label>
             <input type="text" id="title_en" placeholder="Ex: Premium Escape in Namibia...">
         </div>
         
         <div class="form-group">
-            <label>Category (EN)</label>
-            <input type="text" id="category_en" placeholder="Ex: Experience, Tips, Top 10" value="Experience">
+            <label>Categorie (English)</label>
+            <input type="text" id="category_en" placeholder="Ex: Experience, Tips, News" value="Experience">
+        </div>
+
+        <div class="form-group">
+            <label>Contenu (English)</label>
+            <div class="editor-wrapper">
+                <textarea id="content_en"></textarea>
+            </div>
+            <div class="markdown-help">
+                <strong>Markdown Help :</strong> 
+                <code>**bold**</code> 
+                <code>*italic*</code> 
+                <code># Heading</code> 
+                <code>## Subheading</code> 
+                <code>![alt](image_url)</code> 
+                <code>[link](url)</code>
+                <code>---</code> for a divider
+            </div>
         </div>
     </div>
 
+    <!-- Champs communs -->
     <div class="form-group">
         <label>Extrait / Description courte</label>
         <input type="text" id="excerpt" placeholder="Une courte phrase d'accroche...">
@@ -105,28 +252,15 @@
         </div>
     </div>
 
-    <!-- Éditeur WYSIWYG pour le contenu -->
-    <div class="form-group">
-        <label>Contenu de l'article (Éditeur visuel - Insérez des images facilement)</label>
-        <div id="content-tabs">
-            <div id="editor-fr">
-                <textarea id="content"></textarea>
-            </div>
-            <div id="editor-en" style="display:none;">
-                <textarea id="content_en"></textarea>
-            </div>
-        </div>
-    </div>
-
     <div class="checkbox-group">
         <input type="checkbox" id="is_featured">
-        <label for="is_featured">Mettre cet article à la une dans le grand Hero principal</label>
+        <label for="is_featured">Mettre cet article a la une dans le Hero principal</label>
     </div>
 
     <div class="actions">
         <button id="btnPublish" onclick="publishArticle()">Publier le nouvel article</button>
-        <button id="btnUpdate" class="btn-update" onclick="updateArticle()">Mettre à jour l'article</button>
-        <button id="btnCancel" class="btn-secondary" style="display:none;" onclick="cancelEdit()">Annuler</button>
+        <button id="btnUpdate" class="btn-update" onclick="updateArticle()">Mettre a jour l'article</button>
+        <button id="btnCancel" class="btn-cancel" onclick="cancelEdit()">Annuler</button>
     </div>
 </div>
 
@@ -135,114 +269,50 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Initialisation de TinyMCE pour le français
-    tinymce.init({
-        selector: '#content',
-        height: 500,
-        menubar: false,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
-        ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | image media link | help',
-        content_style: 'body { font-family:Plus Jakarta Sans,sans-serif; font-size:16px; }',
-        // Configuration pour gérer les images
-        images_upload_handler: function (blobInfo, progress) {
-            return new Promise((resolve, reject) => {
-                // Option 1: Upload vers Supabase Storage
-                uploadImageToSupabase(blobInfo.blob())
-                    .then(url => resolve(url))
-                    .catch(error => {
-                        // Option 2: Fallback - Convertir en base64
-                        const reader = new FileReader();
-                        reader.readAsDataURL(blobInfo.blob());
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                    });
-            });
-        }
+    // Initialisation SimpleMDE pour le francais
+    const simplemdeFR = new SimpleMDE({ 
+        element: document.getElementById("content"),
+        spellChecker: false,
+        status: false,
+        placeholder: "Redigez votre article en Markdown...",
+        toolbar: [
+            "bold", "italic", "heading", "|",
+            "quote", "unordered-list", "ordered-list", "|",
+            "link", "image", "|",
+            "preview", "side-by-side", "fullscreen", "|",
+            "guide"
+        ]
     });
 
-    // Initialisation de TinyMCE pour l'anglais
-    tinymce.init({
-        selector: '#content_en',
-        height: 500,
-        menubar: false,
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
-        ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | image media link | help',
-        content_style: 'body { font-family:Plus Jakarta Sans,sans-serif; font-size:16px; }',
-        images_upload_handler: function (blobInfo, progress) {
-            return new Promise((resolve, reject) => {
-                uploadImageToSupabase(blobInfo.blob())
-                    .then(url => resolve(url))
-                    .catch(error => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(blobInfo.blob());
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                    });
-            });
-        }
+    // Initialisation SimpleMDE pour l'anglais
+    const simplemdeEN = new SimpleMDE({ 
+        element: document.getElementById("content_en"),
+        spellChecker: false,
+        status: false,
+        placeholder: "Write your article in Markdown...",
+        toolbar: [
+            "bold", "italic", "heading", "|",
+            "quote", "unordered-list", "ordered-list", "|",
+            "link", "image", "|",
+            "preview", "side-by-side", "fullscreen", "|",
+            "guide"
+        ]
     });
 
     let currentEditId = null;
     let currentTab = 'fr';
 
-    // Fonction pour uploader les images vers Supabase Storage
-    async function uploadImageToSupabase(blob) {
-        const fileName = `article-images/${Date.now()}-${Math.random().toString(36).substring(7)}.${blob.type.split('/')[1]}`;
-        
-        const { data, error } = await supabaseClient.storage
-            .from('articles') // Nom de votre bucket Supabase
-            .upload(fileName, blob, {
-                contentType: blob.type,
-                upsert: false
-            });
-
-        if (error) {
-            console.error('Erreur upload image:', error);
-            throw error;
-        }
-
-        // Récupérer l'URL publique
-        const { data: { publicUrl } } = supabaseClient.storage
-            .from('articles')
-            .getPublicUrl(fileName);
-
-        return publicUrl;
-    }
-
     // Changement d'onglet de langue
     function switchTab(lang) {
         currentTab = lang;
         
-        // Mise à jour des onglets
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        // Mise a jour des onglets
+        document.querySelectorAll('.lang-tab').forEach(tab => tab.classList.remove('active'));
         event.target.classList.add('active');
         
         // Afficher/masquer les champs
         document.getElementById('tab-fr').style.display = lang === 'fr' ? 'block' : 'none';
         document.getElementById('tab-en').style.display = lang === 'en' ? 'block' : 'none';
-        document.getElementById('editor-fr').style.display = lang === 'fr' ? 'block' : 'none';
-        document.getElementById('editor-en').style.display = lang === 'en' ? 'block' : 'none';
-        
-        // Rafraîchir TinyMCE
-        if (lang === 'fr') {
-            tinymce.get('content').focus();
-        } else {
-            tinymce.get('content_en').focus();
-        }
     }
 
     // Charger un article existant
@@ -265,10 +335,10 @@
             .single();
 
         btnLoad.disabled = false;
-        btnLoad.innerText = "Charger l'article";
+        btnLoad.innerText = "Charger";
 
         if (error || !data) {
-            alert('Article introuvable.');
+            alert('Article introuvable. Verifiez l\'ID.');
             return;
         }
 
@@ -282,9 +352,9 @@
         document.getElementById('category_en').value = data.category_en || '';
         document.getElementById('is_featured').checked = data.is_featured || false;
         
-        // Remplir le contenu dans TinyMCE
-        tinymce.get('content').setContent(data.content || '');
-        tinymce.get('content_en').setContent(data.content_en || '');
+        // Remplir le contenu Markdown
+        simplemdeFR.value(data.content || '');
+        simplemdeEN.value(data.content_en || '');
 
         currentEditId = data.id;
         document.getElementById('btnPublish').style.display = 'none';
@@ -300,12 +370,12 @@
         document.getElementById('excerpt').value = '';
         document.getElementById('image_url').value = '';
         document.getElementById('reading_time').value = '';
-        document.getElementById('category').value = 'Expérience';
+        document.getElementById('category').value = 'Experience';
         document.getElementById('category_en').value = 'Experience';
         document.getElementById('is_featured').checked = false;
         
-        tinymce.get('content').setContent('');
-        tinymce.get('content_en').setContent('');
+        simplemdeFR.value('');
+        simplemdeEN.value('');
 
         document.getElementById('btnPublish').style.display = 'block';
         document.getElementById('btnUpdate').style.display = 'none';
@@ -322,14 +392,17 @@
             category: document.getElementById('category').value,
             category_en: document.getElementById('category_en').value,
             is_featured: document.getElementById('is_featured').checked,
-            content: tinymce.get('content').getContent(), // HTML du contenu FR
-            content_en: tinymce.get('content_en').getContent() // HTML du contenu EN
+            content: simplemdeFR.value(), // Markdown FR
+            content_en: simplemdeEN.value() // Markdown EN
         };
     }
 
     async function handleFeaturedStatus(is_featured) {
         if (is_featured) {
-            await supabaseClient.from('posts').update({ is_featured: false }).eq('is_featured', true);
+            await supabaseClient
+                .from('posts')
+                .update({ is_featured: false })
+                .eq('is_featured', true);
         }
     }
 
@@ -337,13 +410,13 @@
         const data = getFormData();
         const btn = document.getElementById('btnPublish');
 
-        if(!data.title || !data.content) {
-            alert('Le titre et le contenu sont obligatoires.');
+        if (!data.title || !data.content) {
+            alert('Le titre et le contenu (FR) sont obligatoires.');
             return;
         }
 
         btn.disabled = true;
-        btn.innerText = "Publication...";
+        btn.innerText = "Publication en cours...";
 
         await handleFeaturedStatus(data.is_featured);
 
@@ -357,7 +430,7 @@
             btn.disabled = false;
             btn.innerText = "Publier le nouvel article";
         } else {
-            alert('Article publié !');
+            alert('Article publie avec succes !');
             window.location.reload();
         }
     }
@@ -368,13 +441,13 @@
         const data = getFormData();
         const btn = document.getElementById('btnUpdate');
 
-        if(!data.title || !data.content) {
-            alert('Le titre et le contenu sont obligatoires.');
+        if (!data.title || !data.content) {
+            alert('Le titre et le contenu (FR) sont obligatoires.');
             return;
         }
 
         btn.disabled = true;
-        btn.innerText = "Mise à jour...";
+        btn.innerText = "Mise a jour en cours...";
 
         await handleFeaturedStatus(data.is_featured);
 
@@ -387,9 +460,9 @@
             console.error(error);
             alert('Erreur : ' + error.message);
             btn.disabled = false;
-            btn.innerText = "Mettre à jour l'article";
+            btn.innerText = "Mettre a jour l'article";
         } else {
-            alert('Article mis à jour !');
+            alert('Article mis a jour avec succes !');
             window.location.reload();
         }
     }
