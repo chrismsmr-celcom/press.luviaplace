@@ -1,0 +1,33 @@
+name: Generate Article Pages
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Toutes les 6 heures
+  workflow_dispatch:  # Pour lancer manuellement
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: pip install requests
+      
+      - name: Generate article pages
+        run: python generate_articles.py
+        env:
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      
+      - name: Commit and push
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git add articles/
+          git commit -m "Auto-generate article pages" || echo "No changes"
+          git push
