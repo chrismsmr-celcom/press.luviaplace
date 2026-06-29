@@ -2,11 +2,11 @@ name: Generate Article Pages
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Toutes les 6 heures
-  workflow_dispatch:         # Bouton manuel dans GitHub
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
   push:
     branches:
-      - main                 # Quand tu push sur main
+      - main
 
 jobs:
   generate:
@@ -24,11 +24,11 @@ jobs:
           node-version: '20'
       
       - name: Generate article pages
-        run: node generate-articles.js
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           SITE_URL: 'https://press.luviaplace.com'
+        run: node generate-articles.js
       
       - name: Commit and push if changed
         run: |
