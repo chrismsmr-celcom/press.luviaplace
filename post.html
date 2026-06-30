@@ -57,6 +57,9 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     
+    <!-- Luvia Widget -->
+    <script src="/luvia-widget.js"></script>
+    
     <!-- Tiqets Widget -->
     <script defer src="https://widgets.tiqets.com/loader.js"></script>
     
@@ -284,22 +287,16 @@
             <button class="error-retry" id="error-retry" onclick="location.reload()" data-i18n="error-retry">Reessayer</button>
         </div>
         <div id="skeleton-view" class="article-container" aria-hidden="true">
-            <div class="article-meta">
-                <div class="skeleton" style="width: 80px; height: 24px;"></div>
-                <div class="skeleton" style="width: 120px; height: 18px;"></div>
-            </div>
-            <div class="skeleton" style="width: 100%; height: 48px; margin-bottom: 10px;"></div>
-            <div class="skeleton" style="width: 65%; height: 48px; margin-bottom: 2rem;"></div>
-            <div class="skeleton" style="width: 100%; height: 70vh; margin-bottom: 2rem; min-height: 400px;"></div>
-            <div class="skeleton" style="width: 100%; height: 20px; margin-bottom: 1.2rem;"></div>
-            <div class="skeleton" style="width: 95%; height: 20px; margin-bottom: 1.2rem;"></div>
-            <div class="skeleton" style="width: 40%; height: 20px;"></div>
+            <div class="article-meta"><div class="skeleton" style="width:80px;height:24px"></div><div class="skeleton" style="width:120px;height:18px"></div></div>
+            <div class="skeleton" style="width:100%;height:48px;margin-bottom:10px"></div>
+            <div class="skeleton" style="width:65%;height:48px;margin-bottom:2rem"></div>
+            <div class="skeleton" style="width:100%;height:70vh;margin-bottom:2rem;min-height:400px"></div>
+            <div class="skeleton" style="width:100%;height:20px;margin-bottom:1.2rem"></div>
+            <div class="skeleton" style="width:95%;height:20px;margin-bottom:1.2rem"></div>
+            <div class="skeleton" style="width:40%;height:20px"></div>
         </div>
-        <article class="article-container" id="article-view" style="display:none;" aria-labelledby="article-title">
-            <div class="article-meta">
-                <span class="tag-badge" id="article-cat">Category</span>
-                <span class="article-date" id="article-date">Date</span>
-            </div>
+        <article class="article-container" id="article-view" style="display:none" aria-labelledby="article-title">
+            <div class="article-meta"><span class="tag-badge" id="article-cat">Category</span><span class="article-date" id="article-date">Date</span></div>
             <h1 class="article-title" id="article-title"></h1>
             <div class="article-img-wrapper"><img class="article-main-img" id="article-img" src="" alt=""></div>
             <div class="article-actions">
@@ -315,19 +312,23 @@
             <div class="article-body" id="article-body"></div>
         </article>
         
-        <!-- Widget Slider (inséré dynamiquement au milieu du contenu) -->
-        <div id="widget-slider-container" style="display:none;">
+        <!-- Widget Slider 3 slides : Luvia, Tiqets, GYG -->
+        <div id="widget-slider-container" style="display:none">
             <div class="widget-slider">
                 <p class="widget-slider-title" data-i18n="widget-title">Découvrez aussi</p>
                 <div class="widget-nav">
                     <span class="widget-dot active" onclick="switchWidget(0)"></span>
                     <span class="widget-dot" onclick="switchWidget(1)"></span>
+                    <span class="widget-dot" onclick="switchWidget(2)"></span>
                 </div>
                 <div class="widget-slide active" id="widget-slide-0">
-                    <div data-tiqets-widget="discovery" data-cards-layout="responsive" data-content-type="exhibition" data-item_count="4" data-destination-type="venue" data-destination-id="124297" data-slug-ids="" data-partner="luvia_travel_llc-187826" data-tq-campaign="Louvre experience"></div>
+                    <div data-luvia-widget></div>
                 </div>
                 <div class="widget-slide" id="widget-slide-1">
-                    <div data-gyg-widget="auto" data-gyg-partner-id="TNCQUZX" data-gyg-cmp="Namibie : voyage de 3 jours tout compris à Sossusvlei"></div>
+                    <div id="tiqets-widget-container"></div>
+                </div>
+                <div class="widget-slide" id="widget-slide-2">
+                    <div id="gyg-widget-container"></div>
                 </div>
             </div>
         </div>
@@ -357,33 +358,28 @@
             function changeLanguage(lang){ if(lang===state.currentLang)return; state.currentLang=lang; localStorage.setItem(CONFIG.STORAGE_PREFIX+'lang',lang); applyTranslations(lang); if(state.cachedPostData) renderPost(state.cachedPostData); }
             function toggleMenu(){ const b=document.getElementById('burgerToggle'),m=document.getElementById('mobileMenu'); if(!m||!b)return; const o=m.classList.contains('open'); if(o){ m.classList.remove('open');b.classList.remove('open');b.setAttribute('aria-expanded','false');document.body.style.overflow=''; }else{ m.classList.add('open');b.classList.add('open');b.setAttribute('aria-expanded','true');document.body.style.overflow='hidden'; } }
 
-            async function fetchPost(retry=0){ if(state.isLoading)return; state.isLoading=true; applyTranslations(state.currentLang); const p=new URLSearchParams(window.location.search),id=p.get('id'); if(!id||!/^[a-zA-Z0-9-]+$/.test(id)){ showError('error-invalid-id');state.isLoading=false;return; } state.currentPostId=id; try{ const {data:post,error}=await supabaseClient.from('posts').select('*').eq('id',state.currentPostId).single(); if(error)throw error; if(!post)throw new Error('Article non trouve'); state.cachedPostData=post; renderPost(post); setupActionButtons(); }catch(e){ console.error('Erreur:',e); if(retry<2){ setTimeout(()=>fetchPost(retry+1),1000*(retry+1)); state.isLoading=false;return; } showError('error-network'); }finally{ state.isLoading=false; } }
+            async function loadDynamicWidgets() {
+                const { data } = await supabaseClient.from('widgets_config').select('*');
+                if (!data) return;
+                data.forEach(w => {
+                    if (w.type === 'tiqets' && w.active && w.html_code) {
+                        document.getElementById('tiqets-widget-container').innerHTML = w.html_code;
+                    }
+                    if (w.type === 'gyg' && w.active && w.html_code) {
+                        document.getElementById('gyg-widget-container').innerHTML = w.html_code;
+                    }
+                });
+            }
+
+            async function fetchPost(retry=0){ if(state.isLoading)return; state.isLoading=true; applyTranslations(state.currentLang); const p=new URLSearchParams(window.location.search),id=p.get('id'); if(!id||!/^[a-zA-Z0-9-]+$/.test(id)){ showError('error-invalid-id');state.isLoading=false;return; } state.currentPostId=id; try{ const {data:post,error}=await supabaseClient.from('posts').select('*').eq('id',state.currentPostId).single(); if(error)throw error; if(!post)throw new Error('Article non trouve'); state.cachedPostData=post; renderPost(post); setupActionButtons(); loadDynamicWidgets(); }catch(e){ console.error('Erreur:',e); if(retry<2){ setTimeout(()=>fetchPost(retry+1),1000*(retry+1)); state.isLoading=false;return; } showError('error-network'); }finally{ state.isLoading=false; } }
 
             function renderPost(post){ try{ const isEN=state.currentLang==='en'; const title=isEN&&post.title_en?post.title_en:post.title; const cat=isEN&&post.category_en?post.category_en:(post.category||'News'); const content=isEN&&post.content_en?post.content_en:post.content; document.title=title+' - Travel Press'; document.getElementById('article-title').textContent=title; document.getElementById('article-cat').textContent=cat; const img=document.getElementById('article-img'); img.src=post.image_url||'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'; img.alt=title; document.getElementById('article-date').textContent=new Date(post.created_at).toLocaleDateString(isEN?'en-US':'fr-FR',{month:'long',day:'numeric',year:'numeric'});
-            
             const metaDesc=document.querySelector('meta[name="description"]'); if(metaDesc) metaDesc.setAttribute('content',(post.excerpt||title).substring(0,160));
             const canonical=document.querySelector('link[rel="canonical"]'); if(canonical) canonical.href=SITE_URL+'/post.html?id='+post.id;
             const sd=document.getElementById('structured-data'); if(sd){ sd.textContent=JSON.stringify({"@context":"https://schema.org","@type":"NewsArticle","headline":title,"image":post.image_url,"datePublished":post.created_at,"dateModified":post.created_at,"author":{"@type":"Organization","name":"Travel Press"},"publisher":{"@type":"Organization","name":"Travel Press","logo":{"@type":"ImageObject","url":"https://press.luviaplace.com/logo.png"}}}); }
-            
             const raw=marked.parse(content||''); const clean=DOMPurify.sanitize(raw,{ALLOWED_TAGS:['p','br','strong','em','u','h1','h2','h3','h4','h5','h6','ul','ol','li','a','img','blockquote','code','pre','span','div','table','thead','tbody','tr','td','th'],ALLOWED_ATTR:['href','src','alt','class','target','rel','width','height']}); document.getElementById('article-body').innerHTML=clean; document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='block'; document.getElementById('error-container').style.display='none';
-            
-            // Insérer le widget slider au milieu du contenu (après le 4ème paragraphe)
-            const articleBody = document.getElementById('article-body');
-            const widgetSlider = document.getElementById('widget-slider-container');
-            if (articleBody && widgetSlider) {
-                const paragraphs = articleBody.querySelectorAll('p');
-                if (paragraphs.length >= 4) {
-                    const target = paragraphs[3];
-                    target.parentNode.insertBefore(widgetSlider, target.nextSibling);
-                } else if (paragraphs.length >= 2) {
-                    const target = paragraphs[Math.floor(paragraphs.length / 2)];
-                    target.parentNode.insertBefore(widgetSlider, target.nextSibling);
-                } else {
-                    articleBody.appendChild(widgetSlider);
-                }
-                widgetSlider.style.display = 'block';
-            }
-            
+            const articleBody=document.getElementById('article-body'); const widgetSlider=document.getElementById('widget-slider-container');
+            if(articleBody&&widgetSlider){ const paragraphs=articleBody.querySelectorAll('p'); if(paragraphs.length>=4){ paragraphs[3].parentNode.insertBefore(widgetSlider,paragraphs[3].nextSibling); }else if(paragraphs.length>=2){ const mid=paragraphs[Math.floor(paragraphs.length/2)]; mid.parentNode.insertBefore(widgetSlider,mid.nextSibling); }else{ articleBody.appendChild(widgetSlider); } widgetSlider.style.display='block'; }
             updateSaveButtonUI(); }catch(e){ console.error('Erreur de rendu:',e); showError('error-not-found'); } }
             function showError(t='error-not-found'){ document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='none'; document.getElementById('error-container').style.display='block'; const m=document.getElementById('error-message'); if(m&&translations[state.currentLang]?.[t]) m.textContent=translations[state.currentLang][t]; }
             function setupActionButtons(){ document.getElementById('btn-share')?.addEventListener('click',handleShare); document.getElementById('btn-save')?.addEventListener('click',toggleSavePost); updateSaveButtonUI(); }
@@ -392,22 +388,9 @@
             function toggleSavePost(){ if(!state.currentPostId)return; let s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); const i=s.indexOf(state.currentPostId); if(i>-1){s.splice(i,1);showToast(translations[state.currentLang]['toast-removed']);}else{s.push(state.currentPostId);showToast(translations[state.currentLang]['toast-saved']);} localStorage.setItem(CONFIG.STORAGE_PREFIX+'saved-posts',JSON.stringify(s));updateSaveButtonUI(); }
             function updateSaveButtonUI(){ if(!state.currentPostId)return; const b=document.getElementById('btn-save'),t=document.getElementById('text-save'); if(!b||!t)return; const s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); if(s.includes(state.currentPostId)){b.classList.add('saved');t.textContent=translations[state.currentLang]['btn-saved'];b.setAttribute('aria-pressed','true');}else{b.classList.remove('saved');t.textContent=translations[state.currentLang]['btn-save'];b.setAttribute('aria-pressed','false');} }
 
-            // Widget Slider
-            let currentWidget = 0;
-            window.switchWidget = function(index) {
-                document.querySelectorAll('.widget-slide').forEach(s => s.classList.remove('active'));
-                document.querySelectorAll('.widget-dot').forEach(d => d.classList.remove('active'));
-                document.getElementById('widget-slide-' + index).classList.add('active');
-                document.querySelectorAll('.widget-dot')[index].classList.add('active');
-                currentWidget = index;
-            };
-            
-            setInterval(function() {
-                if (document.getElementById('widget-slider-container') && document.getElementById('widget-slider-container').style.display !== 'none') {
-                    var next = currentWidget === 0 ? 1 : 0;
-                    switchWidget(next);
-                }
-            }, 8000);
+            let currentWidget=0;
+            window.switchWidget=function(index){ document.querySelectorAll('.widget-slide').forEach(s=>s.classList.remove('active')); document.querySelectorAll('.widget-dot').forEach(d=>d.classList.remove('active')); document.getElementById('widget-slide-'+index).classList.add('active'); document.querySelectorAll('.widget-dot')[index].classList.add('active'); currentWidget=index; };
+            setInterval(function(){ const c=document.getElementById('widget-slider-container'); if(c&&c.style.display!=='none'){ const next=currentWidget===2?0:currentWidget+1; switchWidget(next); } },8000);
 
             document.getElementById('burgerToggle')?.addEventListener('click',toggleMenu);
             document.querySelectorAll('.nav-mobile a').forEach(l=>l.addEventListener('click',()=>{ if(document.getElementById('mobileMenu')?.classList.contains('open'))toggleMenu(); }));
