@@ -2,262 +2,190 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Luvia Journal - Editeur</title>
+    <title>Travel Press - Editeur</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: #fafafa; 
-            padding: 3rem 1rem; 
-            color: #111; 
-        }
-        .container { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            background: white; 
-            padding: 2.5rem; 
-            border: 1px solid #e5e5e5; 
-            border-radius: 12px; 
-        }
-        h1 { 
-            font-size: 1.8rem; 
-            margin-bottom: 0.5rem; 
-            letter-spacing: -1px; 
-        }
-        .subtitle {
-            color: #757575;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fafafa; padding: 3rem 1rem; color: #111; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 2.5rem; border: 1px solid #e5e5e5; border-radius: 12px; }
+        h1 { font-size: 1.8rem; margin-bottom: 0.5rem; letter-spacing: -1px; }
+        .subtitle { color: #757575; font-size: 0.9rem; margin-bottom: 2rem; }
         
-        .edit-section { 
-            background: #f0f4ff; 
-            padding: 1.5rem; 
-            border-radius: 8px; 
-            margin-bottom: 2rem; 
-            border: 1px solid #cce0ff; 
-        }
-        .edit-section h2 { 
-            font-size: 1.1rem; 
-            margin-bottom: 1rem; 
-            margin-top: 0; 
-        }
+        .edit-section { background: #f0f4ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #cce0ff; }
+        .edit-section h2 { font-size: 1.1rem; margin-bottom: 1rem; margin-top: 0; }
         
         .form-group { margin-bottom: 1.5rem; }
         .form-row { display: flex; gap: 1.5rem; }
         .form-row .form-group { flex: 1; }
-        label { 
-            display: block; 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            margin-bottom: 0.5rem; 
-        }
-        input, textarea { 
-            width: 100%; 
-            padding: 0.75rem; 
-            border: 1px solid #e5e5e5; 
-            border-radius: 6px; 
-            font-family: inherit; 
-            font-size: 0.95rem; 
-            box-sizing: border-box; 
-        }
-        input:focus { outline: none; border-color: #000; }
+        label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; }
+        input, textarea, select { width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 6px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #000; }
         
-        button { 
-            background: #000; 
-            color: #fff; 
-            border: none; 
-            padding: 0.75rem 1.5rem; 
-            font-weight: 600; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-family: inherit; 
-            transition: opacity 0.2s; 
-        }
+        button { background: #000; color: #fff; border: none; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 6px; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
         button:hover { opacity: 0.85; }
         button:disabled { background: #ccc; cursor: not-allowed; }
-        
         .btn-secondary { background: #e5e5e5; color: #111; }
         .btn-update { background: #0046e4; display: none; }
         .btn-cancel { background: #fff; color: #111; border: 1px solid #e5e5e5; display: none; }
+        .btn-success { background: #00a86b; }
+        .btn-danger { background: #e74c3c; }
+        .btn-outline { background: #fff; color: #0046e4; border: 1px solid #0046e4; }
         
         .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
         
-        .lang-tabs { 
-            display: flex; 
-            gap: 0; 
-            margin-bottom: 2rem; 
-            border: 1px solid #e5e5e5; 
-            border-radius: 8px; 
-            overflow: hidden;
-        }
-        .lang-tab { 
-            flex: 1; 
-            padding: 0.8rem; 
-            text-align: center; 
-            cursor: pointer; 
-            border: none; 
-            background: white; 
-            font-weight: 600; 
-            font-family: inherit; 
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        .lang-tab:not(:last-child) {
-            border-right: 1px solid #e5e5e5;
-        }
-        .lang-tab.active { 
-            background: #0046e4; 
-            color: white; 
-        }
+        .main-tabs { display: flex; gap: 0; margin-bottom: 2rem; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+        .main-tab { flex: 1; padding: 0.8rem; text-align: center; cursor: pointer; border: none; background: white; font-weight: 600; font-family: inherit; transition: all 0.2s; font-size: 0.9rem; }
+        .main-tab:not(:last-child) { border-right: 1px solid #e5e5e5; }
+        .main-tab.active { background: #0046e4; color: white; }
         
-        .markdown-help {
-            background: #f9f9f9;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #757575;
-            margin-top: 0.5rem;
-            border-left: 3px solid #0046e4;
-        }
-        .markdown-help code {
-            background: #e5e5e5;
-            padding: 0.15rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.85em;
-        }
-
-        .editor-wrapper {
-            border: 1px solid #e5e5e5;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .CodeMirror-lines {
-            line-height: 1.8 !important;
-        }
-
-        .checkbox-group { 
-            display: flex; 
-            align-items: center; 
-            gap: 0.5rem; 
-            margin: 1.5rem 0; 
-        }
+        .lang-tabs { display: flex; gap: 0; margin-bottom: 2rem; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+        .lang-tab { flex: 1; padding: 0.8rem; text-align: center; cursor: pointer; border: none; background: white; font-weight: 600; font-family: inherit; transition: all 0.2s; font-size: 0.9rem; }
+        .lang-tab:not(:last-child) { border-right: 1px solid #e5e5e5; }
+        .lang-tab.active { background: #0046e4; color: white; }
+        
+        .markdown-help { background: #f9f9f9; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.8rem; color: #757575; margin-top: 0.5rem; border-left: 3px solid #0046e4; }
+        .markdown-help code { background: #e5e5e5; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.85em; }
+        .editor-wrapper { border: 1px solid #e5e5e5; border-radius: 6px; overflow: hidden; }
+        .CodeMirror-lines { line-height: 1.8 !important; }
+        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0; }
         .checkbox-group input { width: auto; cursor: pointer; }
-        
         small { color: #757575; }
+
+        /* Widgets */
+        .widget-card { background: #f9fbff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .widget-card h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .widget-card .widget-status { font-size: 0.75rem; margin-bottom: 1rem; }
+        .widget-card textarea { font-family: 'Courier New', monospace; font-size: 0.8rem; min-height: 100px; resize: vertical; }
+        .widget-preview { margin-top: 1rem; padding: 1rem; background: #fff; border: 1px dashed #ccc; border-radius: 6px; min-height: 60px; }
+        .widget-preview iframe { max-width: 100%; }
+        .badge-tiqets { background: #e6eefc; color: #0046e4; display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge-gyg { background: #fff3e0; color: #e65100; display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .code-help { font-size: 0.75rem; color: #999; margin-top: 0.25rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Luvia Journal - Editeur</h1>
-    <p class="subtitle">Redigez en Markdown, publiez en deux langues</p>
+    <h1>Travel Press - Editeur</h1>
+    <p class="subtitle">Redigez en Markdown, publiez en deux langues, gerez les widgets</p>
     
-    <div class="lang-tabs">
-        <button class="lang-tab active" onclick="switchTab('fr')">Francais</button>
-        <button class="lang-tab" onclick="switchTab('en')">English</button>
+    <div class="main-tabs">
+        <button class="main-tab active" onclick="switchMainTab('editor')">Articles</button>
+        <button class="main-tab" onclick="switchMainTab('widgets')">Widgets</button>
     </div>
 
-    <div class="edit-section">
-        <h2>Modifier un article existant</h2>
-        <div class="form-row" style="align-items: flex-end;">
-            <div class="form-group" style="margin-bottom: 0;">
-                <label>ID de l'article</label>
-                <input type="text" id="edit_id" placeholder="Ex: 1, 4, 5, 6...">
-            </div>
-            <button class="btn-secondary" id="btnLoad" onclick="loadArticle()">Charger</button>
-        </div>
-        <small style="display:block; margin-top:0.5rem;">Laissez vide pour creer un nouvel article.</small>
-    </div>
-
-    <div id="tab-fr">
-        <div class="form-group">
-            <label>Titre (Francais)</label>
-            <input type="text" id="title" placeholder="Ex: Escapee Premium en Namibie...">
-        </div>
-        
-        <div class="form-group">
-            <label>Categorie (Francais)</label>
-            <input type="text" id="category" placeholder="Ex: Experience, Conseils, News" value="Experience">
+    <!-- ========== ONGLET ARTICLES ========== -->
+    <div id="tab-editor">
+        <div class="lang-tabs">
+            <button class="lang-tab active" onclick="switchLangTab('fr')">Francais</button>
+            <button class="lang-tab" onclick="switchLangTab('en')">English</button>
         </div>
 
-        <div class="form-group">
-            <label>Contenu (Francais)</label>
-            <div class="editor-wrapper">
-                <textarea id="content"></textarea>
+        <div class="edit-section">
+            <h2>Modifier un article existant</h2>
+            <div class="form-row" style="align-items: flex-end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>ID de l'article</label>
+                    <input type="text" id="edit_id" placeholder="Ex: 1, 4, 5, 6...">
+                </div>
+                <button class="btn-secondary" id="btnLoad" onclick="loadArticle()">Charger</button>
             </div>
-            <div class="markdown-help">
-                <strong>Aide Markdown :</strong> 
-                <code>**gras**</code> 
-                <code>*italique*</code> 
-                <code># Titre</code> 
-                <code>## Sous-titre</code> 
-                <code>![alt](url_image)</code> 
-                <code>[lien](url)</code>
-                <code>---</code> pour une ligne de separation
+            <small style="display:block; margin-top:0.5rem;">Laissez vide pour creer un nouvel article.</small>
+        </div>
+
+        <div id="tab-fr">
+            <div class="form-group"><label>Titre (Francais)</label><input type="text" id="title" placeholder="Ex: Escapee Premium en Namibie..."></div>
+            <div class="form-group"><label>Categorie (Francais)</label><input type="text" id="category" placeholder="Ex: Experience, Conseils, News" value="Experience"></div>
+            <div class="form-group">
+                <label>Contenu (Francais)</label>
+                <div class="editor-wrapper"><textarea id="content"></textarea></div>
+                <div class="markdown-help">
+                    <strong>Aide Markdown :</strong> 
+                    <code>**gras**</code> <code>*italique*</code> <code># Titre</code> <code>## Sous-titre</code> 
+                    <code>![alt](url_image)</code> <code>[lien](url)</code> <code>---</code> pour une ligne de separation
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="tab-en" style="display:none;">
-        <div class="form-group">
-            <label>Titre (English)</label>
-            <input type="text" id="title_en" placeholder="Ex: Premium Escape in Namibia...">
-        </div>
-        
-        <div class="form-group">
-            <label>Categorie (English)</label>
-            <input type="text" id="category_en" placeholder="Ex: Experience, Tips, News" value="Experience">
-        </div>
-
-        <div class="form-group">
-            <label>Contenu (English)</label>
-            <div class="editor-wrapper">
-                <textarea id="content_en"></textarea>
-            </div>
-            <div class="markdown-help">
-                <strong>Markdown Help :</strong> 
-                <code>**bold**</code> 
-                <code>*italic*</code> 
-                <code># Heading</code> 
-                <code>## Subheading</code> 
-                <code>![alt](image_url)</code> 
-                <code>[link](url)</code>
-                <code>---</code> for a divider
+        <div id="tab-en" style="display:none;">
+            <div class="form-group"><label>Titre (English)</label><input type="text" id="title_en" placeholder="Ex: Premium Escape in Namibia..."></div>
+            <div class="form-group"><label>Categorie (English)</label><input type="text" id="category_en" placeholder="Ex: Experience, Tips, News" value="Experience"></div>
+            <div class="form-group">
+                <label>Contenu (English)</label>
+                <div class="editor-wrapper"><textarea id="content_en"></textarea></div>
+                <div class="markdown-help">
+                    <strong>Markdown Help :</strong> 
+                    <code>**bold**</code> <code>*italic*</code> <code># Heading</code> <code>## Subheading</code>
+                    <code>![alt](image_url)</code> <code>[link](url)</code> <code>---</code> for a divider
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>Extrait / Description courte</label>
-        <input type="text" id="excerpt" placeholder="Une courte phrase d'accroche...">
-    </div>
-
-    <div class="form-row">
-        <div class="form-group">
-            <label>URL de l'image de couverture</label>
-            <input type="text" id="image_url" placeholder="https://images.unsplash.com/...">
+        <div class="form-group"><label>Extrait / Description courte</label><input type="text" id="excerpt" placeholder="Une courte phrase d'accroche..."></div>
+        <div class="form-row">
+            <div class="form-group"><label>URL de l'image de couverture</label><input type="text" id="image_url" placeholder="https://images.unsplash.com/..."></div>
+            <div class="form-group"><label>Temps de lecture</label><input type="text" id="reading_time" placeholder="5 min de lecture"></div>
         </div>
-        <div class="form-group">
-            <label>Temps de lecture</label>
-            <input type="text" id="reading_time" placeholder="5 min de lecture">
+        <div class="checkbox-group">
+            <input type="checkbox" id="is_featured">
+            <label for="is_featured">Mettre cet article a la une dans le Hero principal</label>
+        </div>
+        <div class="actions">
+            <button id="btnPublish" onclick="publishArticle()">Publier le nouvel article</button>
+            <button id="btnUpdate" class="btn-update" onclick="updateArticle()">Mettre a jour l'article</button>
+            <button id="btnCancel" class="btn-cancel" onclick="cancelEdit()">Annuler</button>
         </div>
     </div>
 
-    <div class="checkbox-group">
-        <input type="checkbox" id="is_featured">
-        <label for="is_featured">Mettre cet article a la une dans le Hero principal</label>
-    </div>
+    <!-- ========== ONGLET WIDGETS ========== -->
+    <div id="tab-widgets" style="display:none;">
+        <div class="edit-section">
+            <h2>Gerer les widgets publicitaires</h2>
+            <p style="font-size:0.85rem;color:#757575;margin-bottom:0;">Collez le code HTML fourni par Tiqets ou GetYourGuide. Les widgets apparaissent en slider au milieu des articles.</p>
+        </div>
 
-    <div class="actions">
-        <button id="btnPublish" onclick="publishArticle()">Publier le nouvel article</button>
-        <button id="btnUpdate" class="btn-update" onclick="updateArticle()">Mettre a jour l'article</button>
-        <button id="btnCancel" class="btn-cancel" onclick="cancelEdit()">Annuler</button>
+        <!-- Widget 1 (Tiqets) -->
+        <div class="widget-card">
+            <span class="badge-tiqets">Tiqets</span>
+            <h3>Widget 1 - Tiqets</h3>
+            <p class="widget-status" id="tiqets-status">Chargement...</p>
+            <div class="form-group">
+                <label>Code HTML du widget Tiqets</label>
+                <textarea id="tiqets-code" placeholder="Collez ici le code fourni par Tiqets..."></textarea>
+                <p class="code-help">Exemple: &lt;div data-tiqets-widget=&quot;discovery&quot; data-cards-layout=&quot;horizontal&quot; data-slug-ids=&quot;pro975154&quot; data-partner=&quot;luvia_travel_llc-187826&quot; data-tq-campaign=&quot;Rome Pantheon Tickets&quot;&gt;&lt;/div&gt;</p>
+            </div>
+            <div class="widget-preview" id="tiqets-preview">
+                <em style="color:#999;">Previsualisation apres sauvegarde...</em>
+            </div>
+            <div class="actions" style="margin-top:0.5rem;">
+                <button class="btn-success" onclick="saveWidget('tiqets')">Sauvegarder</button>
+                <button class="btn-outline" onclick="previewWidget('tiqets')">Previsualiser</button>
+                <button class="btn-danger" onclick="clearWidget('tiqets')">Retirer ce widget</button>
+            </div>
+        </div>
+
+        <!-- Widget 2 (GetYourGuide) -->
+        <div class="widget-card">
+            <span class="badge-gyg">GetYourGuide</span>
+            <h3>Widget 2 - GetYourGuide</h3>
+            <p class="widget-status" id="gyg-status">Chargement...</p>
+            <div class="form-group">
+                <label>Code HTML du widget GetYourGuide</label>
+                <textarea id="gyg-code" placeholder="Collez ici le code fourni par GetYourGuide..."></textarea>
+                <p class="code-help">Exemple: &lt;div data-gyg-widget=&quot;auto&quot; data-gyg-partner-id=&quot;TNCQUZX&quot; data-gyg-cmp=&quot;Namibie : voyage de 3 jours&quot;&gt;&lt;/div&gt;</p>
+            </div>
+            <div class="widget-preview" id="gyg-preview">
+                <em style="color:#999;">Previsualisation apres sauvegarde...</em>
+            </div>
+            <div class="actions" style="margin-top:0.5rem;">
+                <button class="btn-success" onclick="saveWidget('gyg')">Sauvegarder</button>
+                <button class="btn-outline" onclick="previewWidget('gyg')">Previsualiser</button>
+                <button class="btn-danger" onclick="clearWidget('gyg')">Retirer ce widget</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -266,73 +194,112 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const simplemdeFR = new SimpleMDE({ 
-        element: document.getElementById("content"),
-        spellChecker: false,
-        status: false,
-        lineWrapping: true,
-        placeholder: "Redigez votre article en Markdown...",
-        toolbar: [
-            "bold", "italic", "heading", "|",
-            "quote", "unordered-list", "ordered-list", "|",
-            "link", "image", "|",
-            "preview", "side-by-side", "fullscreen", "|",
-            "guide"
-        ]
-    });
-
-    const simplemdeEN = new SimpleMDE({ 
-        element: document.getElementById("content_en"),
-        spellChecker: false,
-        status: false,
-        lineWrapping: true,
-        placeholder: "Write your article in Markdown...",
-        toolbar: [
-            "bold", "italic", "heading", "|",
-            "quote", "unordered-list", "ordered-list", "|",
-            "link", "image", "|",
-            "preview", "side-by-side", "fullscreen", "|",
-            "guide"
-        ]
-    });
+    // ========== SIMPLEMDE ==========
+    const simplemdeFR = new SimpleMDE({ element: document.getElementById("content"), spellChecker: false, status: false, lineWrapping: true, placeholder: "Redigez votre article en Markdown...", toolbar: ["bold","italic","heading","|","quote","unordered-list","ordered-list","|","link","image","|","preview","side-by-side","fullscreen","|","guide"] });
+    const simplemdeEN = new SimpleMDE({ element: document.getElementById("content_en"), spellChecker: false, status: false, lineWrapping: true, placeholder: "Write your article in Markdown...", toolbar: ["bold","italic","heading","|","quote","unordered-list","ordered-list","|","link","image","|","preview","side-by-side","fullscreen","|","guide"] });
 
     let currentEditId = null;
-    let currentTab = 'fr';
+    let currentLangTab = 'fr';
 
-    function switchTab(lang) {
-        currentTab = lang;
-        document.querySelectorAll('.lang-tab').forEach(tab => tab.classList.remove('active'));
+    // ========== ONGLETS ==========
+    function switchMainTab(tab) {
+        document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('tab-editor').style.display = tab === 'editor' ? 'block' : 'none';
+        document.getElementById('tab-widgets').style.display = tab === 'widgets' ? 'block' : 'none';
+        if (tab === 'widgets') loadWidgets();
+    }
+
+    function switchLangTab(lang) {
+        currentLangTab = lang;
+        document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
         event.target.classList.add('active');
         document.getElementById('tab-fr').style.display = lang === 'fr' ? 'block' : 'none';
         document.getElementById('tab-en').style.display = lang === 'en' ? 'block' : 'none';
     }
 
+    // ========== WIDGETS ==========
+    async function loadWidgets() {
+        const { data, error } = await supabaseClient.from('widgets_config').select('*');
+        
+        document.getElementById('tiqets-status').textContent = 'Non configure';
+        document.getElementById('gyg-status').textContent = 'Non configure';
+        
+        if (error) { console.error(error); return; }
+        
+        data.forEach(w => {
+            if (w.type === 'tiqets') {
+                document.getElementById('tiqets-code').value = w.html_code || '';
+                document.getElementById('tiqets-status').textContent = w.active ? '✅ Actif - ' + (w.updated_at ? new Date(w.updated_at).toLocaleString('fr-FR') : '') : '❌ Inactif';
+            }
+            if (w.type === 'gyg') {
+                document.getElementById('gyg-code').value = w.html_code || '';
+                document.getElementById('gyg-status').textContent = w.active ? '✅ Actif - ' + (w.updated_at ? new Date(w.updated_at).toLocaleString('fr-FR') : '') : '❌ Inactif';
+            }
+        });
+    }
+
+    function previewWidget(type) {
+        const code = document.getElementById(type + '-code').value;
+        const preview = document.getElementById(type + '-preview');
+        if (code) {
+            preview.innerHTML = code;
+            // Recharger les scripts si necessaire
+            if (type === 'tiqets' && !document.querySelector('script[src*="tiqets.com/loader.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'https://widgets.tiqets.com/loader.js';
+                script.defer = true;
+                document.head.appendChild(script);
+            }
+            if (type === 'gyg' && !document.querySelector('script[src*="getyourguide.com"]')) {
+                const script = document.createElement('script');
+                script.src = 'https://widget.getyourguide.com/dist/pa.umd.production.min.js';
+                script.setAttribute('data-gyg-partner-id', 'TNCQUZX');
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            }
+        } else {
+            preview.innerHTML = '<em style="color:#999;">Aucun code a previsualiser</em>';
+        }
+    }
+
+    async function saveWidget(type) {
+        const code = document.getElementById(type + '-code').value.trim();
+        if (!code) { alert('Veuillez coller le code HTML du widget.'); return; }
+        
+        const { error } = await supabaseClient
+            .from('widgets_config')
+            .upsert({ type: type, html_code: code, active: true, updated_at: new Date().toISOString() }, { onConflict: 'type' });
+        
+        if (error) alert('Erreur: ' + error.message);
+        else { alert('Widget ' + type.toUpperCase() + ' sauvegarde !'); loadWidgets(); }
+    }
+
+    async function clearWidget(type) {
+        if (!confirm('Retirer le widget ' + type.toUpperCase() + ' ?')) return;
+        
+        const { error } = await supabaseClient
+            .from('widgets_config')
+            .upsert({ type: type, html_code: '', active: false, updated_at: new Date().toISOString() }, { onConflict: 'type' });
+        
+        if (error) alert('Erreur: ' + error.message);
+        else { 
+            document.getElementById(type + '-code').value = '';
+            document.getElementById(type + '-preview').innerHTML = '<em style="color:#999;">Widget retire</em>';
+            loadWidgets(); 
+        }
+    }
+
+    // ========== ARTICLES (inchangé) ==========
     async function loadArticle() {
         const idInput = document.getElementById('edit_id').value.trim();
+        if (!idInput) { alert('Veuillez entrer un ID valide.'); return; }
         const btnLoad = document.getElementById('btnLoad');
-        
-        if (!idInput) {
-            alert('Veuillez entrer un ID valide.');
-            return;
-        }
-
-        btnLoad.disabled = true;
-        btnLoad.innerText = "Chargement...";
-
-        const { data, error } = await supabaseClient
-            .from('posts')
-            .select('*')
-            .eq('id', idInput)
-            .single();
-
-        btnLoad.disabled = false;
-        btnLoad.innerText = "Charger";
-
-        if (error || !data) {
-            alert('Article introuvable. Verifiez l\'ID.');
-            return;
-        }
-
+        btnLoad.disabled = true; btnLoad.innerText = "Chargement...";
+        const { data, error } = await supabaseClient.from('posts').select('*').eq('id', idInput).single();
+        btnLoad.disabled = false; btnLoad.innerText = "Charger";
+        if (error || !data) { alert('Article introuvable.'); return; }
         document.getElementById('title').value = data.title || '';
         document.getElementById('title_en').value = data.title_en || '';
         document.getElementById('excerpt').value = data.excerpt || '';
@@ -341,10 +308,8 @@
         document.getElementById('category').value = data.category || '';
         document.getElementById('category_en').value = data.category_en || '';
         document.getElementById('is_featured').checked = data.is_featured || false;
-        
         simplemdeFR.value(data.content || '');
         simplemdeEN.value(data.content_en || '');
-
         currentEditId = data.id;
         document.getElementById('btnPublish').style.display = 'none';
         document.getElementById('btnUpdate').style.display = 'block';
@@ -354,18 +319,11 @@
     function cancelEdit() {
         currentEditId = null;
         document.getElementById('edit_id').value = '';
-        document.getElementById('title').value = '';
-        document.getElementById('title_en').value = '';
-        document.getElementById('excerpt').value = '';
-        document.getElementById('image_url').value = '';
-        document.getElementById('reading_time').value = '';
-        document.getElementById('category').value = 'Experience';
-        document.getElementById('category_en').value = 'Experience';
-        document.getElementById('is_featured').checked = false;
-        
-        simplemdeFR.value('');
-        simplemdeEN.value('');
-
+        document.getElementById('title').value = ''; document.getElementById('title_en').value = '';
+        document.getElementById('excerpt').value = ''; document.getElementById('image_url').value = '';
+        document.getElementById('reading_time').value = ''; document.getElementById('category').value = 'Experience';
+        document.getElementById('category_en').value = 'Experience'; document.getElementById('is_featured').checked = false;
+        simplemdeFR.value(''); simplemdeEN.value('');
         document.getElementById('btnPublish').style.display = 'block';
         document.getElementById('btnUpdate').style.display = 'none';
         document.getElementById('btnCancel').style.display = 'none';
@@ -373,120 +331,52 @@
 
     function cleanMarkdown(md) {
         if (!md) return '';
-        
-        // Saut de ligne avant les titres
         md = md.replace(/([^\n])\n(#{1,6}\s)/g, '$1\n\n$2');
-        
-        // Saut de ligne avant les listes
         md = md.replace(/([^\n])\n(- |\d+\. )/g, '$1\n\n$2');
-        
-        // Saut de ligne avant les tableaux
         md = md.replace(/([^\n])\n(\|)/g, '$1\n\n$2');
-        
-        // Saut de ligne avant les separateurs
         md = md.replace(/([^\n])\n(---)/g, '$1\n\n$2');
-        
-        // Ligne vide apres chaque titre
         md = md.replace(/^(#{1,6}\s.+)$/gm, '$1\n');
-        
-        // Supprimer espaces en fin de ligne
         md = md.replace(/[ \t]+$/gm, '');
-        
-        // Max 2 retours a la ligne
         md = md.replace(/\n{3,}/g, '\n\n');
-        
         return md.trim();
     }
 
     function getFormData() {
-        let contentFR = simplemdeFR.value();
-        let contentEN = simplemdeEN.value();
-        
-        contentFR = cleanMarkdown(contentFR);
-        contentEN = cleanMarkdown(contentEN);
-        
         return {
-            title: document.getElementById('title').value,
-            title_en: document.getElementById('title_en').value,
-            excerpt: document.getElementById('excerpt').value,
-            image_url: document.getElementById('image_url').value,
+            title: document.getElementById('title').value, title_en: document.getElementById('title_en').value,
+            excerpt: document.getElementById('excerpt').value, image_url: document.getElementById('image_url').value,
             reading_time: document.getElementById('reading_time').value,
-            category: document.getElementById('category').value,
-            category_en: document.getElementById('category_en').value,
+            category: document.getElementById('category').value, category_en: document.getElementById('category_en').value,
             is_featured: document.getElementById('is_featured').checked,
-            content: contentFR,
-            content_en: contentEN
+            content: cleanMarkdown(simplemdeFR.value()), content_en: cleanMarkdown(simplemdeEN.value())
         };
     }
 
     async function handleFeaturedStatus(is_featured) {
-        if (is_featured) {
-            await supabaseClient
-                .from('posts')
-                .update({ is_featured: false })
-                .eq('is_featured', true);
-        }
+        if (is_featured) { await supabaseClient.from('posts').update({ is_featured: false }).eq('is_featured', true); }
     }
 
     async function publishArticle() {
         const data = getFormData();
+        if (!data.title || !data.content) { alert('Le titre et le contenu (FR) sont obligatoires.'); return; }
         const btn = document.getElementById('btnPublish');
-
-        if (!data.title || !data.content) {
-            alert('Le titre et le contenu (FR) sont obligatoires.');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerText = "Publication en cours...";
-
+        btn.disabled = true; btn.innerText = "Publication en cours...";
         await handleFeaturedStatus(data.is_featured);
-
-        const { error } = await supabaseClient
-            .from('posts')
-            .insert([data]);
-
-        if (error) {
-            console.error(error);
-            alert('Erreur : ' + error.message);
-            btn.disabled = false;
-            btn.innerText = "Publier le nouvel article";
-        } else {
-            alert('Article publie avec succes !');
-            window.location.reload();
-        }
+        const { error } = await supabaseClient.from('posts').insert([data]);
+        if (error) { alert('Erreur : ' + error.message); btn.disabled = false; btn.innerText = "Publier le nouvel article"; }
+        else { alert('Article publie avec succes !'); window.location.reload(); }
     }
 
     async function updateArticle() {
         if (!currentEditId) return;
-        
         const data = getFormData();
+        if (!data.title || !data.content) { alert('Le titre et le contenu (FR) sont obligatoires.'); return; }
         const btn = document.getElementById('btnUpdate');
-
-        if (!data.title || !data.content) {
-            alert('Le titre et le contenu (FR) sont obligatoires.');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerText = "Mise a jour en cours...";
-
+        btn.disabled = true; btn.innerText = "Mise a jour en cours...";
         await handleFeaturedStatus(data.is_featured);
-
-        const { error } = await supabaseClient
-            .from('posts')
-            .update(data)
-            .eq('id', currentEditId);
-
-        if (error) {
-            console.error(error);
-            alert('Erreur : ' + error.message);
-            btn.disabled = false;
-            btn.innerText = "Mettre a jour l'article";
-        } else {
-            alert('Article mis a jour avec succes !');
-            window.location.reload();
-        }
+        const { error } = await supabaseClient.from('posts').update(data).eq('id', currentEditId);
+        if (error) { alert('Erreur : ' + error.message); btn.disabled = false; btn.innerText = "Mettre a jour l'article"; }
+        else { alert('Article mis a jour avec succes !'); window.location.reload(); }
     }
 </script>
 </body>
