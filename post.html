@@ -28,7 +28,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
     <link rel="manifest" href="/manifest.json">
-    <!-- JSON-LD Structured Data -->
+    
+    <!-- JSON-LD -->
     <script type="application/ld+json" id="structured-data">
     {
         "@context": "https://schema.org",
@@ -55,6 +56,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    
+    <!-- Tiqets Widget -->
+    <script defer src="https://widgets.tiqets.com/loader.js"></script>
+    
+    <!-- GetYourGuide Widget -->
+    <script async defer src="https://widget.getyourguide.com/dist/pa.umd.production.min.js" data-gyg-partner-id="TNCQUZX"></script>
     
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -91,6 +98,45 @@
             padding: 0.5rem 1rem; z-index: 1000; text-decoration: none;
         }
         .skip-link:focus { top: 0; }
+
+        /* Widget Slider */
+        .widget-slider {
+            margin: 3rem 0;
+            position: relative;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 0;
+        }
+        .widget-slider-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #111;
+            text-align: center;
+        }
+        .widget-slide {
+            display: none;
+        }
+        .widget-slide.active {
+            display: block;
+        }
+        .widget-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .widget-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .widget-dot.active {
+            background: var(--accent);
+        }
 
         header { 
             border-bottom: 1px solid var(--border); background: #ffffff;
@@ -185,6 +231,7 @@
             .article-body th, .article-body td { padding: 0.5rem 0.6rem; }
             .article-meta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
             footer { margin-top: 3rem; padding: 1.5rem 1rem; font-size: 0.8rem; }
+            .widget-slider { margin: 2rem 0; padding: 1.5rem 0; }
         }
     </style>
 </head>
@@ -267,6 +314,23 @@
             </div>
             <div class="article-body" id="article-body"></div>
         </article>
+        
+        <!-- Widget Slider (inséré dynamiquement au milieu du contenu) -->
+        <div id="widget-slider-container" style="display:none;">
+            <div class="widget-slider">
+                <p class="widget-slider-title" data-i18n="widget-title">Découvrez aussi</p>
+                <div class="widget-nav">
+                    <span class="widget-dot active" onclick="switchWidget(0)"></span>
+                    <span class="widget-dot" onclick="switchWidget(1)"></span>
+                </div>
+                <div class="widget-slide active" id="widget-slide-0">
+                    <div data-tiqets-widget="discovery" data-cards-layout="responsive" data-content-type="exhibition" data-item_count="4" data-destination-type="venue" data-destination-id="124297" data-slug-ids="" data-partner="luvia_travel_llc-187826" data-tq-campaign="Louvre experience"></div>
+                </div>
+                <div class="widget-slide" id="widget-slide-1">
+                    <div data-gyg-widget="auto" data-gyg-partner-id="TNCQUZX" data-gyg-cmp="Namibie : voyage de 3 jours tout compris à Sossusvlei"></div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -281,8 +345,8 @@
             const CONFIG = { DEFAULT_LANG: 'fr', STORAGE_PREFIX: 'luvia-', CACHE_DURATION: 5 * 60 * 1000 };
 
             const translations = {
-                fr: { "skip-link":"Aller au contenu principal","nav-about":"A propos","nav-insurance":"Assurances","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Nous contacter","nav-cta-mobile":"Nous contacter","lang-label":"Langue","error-not-found":"Article introuvable.","error-network":"Erreur de connexion.","error-invalid-id":"ID d'article invalide.","error-retry":"Reessayer","btn-share":"Partager","btn-save":"Sauvegarder","btn-saved":"Sauvegarde","toast-saved":"Article sauvegarde !","toast-removed":"Article retire des favoris","toast-copied":"Lien copie !" },
-                en: { "skip-link":"Skip to main content","nav-about":"About","nav-insurance":"Insurance","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Get in touch","nav-cta-mobile":"Get in touch","lang-label":"Language","error-not-found":"Article not found.","error-network":"Connection error.","error-invalid-id":"Invalid article ID.","error-retry":"Retry","btn-share":"Share","btn-save":"Save","btn-saved":"Saved","toast-saved":"Article saved!","toast-removed":"Article removed from favorites","toast-copied":"Link copied!" }
+                fr: { "skip-link":"Aller au contenu principal","nav-about":"A propos","nav-insurance":"Assurances","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Nous contacter","nav-cta-mobile":"Nous contacter","lang-label":"Langue","error-not-found":"Article introuvable.","error-network":"Erreur de connexion.","error-invalid-id":"ID d'article invalide.","error-retry":"Reessayer","btn-share":"Partager","btn-save":"Sauvegarder","btn-saved":"Sauvegarde","toast-saved":"Article sauvegarde !","toast-removed":"Article retire des favoris","toast-copied":"Lien copie !","widget-title":"Découvrez aussi" },
+                en: { "skip-link":"Skip to main content","nav-about":"About","nav-insurance":"Insurance","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Get in touch","nav-cta-mobile":"Get in touch","lang-label":"Language","error-not-found":"Article not found.","error-network":"Connection error.","error-invalid-id":"Invalid article ID.","error-retry":"Retry","btn-share":"Share","btn-save":"Save","btn-saved":"Saved","toast-saved":"Article saved!","toast-removed":"Article removed from favorites","toast-copied":"Link copied!","widget-title":"Discover also" }
             };
 
             const state = { currentLang: localStorage.getItem(CONFIG.STORAGE_PREFIX + 'lang') || CONFIG.DEFAULT_LANG, cachedPostData: null, currentPostId: null, isLoading: false };
@@ -297,19 +361,53 @@
 
             function renderPost(post){ try{ const isEN=state.currentLang==='en'; const title=isEN&&post.title_en?post.title_en:post.title; const cat=isEN&&post.category_en?post.category_en:(post.category||'News'); const content=isEN&&post.content_en?post.content_en:post.content; document.title=title+' - Travel Press'; document.getElementById('article-title').textContent=title; document.getElementById('article-cat').textContent=cat; const img=document.getElementById('article-img'); img.src=post.image_url||'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'; img.alt=title; document.getElementById('article-date').textContent=new Date(post.created_at).toLocaleDateString(isEN?'en-US':'fr-FR',{month:'long',day:'numeric',year:'numeric'});
             
-            // SEO Meta
             const metaDesc=document.querySelector('meta[name="description"]'); if(metaDesc) metaDesc.setAttribute('content',(post.excerpt||title).substring(0,160));
             const canonical=document.querySelector('link[rel="canonical"]'); if(canonical) canonical.href=SITE_URL+'/post.html?id='+post.id;
-            // JSON-LD
             const sd=document.getElementById('structured-data'); if(sd){ sd.textContent=JSON.stringify({"@context":"https://schema.org","@type":"NewsArticle","headline":title,"image":post.image_url,"datePublished":post.created_at,"dateModified":post.created_at,"author":{"@type":"Organization","name":"Travel Press"},"publisher":{"@type":"Organization","name":"Travel Press","logo":{"@type":"ImageObject","url":"https://press.luviaplace.com/logo.png"}}}); }
             
-            const raw=marked.parse(content||''); const clean=DOMPurify.sanitize(raw,{ALLOWED_TAGS:['p','br','strong','em','u','h1','h2','h3','h4','h5','h6','ul','ol','li','a','img','blockquote','code','pre','span','div','table','thead','tbody','tr','td','th'],ALLOWED_ATTR:['href','src','alt','class','target','rel','width','height']}); document.getElementById('article-body').innerHTML=clean; document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='block'; document.getElementById('error-container').style.display='none'; updateSaveButtonUI(); }catch(e){ console.error('Erreur de rendu:',e); showError('error-not-found'); } }
+            const raw=marked.parse(content||''); const clean=DOMPurify.sanitize(raw,{ALLOWED_TAGS:['p','br','strong','em','u','h1','h2','h3','h4','h5','h6','ul','ol','li','a','img','blockquote','code','pre','span','div','table','thead','tbody','tr','td','th'],ALLOWED_ATTR:['href','src','alt','class','target','rel','width','height']}); document.getElementById('article-body').innerHTML=clean; document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='block'; document.getElementById('error-container').style.display='none';
+            
+            // Insérer le widget slider au milieu du contenu (après le 4ème paragraphe)
+            const articleBody = document.getElementById('article-body');
+            const widgetSlider = document.getElementById('widget-slider-container');
+            if (articleBody && widgetSlider) {
+                const paragraphs = articleBody.querySelectorAll('p');
+                if (paragraphs.length >= 4) {
+                    const target = paragraphs[3];
+                    target.parentNode.insertBefore(widgetSlider, target.nextSibling);
+                } else if (paragraphs.length >= 2) {
+                    const target = paragraphs[Math.floor(paragraphs.length / 2)];
+                    target.parentNode.insertBefore(widgetSlider, target.nextSibling);
+                } else {
+                    articleBody.appendChild(widgetSlider);
+                }
+                widgetSlider.style.display = 'block';
+            }
+            
+            updateSaveButtonUI(); }catch(e){ console.error('Erreur de rendu:',e); showError('error-not-found'); } }
             function showError(t='error-not-found'){ document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='none'; document.getElementById('error-container').style.display='block'; const m=document.getElementById('error-message'); if(m&&translations[state.currentLang]?.[t]) m.textContent=translations[state.currentLang][t]; }
             function setupActionButtons(){ document.getElementById('btn-share')?.addEventListener('click',handleShare); document.getElementById('btn-save')?.addEventListener('click',toggleSavePost); updateSaveButtonUI(); }
             async function handleShare(){ const url=state.currentPostId?SITE_URL+'/articles/'+state.currentPostId+'.html':window.location.href; if(navigator.share){ try{await navigator.share({title:document.title,url:url});}catch(e){if(e.name!=='AbortError')copyToClipboard(url);} }else{copyToClipboard(url);} }
             function copyToClipboard(url){ url=url||window.location.href; navigator.clipboard.writeText(url).then(()=>showToast(translations[state.currentLang]['toast-copied'])).catch(()=>{ const t=document.createElement('textarea');t.value=url;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);showToast(translations[state.currentLang]['toast-copied']); }); }
             function toggleSavePost(){ if(!state.currentPostId)return; let s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); const i=s.indexOf(state.currentPostId); if(i>-1){s.splice(i,1);showToast(translations[state.currentLang]['toast-removed']);}else{s.push(state.currentPostId);showToast(translations[state.currentLang]['toast-saved']);} localStorage.setItem(CONFIG.STORAGE_PREFIX+'saved-posts',JSON.stringify(s));updateSaveButtonUI(); }
             function updateSaveButtonUI(){ if(!state.currentPostId)return; const b=document.getElementById('btn-save'),t=document.getElementById('text-save'); if(!b||!t)return; const s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); if(s.includes(state.currentPostId)){b.classList.add('saved');t.textContent=translations[state.currentLang]['btn-saved'];b.setAttribute('aria-pressed','true');}else{b.classList.remove('saved');t.textContent=translations[state.currentLang]['btn-save'];b.setAttribute('aria-pressed','false');} }
+
+            // Widget Slider
+            let currentWidget = 0;
+            window.switchWidget = function(index) {
+                document.querySelectorAll('.widget-slide').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.widget-dot').forEach(d => d.classList.remove('active'));
+                document.getElementById('widget-slide-' + index).classList.add('active');
+                document.querySelectorAll('.widget-dot')[index].classList.add('active');
+                currentWidget = index;
+            };
+            
+            setInterval(function() {
+                if (document.getElementById('widget-slider-container') && document.getElementById('widget-slider-container').style.display !== 'none') {
+                    var next = currentWidget === 0 ? 1 : 0;
+                    switchWidget(next);
+                }
+            }, 8000);
 
             document.getElementById('burgerToggle')?.addEventListener('click',toggleMenu);
             document.querySelectorAll('.nav-mobile a').forEach(l=>l.addEventListener('click',()=>{ if(document.getElementById('mobileMenu')?.classList.contains('open'))toggleMenu(); }));
@@ -320,7 +418,6 @@
             window.addEventListener('DOMContentLoaded',()=>{ fetchPost(); });
         })();
 
-        // Footer
         fetch('footer.html').then(r=>r.text()).then(d=>{ document.getElementById('footer-placeholder').innerHTML=d; }).catch(()=>{ document.getElementById('footer-placeholder').innerHTML='<p style="text-align:center;padding:2rem;color:#999;">© 2024 Travel Press</p>'; });
     </script>
 </body>
