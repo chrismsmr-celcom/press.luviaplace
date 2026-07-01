@@ -207,7 +207,7 @@
 
     // Prévisualisation des images (séparateur |)
     document.getElementById('image_url').addEventListener('input', function() {
-        const urls = this.value.split('|').map(u => u.trim()).filter(u => u);
+        const urls = this.value.split('||').map(u => u.trim()).filter(u => u);
         const preview = document.getElementById('image-preview');
         if (urls.length > 0) {
             preview.innerHTML = urls.map((url, i) => 
