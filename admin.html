@@ -33,8 +33,9 @@
         .btn-success { background: #00a86b; }
         .btn-danger { background: #e74c3c; }
         .btn-outline { background: #fff; color: #0046e4; border: 1px solid #0046e4; }
+        .btn-small { padding: 0.3rem 0.7rem; font-size: 0.75rem; border-radius: 4px; }
         
-        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
         
         .main-tabs { display: flex; gap: 0; margin-bottom: 2rem; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
         .main-tab { flex: 1; padding: 0.8rem; text-align: center; cursor: pointer; border: none; background: white; font-weight: 600; font-family: inherit; transition: all 0.2s; font-size: 0.9rem; }
@@ -53,6 +54,16 @@
         .checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0; }
         .checkbox-group input { width: auto; cursor: pointer; }
         small { color: #757575; }
+
+        /* Multi-images */
+        .image-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+        .image-item { display: flex; gap: 0.5rem; align-items: center; }
+        .image-item input { flex: 1; }
+        .image-item button { flex-shrink: 0; }
+        .image-preview { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .image-preview img { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 2px solid transparent; cursor: pointer; }
+        .image-preview img:hover { border-color: var(--accent, #0046e4); }
+        .image-preview img.main-image { border-color: #0046e4; }
 
         /* Widgets */
         .widget-card { background: #f9fbff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
@@ -125,8 +136,16 @@
         </div>
 
         <div class="form-group"><label>Extrait / Description courte</label><input type="text" id="excerpt" placeholder="Une courte phrase d'accroche..."></div>
+        
+        <!-- Images multiples -->
+        <div class="form-group">
+            <label>Images de l'article (URLs séparées par des virgules)</label>
+            <input type="text" id="image_url" placeholder="https://image1.jpg, https://image2.jpg, https://image3.jpg">
+            <small style="display:block;margin-top:0.25rem;">Ajoutez plusieurs URLs séparées par des virgules pour un slider d'images.</small>
+            <div class="image-preview" id="image-preview"></div>
+        </div>
+        
         <div class="form-row">
-            <div class="form-group"><label>URL de l'image de couverture</label><input type="text" id="image_url" placeholder="https://images.unsplash.com/..."></div>
             <div class="form-group"><label>Temps de lecture</label><input type="text" id="reading_time" placeholder="5 min de lecture"></div>
         </div>
         <div class="checkbox-group">
@@ -147,7 +166,6 @@
             <p style="font-size:0.85rem;color:#757575;margin-bottom:0;">Collez le code HTML fourni par Tiqets ou GetYourGuide. Les widgets apparaissent en slider au milieu des articles.</p>
         </div>
 
-        <!-- Widget 1 (Tiqets) -->
         <div class="widget-card">
             <span class="badge-tiqets">Tiqets</span>
             <h3>Widget 1 - Tiqets</h3>
@@ -157,9 +175,7 @@
                 <textarea id="tiqets-code" placeholder="Collez ici le code fourni par Tiqets..."></textarea>
                 <p class="code-help">Exemple: &lt;div data-tiqets-widget=&quot;discovery&quot; data-cards-layout=&quot;horizontal&quot; data-slug-ids=&quot;pro975154&quot; data-partner=&quot;luvia_travel_llc-187826&quot; data-tq-campaign=&quot;Rome Pantheon Tickets&quot;&gt;&lt;/div&gt;</p>
             </div>
-            <div class="widget-preview" id="tiqets-preview">
-                <em style="color:#999;">Previsualisation apres sauvegarde...</em>
-            </div>
+            <div class="widget-preview" id="tiqets-preview"><em style="color:#999;">Previsualisation apres sauvegarde...</em></div>
             <div class="actions" style="margin-top:0.5rem;">
                 <button class="btn-success" onclick="saveWidget('tiqets')">Sauvegarder</button>
                 <button class="btn-outline" onclick="previewWidget('tiqets')">Previsualiser</button>
@@ -167,7 +183,6 @@
             </div>
         </div>
 
-        <!-- Widget 2 (GetYourGuide) -->
         <div class="widget-card">
             <span class="badge-gyg">GetYourGuide</span>
             <h3>Widget 2 - GetYourGuide</h3>
@@ -177,9 +192,7 @@
                 <textarea id="gyg-code" placeholder="Collez ici le code fourni par GetYourGuide..."></textarea>
                 <p class="code-help">Exemple: &lt;div data-gyg-widget=&quot;auto&quot; data-gyg-partner-id=&quot;TNCQUZX&quot; data-gyg-cmp=&quot;Namibie : voyage de 3 jours&quot;&gt;&lt;/div&gt;</p>
             </div>
-            <div class="widget-preview" id="gyg-preview">
-                <em style="color:#999;">Previsualisation apres sauvegarde...</em>
-            </div>
+            <div class="widget-preview" id="gyg-preview"><em style="color:#999;">Previsualisation apres sauvegarde...</em></div>
             <div class="actions" style="margin-top:0.5rem;">
                 <button class="btn-success" onclick="saveWidget('gyg')">Sauvegarder</button>
                 <button class="btn-outline" onclick="previewWidget('gyg')">Previsualiser</button>
@@ -194,14 +207,25 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ========== SIMPLEMDE ==========
     const simplemdeFR = new SimpleMDE({ element: document.getElementById("content"), spellChecker: false, status: false, lineWrapping: true, placeholder: "Redigez votre article en Markdown...", toolbar: ["bold","italic","heading","|","quote","unordered-list","ordered-list","|","link","image","|","preview","side-by-side","fullscreen","|","guide"] });
     const simplemdeEN = new SimpleMDE({ element: document.getElementById("content_en"), spellChecker: false, status: false, lineWrapping: true, placeholder: "Write your article in Markdown...", toolbar: ["bold","italic","heading","|","quote","unordered-list","ordered-list","|","link","image","|","preview","side-by-side","fullscreen","|","guide"] });
 
     let currentEditId = null;
     let currentLangTab = 'fr';
 
-    // ========== ONGLETS ==========
+    // Prévisualisation des images
+    document.getElementById('image_url').addEventListener('input', function() {
+        const urls = this.value.split(',').map(u => u.trim()).filter(u => u);
+        const preview = document.getElementById('image-preview');
+        if (urls.length > 0) {
+            preview.innerHTML = urls.map((url, i) => 
+                `<img src="${url}" alt="Image ${i+1}" class="${i===0?'main-image':''}" onerror="this.style.display='none'" title="Image ${i+1}${i===0?' (principale)':''}">`
+            ).join('');
+        } else {
+            preview.innerHTML = '';
+        }
+    });
+
     function switchMainTab(tab) {
         document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
         event.target.classList.add('active');
@@ -218,23 +242,19 @@
         document.getElementById('tab-en').style.display = lang === 'en' ? 'block' : 'none';
     }
 
-    // ========== WIDGETS ==========
     async function loadWidgets() {
         const { data, error } = await supabaseClient.from('widgets_config').select('*');
-        
         document.getElementById('tiqets-status').textContent = 'Non configure';
         document.getElementById('gyg-status').textContent = 'Non configure';
-        
         if (error) { console.error(error); return; }
-        
         data.forEach(w => {
             if (w.type === 'tiqets') {
                 document.getElementById('tiqets-code').value = w.html_code || '';
-                document.getElementById('tiqets-status').textContent = w.active ? '✅ Actif - ' + (w.updated_at ? new Date(w.updated_at).toLocaleString('fr-FR') : '') : '❌ Inactif';
+                document.getElementById('tiqets-status').textContent = w.active ? '✅ Actif' : '❌ Inactif';
             }
             if (w.type === 'gyg') {
                 document.getElementById('gyg-code').value = w.html_code || '';
-                document.getElementById('gyg-status').textContent = w.active ? '✅ Actif - ' + (w.updated_at ? new Date(w.updated_at).toLocaleString('fr-FR') : '') : '❌ Inactif';
+                document.getElementById('gyg-status').textContent = w.active ? '✅ Actif' : '❌ Inactif';
             }
         });
     }
@@ -242,56 +262,25 @@
     function previewWidget(type) {
         const code = document.getElementById(type + '-code').value;
         const preview = document.getElementById(type + '-preview');
-        if (code) {
-            preview.innerHTML = code;
-            // Recharger les scripts si necessaire
-            if (type === 'tiqets' && !document.querySelector('script[src*="tiqets.com/loader.js"]')) {
-                const script = document.createElement('script');
-                script.src = 'https://widgets.tiqets.com/loader.js';
-                script.defer = true;
-                document.head.appendChild(script);
-            }
-            if (type === 'gyg' && !document.querySelector('script[src*="getyourguide.com"]')) {
-                const script = document.createElement('script');
-                script.src = 'https://widget.getyourguide.com/dist/pa.umd.production.min.js';
-                script.setAttribute('data-gyg-partner-id', 'TNCQUZX');
-                script.async = true;
-                script.defer = true;
-                document.head.appendChild(script);
-            }
-        } else {
-            preview.innerHTML = '<em style="color:#999;">Aucun code a previsualiser</em>';
-        }
+        if (code) { preview.innerHTML = code; }
+        else { preview.innerHTML = '<em style="color:#999;">Aucun code a previsualiser</em>'; }
     }
 
     async function saveWidget(type) {
         const code = document.getElementById(type + '-code').value.trim();
         if (!code) { alert('Veuillez coller le code HTML du widget.'); return; }
-        
-        const { error } = await supabaseClient
-            .from('widgets_config')
-            .upsert({ type: type, html_code: code, active: true, updated_at: new Date().toISOString() }, { onConflict: 'type' });
-        
+        const { error } = await supabaseClient.from('widgets_config').upsert({ type: type, html_code: code, active: true, updated_at: new Date().toISOString() }, { onConflict: 'type' });
         if (error) alert('Erreur: ' + error.message);
         else { alert('Widget ' + type.toUpperCase() + ' sauvegarde !'); loadWidgets(); }
     }
 
     async function clearWidget(type) {
         if (!confirm('Retirer le widget ' + type.toUpperCase() + ' ?')) return;
-        
-        const { error } = await supabaseClient
-            .from('widgets_config')
-            .upsert({ type: type, html_code: '', active: false, updated_at: new Date().toISOString() }, { onConflict: 'type' });
-        
+        const { error } = await supabaseClient.from('widgets_config').upsert({ type: type, html_code: '', active: false, updated_at: new Date().toISOString() }, { onConflict: 'type' });
         if (error) alert('Erreur: ' + error.message);
-        else { 
-            document.getElementById(type + '-code').value = '';
-            document.getElementById(type + '-preview').innerHTML = '<em style="color:#999;">Widget retire</em>';
-            loadWidgets(); 
-        }
+        else { document.getElementById(type + '-code').value = ''; document.getElementById(type + '-preview').innerHTML = '<em style="color:#999;">Widget retire</em>'; loadWidgets(); }
     }
 
-    // ========== ARTICLES (inchangé) ==========
     async function loadArticle() {
         const idInput = document.getElementById('edit_id').value.trim();
         if (!idInput) { alert('Veuillez entrer un ID valide.'); return; }
@@ -310,6 +299,8 @@
         document.getElementById('is_featured').checked = data.is_featured || false;
         simplemdeFR.value(data.content || '');
         simplemdeEN.value(data.content_en || '');
+        // Trigger image preview
+        document.getElementById('image_url').dispatchEvent(new Event('input'));
         currentEditId = data.id;
         document.getElementById('btnPublish').style.display = 'none';
         document.getElementById('btnUpdate').style.display = 'block';
@@ -323,6 +314,7 @@
         document.getElementById('excerpt').value = ''; document.getElementById('image_url').value = '';
         document.getElementById('reading_time').value = ''; document.getElementById('category').value = 'Experience';
         document.getElementById('category_en').value = 'Experience'; document.getElementById('is_featured').checked = false;
+        document.getElementById('image-preview').innerHTML = '';
         simplemdeFR.value(''); simplemdeEN.value('');
         document.getElementById('btnPublish').style.display = 'block';
         document.getElementById('btnUpdate').style.display = 'none';
