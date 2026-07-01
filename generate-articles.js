@@ -42,10 +42,17 @@ function getArticleHash(article) {
     return crypto.createHash('md5').update(content).digest('hex');
 }
 
+// Récupérer la première image (séparateur |)
+function getFirstImage(imageUrl) {
+    if (!imageUrl) return `${SITE_URL}/og-default.jpg`;
+    const urls = imageUrl.split('|').map(u => u.trim()).filter(u => u);
+    return urls[0] || `${SITE_URL}/og-default.jpg`;
+}
+
 function generatePage(article) {
     const title = article.title || 'Travel Press';
     const desc = (article.excerpt || article.title || '').substring(0, 160);
-    const img = article.image_url || `${SITE_URL}/og-default.jpg`;
+    const img = getFirstImage(article.image_url);
     const redirectUrl = `${SITE_URL}/post.html?id=${article.id}`;
     const category = article.category || 'News';
     const hash = getArticleHash(article);
@@ -134,7 +141,6 @@ async function main() {
         console.log('📁 Dossier articles/ créé');
     }
     
-    // Compter les fichiers existants
     const existingFiles = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.endsWith('.html')) : [];
     console.log(`📄 ${existingFiles.length} fichiers existants dans articles/`);
     
@@ -147,7 +153,6 @@ async function main() {
         const { html, hash } = generatePage(article);
         const existingHash = getExistingHash(filePath);
         
-        // Ne générer que si le fichier n'existe pas OU si le contenu a changé
         if (!existingHash || existingHash !== hash) {
             fs.writeFileSync(filePath, html);
             const reason = !existingHash ? 'NOUVEAU' : 'MODIFIÉ';
