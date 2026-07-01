@@ -45,7 +45,7 @@ function getArticleHash(article) {
 // Récupérer la première image (séparateur |)
 function getFirstImage(imageUrl) {
     if (!imageUrl) return `${SITE_URL}/og-default.jpg`;
-    const urls = imageUrl.split('|').map(u => u.trim()).filter(u => u);
+    const urls = imageUrl.split('||').map(u => u.trim()).filter(u => u);
     return urls[0] || `${SITE_URL}/og-default.jpg`;
 }
 
