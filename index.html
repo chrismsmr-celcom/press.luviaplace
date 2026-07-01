@@ -329,7 +329,7 @@
             if (!gridContainer) return;
             if (normalGridPosts.length === 0) { gridContainer.innerHTML = `<div style="grid-column:span 3;color:var(--text-muted);padding:2rem 0">Aucun autre article ne correspond à votre recherche.</div>`; return; }
             gridContainer.innerHTML = normalGridPosts.map(post => {
-                const imgUrls = post.image_url ? post.image_url.split('|').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600'];
+                const imgUrls = post.image_url ? post.image_url.split('||').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600'];
                 const hasMultiple = imgUrls.length > 1;
                 setTimeout(() => {
                     if (hasMultiple) {
