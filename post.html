@@ -148,7 +148,7 @@
         .img-dots.visible { display: flex; }
         .img-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s ease; }
         .img-dot.active { background: #ffffff; width: 18px; border-radius: 10px; }
-                .img-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 5; display: none; align-items: center; justify-content: center; color: #333; transition: opacity 0.3s; opacity: 0; }
+                .img-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 62px; height: 62px; border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 5; display: none; align-items: center; justify-content: center; color: #333; transition: opacity 0.3s; opacity: 0; }
         .img-arrow.visible { display: flex; }
         .article-img-wrapper:hover 
         .img-arrow.visible { opacity: 1; }       
@@ -335,7 +335,7 @@
             function renderPost(post){ try{ const isEN=state.currentLang==='en'; const title=isEN&&post.title_en?post.title_en:post.title; const cat=isEN&&post.category_en?post.category_en:(post.category||'News'); const content=isEN&&post.content_en?post.content_en:post.content; document.title=title+' - Travel Press'; document.getElementById('article-title').textContent=title; document.getElementById('article-cat').textContent=cat;
             
             // Images slider
-            const imgUrls = post.image_url ? post.image_url.split('|').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'];
+            const imgUrls = post.image_url ? post.image_url.split('||').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'];
             const imgSlider = document.getElementById('article-img-slider');
             const imgDots = document.getElementById('img-dots');
             const arrowLeft = document.getElementById('img-arrow-left');
