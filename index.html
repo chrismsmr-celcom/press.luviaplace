@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Press by luvia — Media Center</title>
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Travel Press — Media Center</title>
+
     <!-- SEO Meta -->
-    <meta name="description" content="Travel Press by Luvia — Media Center officiel. Actualités voyage, tourisme de luxe, hôtellerie et lifestyle.">
-    <meta name="keywords" content="travel, voyage, luxe, tourisme, hôtel, actu, news, travel press, luvia, media">
-    <meta name="author" content="Travel Press">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://press.luviaplace.com/">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
-    
+    <meta name="description" content="Travel Press by Luvia — Media Center officiel. Actualités voyage, tourisme de luxe, hôtellerie et lifestyle." />
+    <meta name="keywords" content="travel, voyage, luxe, tourisme, hôtel, actu, news, travel press, luvia, media" />
+    <meta name="author" content="Travel Press" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://press.luviaplace.com/" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+
     <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://press.luviaplace.com/">
-    <meta property="og:title" content="Travel Press — Media Center">
-    <meta property="og:description" content="Actualités voyage, tourisme de luxe, hôtellerie et lifestyle.">
-    <meta property="og:image" content="https://press.luviaplace.com/og-default.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Travel Press">
-    <meta property="og:locale" content="fr_FR">
-    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://press.luviaplace.com/" />
+    <meta property="og:title" content="Travel Press — Media Center" />
+    <meta property="og:description" content="Actualités voyage, tourisme de luxe, hôtellerie et lifestyle." />
+    <meta property="og:image" content="https://press.luviaplace.com/og-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Travel Press" />
+    <meta property="og:locale" content="fr_FR" />
+
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@travelpress">
-    <meta name="twitter:title" content="Travel Press — Media Center">
-    <meta name="twitter:description" content="Actualités voyage, tourisme de luxe, hôtellerie et lifestyle.">
-    <meta name="twitter:image" content="https://press.luviaplace.com/og-default.jpg">
-    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@travelpress" />
+    <meta name="twitter:title" content="Travel Press — Media Center" />
+    <meta name="twitter:description" content="Actualités voyage, tourisme de luxe, hôtellerie et lifestyle." />
+    <meta name="twitter:image" content="https://press.luviaplace.com/og-default.jpg" />
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
-    <link rel="manifest" href="/manifest.json">
-    
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
     <!-- Polices -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -51,151 +51,521 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WD4WP29Q');</script>
     <!-- End Google Tag Manager -->
-    
+
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-main: #121212;
-            --text-muted: #6a6a6a;
-            --accent: #0046e4; 
-            --accent-bg: #e6eefc;
-            --border: #e8e8e8;
-            --max-width: 1200px;
-            --skeleton-base: #f2f2f2;
-            --skeleton-shimmer: #e4e4e4;
+        /* ===== RESET & BASE ===== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); -webkit-font-smoothing: antialiased; }
-        
-        header { border-bottom: 1px solid var(--border); background: #ffffff; position: sticky; top: 0; z-index: 100; height: 75px; }
-        .nav-container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; height: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .logo-wrap { display: flex; align-items: center; height: 100%; text-decoration: none; }
-        .logo-img { height: 70px; width: auto; object-fit: contain; }
-        
-        nav.nav-desktop { display: flex; gap: 2.5rem; align-items: center; }
-        nav.nav-desktop a { text-decoration: none; color: var(--text-main); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        :root {
+            --max-width: 1140px;
+            --accent: #1a3b7a;
+            --accent-light: #eef3fc;
+            --border: #e6e6e6;
+            --text-muted: #6b6b6b;
+            --skeleton-base: #f5f5f5;
+            --skeleton-shimmer: #e8e8e8;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ===== HEADER ===== */
+        header {
+            border-bottom: 1px solid var(--border);
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 68px;
+        }
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        .logo-img {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav.nav-desktop {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        nav.nav-desktop a {
+            color: #1a1a1a;
+            transition: color 0.2s;
+            letter-spacing: 0.01em;
+        }
         nav.nav-desktop a:hover { color: var(--accent); }
-        .cta-main-site { background-color: var(--accent); color: #ffffff; padding: 0.65rem 1.4rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+        .cta-main-site {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 0.45rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: opacity 0.2s;
+        }
         .cta-main-site:hover { opacity: 0.9; }
 
-        .ticker-bar { background: #fcfcfc; border-bottom: 1px solid var(--border); padding: 0.6rem 2rem; font-size: 0.8rem; overflow: hidden; white-space: nowrap; position: relative; }
-        .ticker-container { max-width: var(--max-width); margin: 0 auto; display: flex; gap: 2rem; align-items: center; }
-        .ticker-badge { background: #0046e4; color: white; padding: 0.2rem 0.5rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; font-size: 0.75rem; flex-shrink: 0; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
-        .ticker-scroll-wrap { overflow: hidden; flex: 1; position: relative; height: 20px; }
-        .ticker-text { font-weight: 500; color: var(--text-main); display: inline-block; animation: ticker-scroll 90s linear infinite; white-space: nowrap; padding-left: 100%; }
-        .ticker-text:hover { animation-play-state: paused; }
-        .ticker-separator { margin: 0 2rem; color: #999; }
-        @keyframes ticker-scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
-        .ticker-loading { font-weight: 500; color: var(--text-muted); }
+        .lang-dropdown {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 0.3rem 0.6rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+        }
 
-        .hero-section { max-width: var(--max-width); margin: 2rem auto; padding: 0 2rem; }
-        .hero-banner-bg { width: 100%; min-height: 440px; background-size: cover; background-position: center; border-radius: 16px; position: relative; display: flex; align-items: center; padding: 4rem; overflow: visible; }
-        .hero-banner-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0) 80%); border-radius: 16px; }
-        .hero-left-content { position: relative; z-index: 2; max-width: 50%; color: #ffffff; }
-        .hero-left-content h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -1px; }
-        .hero-left-content p { font-size: 1.05rem; color: rgba(255,255,255,0.85); font-weight: 400; line-height: 1.5; }
-
-        .featured-floating-card { position: absolute; right: 4rem; top: 3rem; bottom: -3rem; width: 380px; background: #ffffff; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 1.5rem; display: flex; flex-direction: column; text-decoration: none; color: inherit; z-index: 5; transition: transform 0.2s; }
-        .featured-floating-card:hover { transform: translateY(-4px); }
-        .featured-card-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
-        .tag-badge { display: inline-block; background: #121212; color: #ffffff; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px; text-transform: uppercase; margin-bottom: 0.75rem; align-self: flex-start; }
-        .featured-card-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem; }
-        .featured-card-title { font-size: 1.15rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .filter-section { max-width: var(--max-width); margin: 6rem auto 2rem auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .filter-section h2 { font-size: 1.4rem; font-weight: 700; }
-        .filter-controls { display: flex; gap: 1rem; }
-        .search-input { padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; width: 220px; outline: none; font-family: inherit; }
-        .category-select { padding: 0.6rem 1.5rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; background: #fff; cursor: pointer; outline: none; font-family: inherit; }
-
-        /* --- GRILLE --- */
-        .journal-grid { max-width: var(--max-width); margin: 0 auto 5rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-        .article-card { background: #ffffff; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.2s; }
-        .article-card:hover { transform: translateY(-2px); }
-        
-        .article-img-wrap { width: 100%; height: 210px; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; background: #f0f0f0; position: relative; }
-        .article-img-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; height: 100%; cursor: grab; }
-        .article-img-slider::-webkit-scrollbar { display: none; }
-        .article-img-slider:active { cursor: grabbing; }
-        .article-img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; scroll-snap-align: start; }
-        
-        .card-controls { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; z-index: 5; }
-        .card-dots { display: flex; gap: 4px; }
-        .card-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.5); transition: all 0.3s ease; }
-        .card-dot.active { background: #ffffff; width: 14px; border-radius: 10px; }
-        .card-arrows { display: flex; gap: 4px; }
-        .card-arrow { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.8); border: none; cursor: pointer; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; color: #333; transition: opacity 0.2s; }
-        .card-arrow:hover { background: #ffffff; }
-        .card-controls.hidden { display: none; }
-        
-        .article-info { display: flex; flex-direction: column; }
-        .meta-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-        .article-title { font-size: 1rem; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .lang-dropdown { background: #ffffff; border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; outline: none; }
-        .lang-dropdown:hover { border-color: var(--text-main); }
-        .lang-selector-wrap { display: flex; align-items: center; }
-
-        @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-        .skeleton { background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: 4px; }
-
-        .skeleton-view { display: block; }
-        .real-view { display: none; opacity: 0; transition: opacity 0.4s ease; }
-        .real-view.ready { display: block; opacity: 1; }
-
-        .burger-menu { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; z-index: 110; }
-        .burger-menu span { display: block; width: 22px; height: 2px; background: var(--text-main); margin: 5px 0; transition: 0.3s ease; }
-        .nav-mobile { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #ffffff; z-index: 105; padding: 6rem 2rem 2rem 2rem; flex-direction: column; gap: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .nav-mobile a { text-decoration: none; color: var(--text-main); font-size: 1.3rem; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
-        .nav-mobile .cta-mobile-site { color: var(--accent); border: none; margin-top: 1rem; font-size: 1.4rem; }
+        /* Mobile nav */
+        .burger-menu { display: none; background: none; border: none; cursor: pointer; padding: 0.4rem; z-index: 110; }
+        .burger-menu span { display: block; width: 22px; height: 2px; background: #1a1a1a; margin: 5px 0; transition: 0.3s ease; }
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: #fff;
+            z-index: 105;
+            padding: 5rem 2rem 2rem;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .nav-mobile a { font-size: 1.2rem; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+        .nav-mobile .cta-mobile-site { color: var(--accent); border: none; }
         .nav-mobile.open { display: flex; }
         .burger-menu.open span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 5px); }
         .burger-menu.open span:nth-child(2) { opacity: 0; }
         .burger-menu.open span:nth-child(3) { transform: rotate(45deg) translate(-5px, -5px); }
 
-        @media (max-width: 992px) { nav.nav-desktop { display: none; } .burger-menu { display: block; } }
-        @media (max-width: 768px) {
-            .hero-section { max-width: 100%; margin: 0; padding: 0; }
-            .hero-banner-bg { border-radius: 0; min-height: 100vh; min-height: 100svh; flex-direction: column; padding: 6rem 1.5rem 2rem 1.5rem; align-items: flex-start; justify-content: flex-start; margin-bottom: 0; }
-            .hero-banner-bg::before { border-radius: 0; background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.7) 100%); }
-            .hero-left-content { max-width: 100%; margin-bottom: 2rem; padding-top: 2rem; }
-            .hero-left-content h1 { font-size: 2.2rem; } .hero-left-content p { font-size: 0.95rem; }
-            .featured-floating-card { position: relative; right: auto; top: auto; bottom: auto; width: 100%; margin-top: auto; flex-shrink: 0; }
-            .hero-banner-bg { display: flex; flex-direction: column; }
-            .filter-section { margin-top: 2rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .filter-controls { flex-direction: column; width: 100%; } .search-input { width: 100%; }
-            .journal-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-            .ticker-bar { padding: 0.5rem 1rem; }
+        @media (max-width: 992px) {
+            nav.nav-desktop { display: none; }
+            .burger-menu { display: block; }
         }
+
+        /* ===== TICKER ===== */
+        .ticker-bar {
+            background: #fafafa;
+            border-bottom: 1px solid var(--border);
+            padding: 0.4rem 2rem;
+            font-size: 0.8rem;
+            overflow: hidden;
+        }
+        .ticker-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .ticker-badge {
+            background: var(--accent);
+            color: #fff;
+            padding: 0.1rem 0.6rem;
+            font-weight: 700;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .ticker-scroll-wrap {
+            overflow: hidden;
+            flex: 1;
+            position: relative;
+            height: 1.4rem;
+        }
+        .ticker-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker-scroll 80s linear infinite;
+            padding-left: 100%;
+            font-weight: 450;
+            color: #1a1a1a;
+        }
+        .ticker-text:hover { animation-play-state: paused; }
+        .ticker-separator { margin: 0 1.8rem; color: #bbb; }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* ===== HERO ===== */
+        .hero-section {
+            max-width: var(--max-width);
+            margin: 2.5rem auto 0;
+            padding: 0 2rem;
+        }
+        .hero-banner-bg {
+            width: 100%;
+            min-height: 380px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 3rem 3.5rem;
+            overflow: visible;
+        }
+        .hero-banner-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.1) 75%);
+            border-radius: 12px;
+        }
+        .hero-left-content {
+            position: relative;
+            z-index: 2;
+            max-width: 52%;
+            color: #fff;
+        }
+        .hero-left-content h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+        .hero-left-content p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.85);
+            font-weight: 300;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        .featured-floating-card {
+            position: absolute;
+            right: 3rem;
+            top: 2.5rem;
+            bottom: -2.5rem;
+            width: 340px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            transition: transform 0.2s;
+        }
+        .featured-floating-card:hover { transform: translateY(-3px); }
+        .featured-card-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+        }
+        .tag-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.15rem 0.6rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.5rem;
+            align-self: flex-start;
+        }
+        .featured-card-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+        .featured-card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ===== FILTERS ===== */
+        .filter-section {
+            max-width: var(--max-width);
+            margin: 5rem auto 1.5rem;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+        .filter-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .filter-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .search-input {
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            width: 200px;
+            outline: none;
+            font-family: inherit;
+            background: #fafafa;
+            transition: border 0.2s;
+        }
+        .search-input:focus { border-color: #999; background: #fff; }
+        .category-select {
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: #fafafa;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+        }
+
+        /* ===== GRID ===== */
+        .journal-grid {
+            max-width: var(--max-width);
+            margin: 1.5rem auto 4rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .article-card {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s;
+        }
+        .article-card:hover { transform: translateY(-2px); }
+
+        .article-img-wrap {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            background: #f0f0f0;
+            position: relative;
+        }
+        .article-img-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            height: 100%;
+            cursor: grab;
+        }
+        .article-img-slider::-webkit-scrollbar { display: none; }
+        .article-img-slider:active { cursor: grabbing; }
+        .article-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+
+        .card-controls {
+            position: absolute;
+            bottom: 8px;
+            left: 0; right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8px;
+            z-index: 5;
+        }
+        .card-dots { display: flex; gap: 4px; }
+        .card-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.3s;
+        }
+        .card-dot.active { background: #fff; width: 14px; border-radius: 10px; }
+        .card-arrows { display: flex; gap: 4px; }
+        .card-arrow {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.85);
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            transition: background 0.2s;
+        }
+        .card-arrow:hover { background: #fff; }
+        .card-controls.hidden { display: none; }
+
+        .article-info .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.3rem;
+        }
+        .article-info .meta-row .tag-badge {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 0.1rem 0.6rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+        }
+        .article-info .meta-row .date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .article-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ===== SKELETON ===== */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+            border-radius: 4px;
+        }
+        .skeleton-view { display: block; }
+        .real-view { display: none; opacity: 0; transition: opacity 0.4s; }
+        .real-view.ready { display: block; opacity: 1; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .hero-banner-bg { min-height: 320px; padding: 2rem; }
+            .featured-floating-card { width: 280px; right: 2rem; top: 2rem; bottom: -2rem; }
+            .hero-left-content h1 { font-size: 2rem; }
+            .journal-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section { margin: 0; padding: 0; }
+            .hero-banner-bg {
+                border-radius: 0;
+                min-height: 100vh;
+                min-height: 100svh;
+                flex-direction: column;
+                padding: 5rem 1.5rem 2rem;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+            .hero-banner-bg::before {
+                border-radius: 0;
+                background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.7) 100%);
+            }
+            .hero-left-content { max-width: 100%; margin-bottom: 2rem; padding-top: 1rem; }
+            .hero-left-content h1 { font-size: 2rem; }
+            .hero-left-content p { max-width: 100%; font-size: 0.95rem; }
+            .featured-floating-card {
+                position: relative;
+                right: auto; top: auto; bottom: auto;
+                width: 100%;
+                margin-top: auto;
+                flex-shrink: 0;
+            }
+            .filter-section {
+                margin-top: 2rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .filter-controls { flex-direction: column; width: 100%; }
+            .search-input { width: 100%; }
+            .journal-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .ticker-bar { padding: 0.3rem 1rem; }
+            .ticker-container { gap: 0.8rem; }
+        }
+
         @media (max-width: 480px) {
-            .hero-banner-bg { min-height: 100vh; min-height: 100svh; padding: 5rem 1rem 1.5rem 1rem; }
-            .hero-left-content h1 { font-size: 1.8rem; }
-            .journal-grid { grid-template-columns: 1fr; }
+            .hero-banner-bg { min-height: 100vh; min-height: 100svh; padding: 4rem 1rem 1.5rem; }
+            .hero-left-content h1 { font-size: 1.7rem; }
         }
     </style>
 </head>
 <body>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD4WP29Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD4WP29Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+    <!-- ===== HEADER ===== -->
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo-wrap"><img src="https://ukbekfcjfcjcqrpxfpmq.supabase.co/storage/v1/object/public/logo%20luvia/travel%20press%20svg.svg" alt="Travel Press" class="logo-img"></a>
+            <a href="index.html" class="logo-wrap">
+                <img src="https://ukbekfcjfcjcqrpxfpmq.supabase.co/storage/v1/object/public/logo%20luvia/travel%20press%20svg.svg" alt="Travel Press" class="logo-img" />
+            </a>
             <nav class="nav-desktop">
                 <a href="https://about.luviaplace.com" target="_blank" data-i18n="nav-about">About</a>
                 <a href="https://insurance.luviaplace.com" target="_blank" data-i18n="nav-insurance">Insurance</a>
                 <a href="https://tiqets.luviaplace.com" target="_blank" data-i18n="nav-tiqets">Luvia+Tiqets</a>
                 <a href="https://activites.luviaplace.com" target="_blank" data-i18n="nav-gyg">Luvia+GYG</a>
                 <div class="lang-selector-wrap">
-                    <select id="langSelect" onchange="changeLanguage(this.value)" class="lang-dropdown"><option value="fr">FR</option><option value="en">EN</option></select>
+                    <select id="langSelect" onchange="changeLanguage(this.value)" class="lang-dropdown">
+                        <option value="fr">FR</option>
+                        <option value="en">EN</option>
+                    </select>
                 </div>
                 <a href="https://luviaplace.com" class="cta-main-site" target="_blank" data-i18n="nav-cta">Get in touch</a>
             </nav>
-            <button class="burger-menu" id="burgerToggle" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <button class="burger-menu" id="burgerToggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
             <nav class="nav-mobile" id="mobileMenu">
                 <div style="padding-bottom:1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-weight:600;font-size:.9rem" data-i18n="lang-label">Langue / Language</span>
-                    <select id="langSelectMobile" onchange="changeLanguage(this.value)" class="lang-dropdown"><option value="fr">FR</option><option value="en">EN</option></select>
+                    <span style="font-weight:600;font-size:.85rem" data-i18n="lang-label">Langue / Language</span>
+                    <select id="langSelectMobile" onchange="changeLanguage(this.value)" class="lang-dropdown">
+                        <option value="fr">FR</option>
+                        <option value="en">EN</option>
+                    </select>
                 </div>
                 <a href="https://about.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-about">About</a>
                 <a href="https://insurance.luviaplace.com" target="_blank" onclick="toggleMenu()" data-i18n="nav-insurance">Insurance</a>
@@ -206,26 +576,56 @@
         </div>
     </header>
 
+    <!-- ===== TICKER ===== -->
     <div class="ticker-bar">
         <div class="ticker-container">
             <span class="ticker-badge" data-i18n="ticker-badge">Dernières minutes</span>
-            <div class="ticker-scroll-wrap"><span class="ticker-text" id="ticker-headline"><span class="ticker-loading">Chargement des actualités travel...</span></span></div>
+            <div class="ticker-scroll-wrap">
+                <span class="ticker-text" id="ticker-headline"><span class="ticker-loading">Chargement des actualités travel...</span></span>
+            </div>
         </div>
     </div>
 
+    <!-- ===== SKELETON ===== -->
     <div id="skeleton-view" class="skeleton-view">
-        <div class="hero-section"><div class="skeleton" style="width:100%;height:440px;border-radius:16px;position:relative"><div style="position:absolute;left:4rem;top:35%;width:45%"><div class="skeleton" style="height:35px;width:90%;background:#e2e2e2;margin-bottom:10px"></div><div class="skeleton" style="height:35px;width:60%;background:#e2e2e2;margin-bottom:20px"></div><div class="skeleton" style="height:15px;width:100%;background:#e2e2e2"></div></div><div style="position:absolute;right:4rem;top:3rem;width:380px;height:380px;background:#fff;border-radius:12px;padding:1.5rem"><div class="skeleton" style="width:100%;height:180px;border-radius:8px"></div><div class="skeleton" style="width:80px;height:18px;margin-top:1rem"></div><div class="skeleton" style="width:100%;height:20px;margin-top:1rem"></div></div></div></div>
-        <div class="filter-section"><div class="skeleton" style="width:250px;height:24px"></div><div class="filter-controls"><div class="skeleton" style="width:220px;height:35px;border-radius:20px"></div><div class="skeleton" style="width:120px;height:35px;border-radius:20px"></div></div></div>
-        <div class="journal-grid"><div class="article-card"><div class="skeleton" style="width:100%;height:210px;border-radius:12px"></div></div><div class="article-card"><div class="skeleton" style="width:100%;height:210px;border-radius:12px"></div></div><div class="article-card"><div class="skeleton" style="width:100%;height:210px;border-radius:12px"></div></div></div>
+        <div class="hero-section">
+            <div class="skeleton" style="width:100%;height:380px;border-radius:12px;position:relative">
+                <div style="position:absolute;left:3rem;top:35%;width:45%">
+                    <div class="skeleton" style="height:32px;width:85%;margin-bottom:8px"></div>
+                    <div class="skeleton" style="height:32px;width:55%;margin-bottom:16px"></div>
+                    <div class="skeleton" style="height:14px;width:90%"></div>
+                </div>
+                <div style="position:absolute;right:3rem;top:2rem;width:340px;height:340px;background:#fff;border-radius:10px;padding:1.5rem">
+                    <div class="skeleton" style="width:100%;height:160px;border-radius:6px"></div>
+                    <div class="skeleton" style="width:60px;height:16px;margin-top:0.75rem"></div>
+                    <div class="skeleton" style="width:100%;height:18px;margin-top:0.75rem"></div>
+                </div>
+            </div>
+        </div>
+        <div class="filter-section">
+            <div class="skeleton" style="width:180px;height:22px"></div>
+            <div class="filter-controls">
+                <div class="skeleton" style="width:200px;height:34px;border-radius:20px"></div>
+                <div class="skeleton" style="width:120px;height:34px;border-radius:20px"></div>
+            </div>
+        </div>
+        <div class="journal-grid">
+            <div class="article-card"><div class="skeleton" style="width:100%;height:200px;border-radius:8px"></div></div>
+            <div class="article-card"><div class="skeleton" style="width:100%;height:200px;border-radius:8px"></div></div>
+            <div class="article-card"><div class="skeleton" style="width:100%;height:200px;border-radius:8px"></div></div>
+        </div>
     </div>
 
+    <!-- ===== REAL CONTENT ===== -->
     <div id="real-view" class="real-view">
         <div id="hero-container"></div>
         <div class="filter-section">
             <h2 id="grid-title-count" data-i18n="latest-news">Latest News</h2>
             <div class="filter-controls">
-                <input type="text" id="searchInput" class="search-input" oninput="filterPosts()" placeholder="Search articles..." data-i18n-placeholder="search-placeholder">
-                <select class="category-select" id="categoryFilter" onchange="filterPosts()"><option value="all" data-i18n="cat-all">Categories</option></select>
+                <input type="text" id="searchInput" class="search-input" oninput="filterPosts()" placeholder="Search articles..." data-i18n-placeholder="search-placeholder" />
+                <select class="category-select" id="categoryFilter" onchange="filterPosts()">
+                    <option value="all" data-i18n="cat-all">Categories</option>
+                </select>
             </div>
         </div>
         <main class="journal-grid" id="posts-grid-container"></main>
@@ -234,103 +634,177 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        let realtimeDebounceTimer = null;
-        const REALTIME_DEBOUNCE_MS = 30000;
-        const NEWS_API_KEY = 'pub_1ea29e57ce7b48fb8cfecae994edc791';
-        const NEWS_API_URL = 'https://newsdata.io/api/1/latest';
+        // ===== CONFIG =====
         const SUPABASE_URL = 'https://ukbekfcjfcjcqrpxfpmq.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrYmVrZmNqZmNqY3FycHhmcG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDk2NzcsImV4cCI6MjA4OTkyNTY3N30.KK3nxQOLTi3IZjYoRtrNC6mS_ixSsrZMI3J4WfxJVYU';
+        const NEWS_API_KEY = 'pub_1ea29e57ce7b48fb8cfecae994edc791';
+        const NEWS_API_URL = 'https://newsdata.io/api/1/latest';
+        const REALTIME_DEBOUNCE_MS = 30000;
+
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // ===== TRANSLATIONS =====
         const translations = {
-            fr: {"nav-about":"À propos","nav-insurance":"Assurances","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Nous contacter","nav-cta-mobile":"Nous contacter →","lang-label":"Langue","ticker-badge":"Dernières minutes","loading-news":"Chargement des actualités...","latest-news":"Toutes les actualités Travel Press","search-placeholder":"Rechercher un article...","cat-all":"Toutes les catégories","hero-welcome":"Bienvenue sur le<br>Travel Press Media Center","hero-desc":"Suivez en temps réel les annonces officielles, communiqués de presse, analyses de luxe et carnets de bord exclusifs.","ticker-no-news":"Aucune actualité travel disponible pour le moment."},
-            en: {"nav-about":"About","nav-insurance":"Insurance","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Get in touch","nav-cta-mobile":"Get in touch →","lang-label":"Language","ticker-badge":"Breaking News","loading-news":"Loading latest news...","latest-news":"Latest News by Travel Press","search-placeholder":"Search articles...","cat-all":"Categories","hero-welcome":"Welcome to the<br>Travel Press Media Center","hero-desc":"Stay up to date on current company announcements, press releases, luxury insights, and reports.","ticker-no-news":"No travel news available at the moment."}
+            fr: {
+                "nav-about": "À propos",
+                "nav-insurance": "Assurances",
+                "nav-tiqets": "Luvia+Tiqets",
+                "nav-gyg": "Luvia+GYG",
+                "nav-cta": "Nous contacter",
+                "nav-cta-mobile": "Nous contacter →",
+                "lang-label": "Langue",
+                "ticker-badge": "Dernières minutes",
+                "loading-news": "Chargement des actualités...",
+                "latest-news": "Dernières actualités Travel Press",
+                "search-placeholder": "Rechercher un article...",
+                "cat-all": "Toutes les catégories",
+                "hero-welcome": "Bienvenue sur le<br>Travel Press Media Center",
+                "hero-desc": "Suivez en temps réel les annonces officielles, communiqués de presse, analyses de luxe et carnets de bord exclusifs.",
+                "ticker-no-news": "Aucune actualité travel disponible pour le moment."
+            },
+            en: {
+                "nav-about": "About",
+                "nav-insurance": "Insurance",
+                "nav-tiqets": "Luvia+Tiqets",
+                "nav-gyg": "Luvia+GYG",
+                "nav-cta": "Get in touch",
+                "nav-cta-mobile": "Get in touch →",
+                "lang-label": "Language",
+                "ticker-badge": "Breaking News",
+                "loading-news": "Loading latest news...",
+                "latest-news": "Latest News by Travel Press",
+                "search-placeholder": "Search articles...",
+                "cat-all": "Categories",
+                "hero-welcome": "Welcome to the<br>Travel Press Media Center",
+                "hero-desc": "Stay up to date on current company announcements, press releases, luxury insights, and reports.",
+                "ticker-no-news": "No travel news available at the moment."
+            }
         };
 
         let currentLang = localStorage.getItem('luvia-lang') || 'fr';
+        let allPostsData = [];
+        let featuredPostId = null;
 
+        // ===== I18N =====
         function applyTranslations() {
-            document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (translations[currentLang][k]) el.innerHTML = translations[currentLang][k]; });
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { const k = el.getAttribute('data-i18n-placeholder'); if (translations[currentLang][k]) el.setAttribute('placeholder', translations[currentLang][k]); });
-            if (document.getElementById('langSelect')) document.getElementById('langSelect').value = currentLang;
-            if (document.getElementById('langSelectMobile')) document.getElementById('langSelectMobile').value = currentLang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const k = el.getAttribute('data-i18n');
+                if (translations[currentLang]?.[k]) el.innerHTML = translations[currentLang][k];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const k = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang]?.[k]) el.setAttribute('placeholder', translations[currentLang][k]);
+            });
+            document.getElementById('langSelect').value = currentLang;
+            document.getElementById('langSelectMobile').value = currentLang;
         }
-        function changeLanguage(lang) { currentLang = lang; localStorage.setItem('luvia-lang', lang); applyTranslations(); if (window.allPostsData) renderDynamicContent(window.allPostsData); }
-        function toggleMenu() { document.getElementById('burgerToggle').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
 
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('luvia-lang', lang);
+            applyTranslations();
+            if (allPostsData.length) renderDynamicContent(allPostsData);
+        }
+
+        function toggleMenu() {
+            document.getElementById('burgerToggle').classList.toggle('open');
+            document.getElementById('mobileMenu').classList.toggle('open');
+        }
+
+        // ===== TICKER =====
         async function fetchLatestNews() {
             const tickerHeadline = document.getElementById('ticker-headline');
             try {
-                const response = await fetch(`${NEWS_API_URL}?apikey=${NEWS_API_KEY}&q=travel&language=fr,en&size=10`);
-                if (!response.ok) throw new Error('Erreur API');
-                const data = await response.json();
-                if (data.status === 'success' && data.results && data.results.length > 0) {
-                    const headlines = data.results.filter(a => a.title && a.title.length > 10).map(a => a.title).slice(0, 10);
-                    if (headlines.length > 0) { const t = headlines.join(' <span class="ticker-separator">|</span> '); tickerHeadline.innerHTML = t + ' <span class="ticker-separator">|</span> ' + t; }
-                    else tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
-                } else tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
-            } catch (e) { tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news']; }
+                const res = await fetch(`${NEWS_API_URL}?apikey=${NEWS_API_KEY}&q=travel&language=fr,en&size=10`);
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                if (data.status === 'success' && data.results?.length) {
+                    const headlines = data.results.filter(a => a.title?.length > 10).map(a => a.title).slice(0, 10);
+                    if (headlines.length) {
+                        tickerHeadline.innerHTML = headlines.join(' <span class="ticker-separator">|</span> ') + ' <span class="ticker-separator">|</span> ' + headlines.join(' <span class="ticker-separator">|</span> ');
+                    } else {
+                        tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
+                    }
+                } else {
+                    tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
+                }
+            } catch {
+                tickerHeadline.innerHTML = translations[currentLang]['ticker-no-news'];
+            }
         }
-        function startTickerRefresh() { fetchLatestNews(); setInterval(fetchLatestNews, 5 * 60 * 1000); }
 
+        function startTickerRefresh() {
+            fetchLatestNews();
+            setInterval(fetchLatestNews, 5 * 60 * 1000);
+        }
+
+        // ===== REALTIME =====
+        let realtimeDebounceTimer = null;
         function setupRealtime() {
-            supabaseClient.channel('posts-realtime').on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => {
-                if (realtimeDebounceTimer) clearTimeout(realtimeDebounceTimer);
-                realtimeDebounceTimer = setTimeout(() => { refreshArticles(); realtimeDebounceTimer = null; }, REALTIME_DEBOUNCE_MS);
-            }).subscribe();
+            supabaseClient.channel('posts-realtime')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => {
+                    if (realtimeDebounceTimer) clearTimeout(realtimeDebounceTimer);
+                    realtimeDebounceTimer = setTimeout(() => {
+                        refreshArticles();
+                        realtimeDebounceTimer = null;
+                    }, REALTIME_DEBOUNCE_MS);
+                })
+                .subscribe();
         }
 
         async function refreshArticles() {
             const { data: posts } = await supabaseClient.from('posts').select('*').order('created_at', { ascending: false });
-            if (!posts || !posts.length) return;
-            window.allPostsData = posts;
-            const featuredPost = posts.find(p => p.is_featured) || posts[0];
-            window.featuredPostId = featuredPost.id;
-            const heroContainer = document.getElementById('hero-container');
-            if (heroContainer) {
-                heroContainer.innerHTML = `<section class="hero-section"><div class="hero-banner-bg" style="background-image:url('${featuredPost.image_url||'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}');"><div class="hero-left-content"><h1>${translations[currentLang]['hero-welcome']}</h1><p>${translations[currentLang]['hero-desc']}</p></div><a href="post.html?id=${featuredPost.id}" class="featured-floating-card"><img class="featured-card-img" src="${featuredPost.image_url||'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}" alt="Cover"><span class="tag-badge">${featuredPost.category||'Press'}</span><div class="featured-card-date">${new Date(featuredPost.created_at).toLocaleDateString(currentLang==='fr'?'fr-FR':'en-US',{month:'short',day:'numeric',year:'numeric'})}</div><h3 class="featured-card-title">${featuredPost.title}</h3></a></div></section>`;
-            }
-            buildGrid(posts);
-            const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
-            const selectFilter = document.getElementById('categoryFilter');
-            selectFilter.innerHTML = '<option value="all" data-i18n="cat-all">Categories</option>';
-            categories.forEach(cat => { const opt = document.createElement('option'); opt.value = cat; opt.innerText = cat; selectFilter.appendChild(opt); });
-        }
-
-        async function initMediaCenter() {
-            applyTranslations(); startTickerRefresh(); setupRealtime();
-            const { data: posts } = await supabaseClient.from('posts').select('*').order('created_at', { ascending: false });
-            if (!posts || !posts.length) { document.getElementById('posts-grid-container').innerHTML = `<div>${currentLang==='fr'?'Aucun article disponible.':'No articles available.'}</div>`; return; }
-            window.allPostsData = posts;
-            const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
-            const selectFilter = document.getElementById('categoryFilter');
-            categories.forEach(cat => { const opt = document.createElement('option'); opt.value = cat; opt.innerText = cat; selectFilter.appendChild(opt); });
+            if (!posts?.length) return;
+            allPostsData = posts;
             renderDynamicContent(posts);
+            updateCategoryFilter(posts);
         }
 
+        // ===== RENDER =====
         function renderDynamicContent(posts) {
             if (!posts.length) return;
-            const featuredPost = posts.find(p => p.is_featured) || posts[0];
-            window.featuredPostId = featuredPost.id;
+            const featured = posts.find(p => p.is_featured) || posts[0];
+            featuredPostId = featured.id;
+
             const heroContainer = document.getElementById('hero-container');
-            if (heroContainer) {
-                heroContainer.innerHTML = `<section class="hero-section"><div class="hero-banner-bg" style="background-image:url('${featuredPost.image_url||'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}');"><div class="hero-left-content"><h1>${translations[currentLang]['hero-welcome']}</h1><p>${translations[currentLang]['hero-desc']}</p></div><a href="post.html?id=${featuredPost.id}" class="featured-floating-card"><img class="featured-card-img" src="${featuredPost.image_url||'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}" alt="Cover"><span class="tag-badge">${featuredPost.category||'Press'}</span><div class="featured-card-date">${new Date(featuredPost.created_at).toLocaleDateString(currentLang==='fr'?'fr-FR':'en-US',{month:'short',day:'numeric',year:'numeric'})}</div><h3 class="featured-card-title">${featuredPost.title}</h3></a></div></section>`;
-            }
+            heroContainer.innerHTML = `
+                <section class="hero-section">
+                    <div class="hero-banner-bg" style="background-image:url('${featured.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}')">
+                        <div class="hero-left-content">
+                            <h1>${translations[currentLang]['hero-welcome']}</h1>
+                            <p>${translations[currentLang]['hero-desc']}</p>
+                        </div>
+                        <a href="post.html?id=${featured.id}" class="featured-floating-card">
+                            <img class="featured-card-img" src="${featured.image_url || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'}" alt="Cover" />
+                            <span class="tag-badge">${featured.category || 'Press'}</span>
+                            <div class="featured-card-date">${new Date(featured.created_at).toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                            <h3 class="featured-card-title">${featured.title}</h3>
+                        </a>
+                    </div>
+                </section>
+            `;
             buildGrid(posts);
             document.getElementById('skeleton-view').style.display = 'none';
             document.getElementById('real-view').classList.add('ready');
         }
 
         function buildGrid(postsList) {
-            const normalGridPosts = postsList.filter(p => p.id !== window.featuredPostId);
-            const gridTitleCount = document.getElementById('grid-title-count');
-            if (gridTitleCount) gridTitleCount.innerText = currentLang === 'fr' ? `Dernières actualités Travel Press (${normalGridPosts.length})` : `Latest News by Travel Press (${normalGridPosts.length})`;
-            const gridContainer = document.getElementById('posts-grid-container');
-            if (!gridContainer) return;
-            if (normalGridPosts.length === 0) { gridContainer.innerHTML = `<div style="grid-column:span 3;color:var(--text-muted);padding:2rem 0">Aucun autre article ne correspond à votre recherche.</div>`; return; }
-            gridContainer.innerHTML = normalGridPosts.map(post => {
-                const imgUrls = post.image_url ? post.image_url.split('||').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600'];
+            const normalPosts = postsList.filter(p => p.id !== featuredPostId);
+            const gridTitle = document.getElementById('grid-title-count');
+            gridTitle.innerText = currentLang === 'fr'
+                ? `Dernières actualités Travel Press (${normalPosts.length})`
+                : `Latest News by Travel Press (${normalPosts.length})`;
+
+            const grid = document.getElementById('posts-grid-container');
+            if (!normalPosts.length) {
+                grid.innerHTML = `<div style="grid-column:span 3;color:var(--text-muted);padding:2rem 0">${currentLang === 'fr' ? 'Aucun autre article.' : 'No other articles.'}</div>`;
+                return;
+            }
+
+            grid.innerHTML = normalPosts.map(post => {
+                const imgUrls = post.image_url ? post.image_url.split('||').map(u => u.trim()).filter(Boolean) : ['https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600'];
                 const hasMultiple = imgUrls.length > 1;
+
                 setTimeout(() => {
                     if (hasMultiple) {
                         const slider = document.getElementById('slider-' + post.id);
@@ -346,41 +820,87 @@
                             });
                             const leftBtn = slider.parentElement.querySelector('.card-arrow-left');
                             const rightBtn = slider.parentElement.querySelector('.card-arrow-right');
-                            if (leftBtn) leftBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); currentIdx = Math.max(0, currentIdx - 1); slider.children[currentIdx].scrollIntoView({behavior:'smooth'}); updateDots(); });
-                            if (rightBtn) rightBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); currentIdx = Math.min(slider.children.length-1, currentIdx + 1); slider.children[currentIdx].scrollIntoView({behavior:'smooth'}); updateDots(); });
+                            if (leftBtn) leftBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); currentIdx = Math.max(0, currentIdx - 1); slider.children[currentIdx].scrollIntoView({ behavior: 'smooth' }); updateDots(); });
+                            if (rightBtn) rightBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); currentIdx = Math.min(slider.children.length - 1, currentIdx + 1); slider.children[currentIdx].scrollIntoView({ behavior: 'smooth' }); updateDots(); });
                         }
                     }
                 }, 100);
-                return `<a href="post.html?id=${post.id}" class="article-card">
-                    <div class="article-img-wrap">
-                        <div class="article-img-slider" id="slider-${post.id}">${imgUrls.map((url, i) => `<img class="article-img" src="${url}" alt="Image ${i+1}" loading="${i===0?'eager':'lazy'}">`).join('')}</div>
-                        <div class="card-controls${!hasMultiple?' hidden':''}">
-                            <div class="card-dots">${imgUrls.map((_, i) => `<span class="card-dot${i===0?' active':''}"></span>`).join('')}</div>
-                            <div class="card-arrows"><button class="card-arrow card-arrow-left">‹</button><button class="card-arrow card-arrow-right">›</button></div>
+
+                return `
+                    <a href="post.html?id=${post.id}" class="article-card">
+                        <div class="article-img-wrap">
+                            <div class="article-img-slider" id="slider-${post.id}">
+                                ${imgUrls.map((url, i) => `<img class="article-img" src="${url}" alt="Image ${i+1}" loading="${i === 0 ? 'eager' : 'lazy'}" />`).join('')}
+                            </div>
+                            <div class="card-controls${!hasMultiple ? ' hidden' : ''}">
+                                <div class="card-dots">${imgUrls.map((_, i) => `<span class="card-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
+                                <div class="card-arrows">
+                                    <button class="card-arrow card-arrow-left">‹</button>
+                                    <button class="card-arrow card-arrow-right">›</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="article-info">
-                        <div class="meta-row"><span class="tag-badge" style="background:#e6eefc;color:var(--accent)">${post.category||'News'}</span><span style="font-size:.75rem;color:var(--text-muted)">${new Date(post.created_at).toLocaleDateString(currentLang==='fr'?'fr-FR':'en-US',{month:'short',day:'numeric',year:'numeric'})}</span></div>
-                        <h3 class="article-title">${post.title}</h3>
-                    </div>
-                </a>`;
+                        <div class="article-info">
+                            <div class="meta-row">
+                                <span class="tag-badge">${post.category || 'News'}</span>
+                                <span class="date">${new Date(post.created_at).toLocaleDateString(currentLang === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            </div>
+                            <h3 class="article-title">${post.title}</h3>
+                        </div>
+                    </a>
+                `;
             }).join('');
+        }
+
+        // ===== FILTERS =====
+        function updateCategoryFilter(posts) {
+            const cats = [...new Set(posts.map(p => p.category).filter(Boolean))];
+            const sel = document.getElementById('categoryFilter');
+            sel.innerHTML = `<option value="all" data-i18n="cat-all">${currentLang === 'fr' ? 'Toutes les catégories' : 'Categories'}</option>`;
+            cats.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerText = cat;
+                sel.appendChild(opt);
+            });
         }
 
         function filterPosts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const selectedCat = document.getElementById('categoryFilter').value;
-            const filtered = window.allPostsData.filter(post => {
-                const matchesSearch = post.title.toLowerCase().includes(query) || (post.content && post.content.toLowerCase().includes(query));
-                return matchesSearch && (selectedCat === 'all' || post.category === selectedCat);
+            const cat = document.getElementById('categoryFilter').value;
+            const filtered = allPostsData.filter(p => {
+                const matchSearch = p.title.toLowerCase().includes(query) || (p.content && p.content.toLowerCase().includes(query));
+                return matchSearch && (cat === 'all' || p.category === cat);
             });
             buildGrid(filtered);
         }
 
-        window.onload = initMediaCenter;
+        // ===== INIT =====
+        async function init() {
+            applyTranslations();
+            startTickerRefresh();
+            setupRealtime();
 
-        fetch('footer.html').then(r => r.text()).then(d => { document.getElementById('footer-placeholder').innerHTML = d; }).catch(() => { document.getElementById('footer-placeholder').innerHTML = '<footer style="text-align:center;padding:2rem;color:#999;">© 2024 Travel Press</footer>'; });
+            const { data: posts } = await supabaseClient.from('posts').select('*').order('created_at', { ascending: false });
+            if (!posts?.length) {
+                document.getElementById('posts-grid-container').innerHTML = `<div>${currentLang === 'fr' ? 'Aucun article disponible.' : 'No articles available.'}</div>`;
+                return;
+            }
+            allPostsData = posts;
+            updateCategoryFilter(posts);
+            renderDynamicContent(posts);
+        }
+
+        // ===== FOOTER =====
+        fetch('footer.html')
+            .then(r => r.text())
+            .then(d => document.getElementById('footer-placeholder').innerHTML = d)
+            .catch(() => document.getElementById('footer-placeholder').innerHTML = '<footer style="text-align:center;padding:2rem;color:#999;border-top:1px solid var(--border);margin-top:2rem;font-size:0.8rem;">© 2024 Travel Press</footer>');
+
+        window.onload = init;
+        window.changeLanguage = changeLanguage;
+        window.toggleMenu = toggleMenu;
+        window.filterPosts = filterPosts;
     </script>
 </body>
 </html>
-
