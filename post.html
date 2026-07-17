@@ -50,12 +50,15 @@
     <!-- Polices -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    
+    <!-- Nuitee Connect SDK -->
+    <script src="https://components.liteapi.travel/v1.0/sdk.umd.js"></script>
     
     <!-- Tiqets Widget -->
     <script defer src="https://widgets.tiqets.com/loader.js"></script>
@@ -77,6 +80,7 @@
             --text-main: #1a1a1a; 
             --text-muted: #757575;
             --accent: #0046e4; 
+            --accent-hover: #0035b0;
             --border: #f0f0f0;
             --max-width: 720px; 
             --skeleton-base: #f8f9fa;
@@ -99,15 +103,69 @@
         }
         .skip-link:focus { top: 0; }
 
-        /* Widget Slider */
-        .widget-slider { margin: 3rem 0; position: relative; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2rem 0; }
-        .widget-slider-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: #111; text-align: center; }
+        /* ===== WIDGET SLIDER ===== */
+        .widget-slider { 
+            margin: 3rem 0; 
+            position: relative; 
+            border-top: 1px solid var(--border); 
+            border-bottom: 1px solid var(--border); 
+            padding: 2rem 0; 
+        }
+        .widget-slider-title { 
+            font-family: 'Playfair Display', Georgia, serif; 
+            font-size: 1.3rem; 
+            font-weight: 700; 
+            margin-bottom: 1rem; 
+            color: #111; 
+            text-align: center; 
+        }
         .widget-slide { display: none; }
         .widget-slide.active { display: block; }
-        .widget-nav { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
-        .widget-dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: background 0.3s; }
+        .widget-nav { 
+            display: flex; 
+            justify-content: center; 
+            gap: 0.5rem; 
+            margin-bottom: 1.5rem; 
+        }
+        .widget-dot { 
+            width: 10px; 
+            height: 10px; 
+            border-radius: 50%; 
+            background: #ddd; 
+            cursor: pointer; 
+            transition: background 0.3s; 
+            border: none; 
+            padding: 0; 
+        }
         .widget-dot.active { background: var(--accent); }
 
+        /* ===== NUITE WIDGETS ===== */
+        .nuitee-widget-container {
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .nuitee-widget-container h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #111;
+        }
+        #nuitee-map-container {
+            height: 400px;
+            min-height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #nuitee-hotels-list {
+            min-height: 300px;
+        }
+
+        /* ===== HEADER ===== */
         header { border-bottom: 1px solid var(--border); background: #ffffff; position: sticky; top: 0; z-index: 100; height: 75px; }
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; height: 100%; display: flex; justify-content: space-between; align-items: center; }
         .logo-wrap { display: flex; align-items: center; height: 100%; text-decoration: none; }
@@ -132,11 +190,12 @@
         .burger-menu.open span:nth-child(3) { transform: rotate(45deg) translate(-5px, -5px); }
         @media (max-width: 992px) { nav.nav-desktop { display: none; } .burger-menu { display: block; } }
 
+        /* ===== ARTICLE ===== */
         .article-container { max-width: var(--max-width); margin: 4rem auto; padding: 0 1.5rem; }
         .article-meta { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .tag-badge { background: transparent; color: var(--accent); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid var(--accent); }
+        .tag-badge { background: transparent; color: var(--accent); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid var(--accent); padding-bottom: 0.15rem; }
         .article-date { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
-        h1.article-title { font-size: 3.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 2.5rem; letter-spacing: -0.03em; color: #111111; }
+        h1.article-title { font-family: 'Playfair Display', Georgia, serif; font-size: 3.2rem; font-weight: 700; line-height: 1.15; margin-bottom: 2.5rem; letter-spacing: -0.02em; color: #111111; }
         
         /* Slider d'images */
         .article-img-wrapper { width: 100vw; margin-left: calc(-50vw + 50%); margin-right: calc(-50vw + 50%); margin-bottom: 2rem; overflow: hidden; position: relative; }
@@ -144,9 +203,9 @@
         .article-img-slider::-webkit-scrollbar { display: none; }
         .article-img-slider:active { cursor: grabbing; }
         .article-main-img { width: 100%; height: 70vh; min-height: 400px; object-fit: cover; display: block; flex-shrink: 0; scroll-snap-align: start; }
-                .img-dots { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: none; gap: 0.4rem; z-index: 5; }
+        .img-dots { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: none; gap: 0.4rem; z-index: 5; }
         .img-dots.visible { display: flex; }
-        .img-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s ease; }
+        .img-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s ease; border: none; padding: 0; }
         .img-dot.active { background: #ffffff; width: 18px; border-radius: 10px; }
         .img-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 62px; height: 62px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; z-index: 5; display: none; align-items: center; justify-content: center; color: #333; transition: opacity 0.3s; opacity: 0; }
         .img-arrow.visible { display: flex; }
@@ -172,8 +231,8 @@
         .article-body img { max-width: 100%; height: auto; display: block; margin: 3.5rem auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
         .article-body blockquote { border-left: none; padding: 2rem 2.5rem; margin: 3.5rem 0; background: #f9fbff; border-radius: 0 16px 16px 0; font-style: italic; color: #1a1a1a; font-size: 1.35rem; line-height: 1.7; position: relative; }
         .article-body blockquote::before { content: "\201C"; position: absolute; left: 15px; top: -10px; font-size: 4rem; color: var(--accent); opacity: 0.15; font-family: serif; line-height: 1; }
-        .article-body h1, .article-body h2 { font-size: 1.9rem; font-weight: 800; margin: 3.5rem 0 1.5rem 0; letter-spacing: -0.02em; color: #111111; }
-        .article-body h3 { font-size: 1.4rem; font-weight: 700; margin: 2.5rem 0 1rem 0; }
+        .article-body h1, .article-body h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.9rem; font-weight: 700; margin: 3.5rem 0 1.5rem 0; letter-spacing: -0.02em; color: #111111; }
+        .article-body h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.4rem; font-weight: 700; margin: 2.5rem 0 1rem 0; }
         .article-body ul, .article-body ol { margin-bottom: 2rem; padding-left: 1.5rem; }
         .article-body li { margin-bottom: 0.8rem; }
         .article-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(0, 70, 228, 0.3); }
@@ -205,6 +264,11 @@
             .article-meta { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
             footer { margin-top: 3rem; padding: 1.5rem 1rem; font-size: 0.8rem; }
             .widget-slider { margin: 2rem 0; padding: 1.5rem 0; }
+            .nuitee-widget-container { margin: 1.5rem 0; padding: 1rem 0; }
+            #nuitee-map-container { height: 300px; min-height: 300px; }
+        }
+        @media (max-width: 480px) {
+            #nuitee-map-container { height: 250px; min-height: 250px; }
         }
     </style>
 </head>
@@ -272,7 +336,7 @@
                 <button class="img-arrow img-arrow-left" id="img-arrow-left" onclick="slideImg(-1)" aria-label="Image précédente">‹</button>
                 <button class="img-arrow img-arrow-right" id="img-arrow-right" onclick="slideImg(1)" aria-label="Image suivante">›</button>
             </div>
-                <div class="article-actions">
+            <div class="article-actions">
                 <button class="action-btn" id="btn-share" aria-label="Partager l'article">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
                     <span data-i18n="btn-share">Partager</span>
@@ -287,22 +351,6 @@
             </div>
             <div class="article-body" id="article-body"></div>
         </article>
-        
-        <div id="widget-slider-container" style="display:none">
-            <div class="widget-slider">
-                <p class="widget-slider-title" data-i18n="widget-title">Découvrez aussi</p>
-                <div class="widget-nav">
-                    <span class="widget-dot active" onclick="switchWidget(0)"></span>
-                    <span class="widget-dot" onclick="switchWidget(1)"></span>
-                </div>
-                <div class="widget-slide active" id="widget-slide-0">
-                    <div data-tiqets-widget="discovery" data-cards-layout="responsive" data-content-type="exhibition" data-item_count="4" data-destination-type="venue" data-destination-id="124297" data-slug-ids="" data-partner="luvia_travel_llc-187826" data-tq-campaign="Louvre experience"></div>
-                </div>
-                <div class="widget-slide" id="widget-slide-1">
-                    <div data-gyg-widget="auto" data-gyg-partner-id="TNCQUZX" data-gyg-cmp="Namibie : voyage de 3 jours tout compris à Sossusvlei"></div>
-                </div>
-            </div>
-        </div>
     </main>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -317,85 +365,494 @@
             const CONFIG = { DEFAULT_LANG: 'fr', STORAGE_PREFIX: 'luvia-', CACHE_DURATION: 5*60*1000 };
 
             const translations = {
-                fr: { "skip-link":"Aller au contenu principal","nav-about":"A propos","nav-insurance":"Assurances","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Nous contacter","nav-cta-mobile":"Nous contacter","lang-label":"Langue","error-not-found":"Article introuvable.","error-network":"Erreur de connexion.","error-invalid-id":"ID d'article invalide.","error-retry":"Reessayer","btn-share":"Partager","btn-save":"Sauvegarder","btn-saved":"Sauvegarde","toast-saved":"Article sauvegarde !","toast-removed":"Article retire des favoris","toast-copied":"Lien copie !","widget-title":"Découvrez aussi","team-note":"<strong>Travel Press</strong><br>Analyse & rédaction par notre équipe éditoriale" },
-                en: { "skip-link":"Skip to main content","nav-about":"About","nav-insurance":"Insurance","nav-tiqets":"Luvia+Tiqets","nav-gyg":"Luvia+GYG","nav-cta":"Get in touch","nav-cta-mobile":"Get in touch","lang-label":"Language","error-not-found":"Article not found.","error-network":"Connection error.","error-invalid-id":"Invalid article ID.","error-retry":"Retry","btn-share":"Share","btn-save":"Save","btn-saved":"Saved","toast-saved":"Article saved!","toast-removed":"Article removed from favorites","toast-copied":"Link copied!","widget-title":"Discover also","team-note":"<strong>Travel Press</strong><br>Analysis & writing by our editorial team" }
+                fr: { 
+                    "skip-link":"Aller au contenu principal",
+                    "nav-about":"À propos",
+                    "nav-insurance":"Assurances",
+                    "nav-tiqets":"Luvia+Tiqets",
+                    "nav-gyg":"Luvia+GYG",
+                    "nav-cta":"Nous contacter",
+                    "nav-cta-mobile":"Nous contacter",
+                    "lang-label":"Langue",
+                    "error-not-found":"Article introuvable.",
+                    "error-network":"Erreur de connexion.",
+                    "error-invalid-id":"ID d'article invalide.",
+                    "error-retry":"Reessayer",
+                    "btn-share":"Partager",
+                    "btn-save":"Sauvegarder",
+                    "btn-saved":"Sauvegardé",
+                    "toast-saved":"Article sauvegardé !",
+                    "toast-removed":"Article retiré des favoris",
+                    "toast-copied":"Lien copié !",
+                    "widget-title":"Découvrez aussi",
+                    "hotels-title":"Hébergements recommandés",
+                    "map-title":"Carte des hôtels",
+                    "team-note":"<strong>Travel Press</strong><br>Analyse & rédaction par notre équipe éditoriale"
+                },
+                en: { 
+                    "skip-link":"Skip to main content",
+                    "nav-about":"About",
+                    "nav-insurance":"Insurance",
+                    "nav-tiqets":"Luvia+Tiqets",
+                    "nav-gyg":"Luvia+GYG",
+                    "nav-cta":"Get in touch",
+                    "nav-cta-mobile":"Get in touch",
+                    "lang-label":"Language",
+                    "error-not-found":"Article not found.",
+                    "error-network":"Connection error.",
+                    "error-invalid-id":"Invalid article ID.",
+                    "error-retry":"Retry",
+                    "btn-share":"Share",
+                    "btn-save":"Save",
+                    "btn-saved":"Saved",
+                    "toast-saved":"Article saved!",
+                    "toast-removed":"Article removed from favorites",
+                    "toast-copied":"Link copied!",
+                    "widget-title":"Discover also",
+                    "hotels-title":"Recommended accommodations",
+                    "map-title":"Hotel map",
+                    "team-note":"<strong>Travel Press</strong><br>Analysis & writing by our editorial team"
+                }
             };
 
             const state = { currentLang: localStorage.getItem(CONFIG.STORAGE_PREFIX+'lang')||CONFIG.DEFAULT_LANG, cachedPostData: null, currentPostId: null, isLoading: false };
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
             function showToast(m,d=3000){ const t=document.getElementById('toast'); if(!t)return; t.textContent=m; t.classList.add('show'); clearTimeout(t.hideTimeout); t.hideTimeout=setTimeout(()=>t.classList.remove('show'),d); }
-            function applyTranslations(lang){ document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(translations[lang]&&translations[lang][k]){ if(k==='team-note'||k==='hero-welcome'){ el.innerHTML=translations[lang][k]; }else{ el.textContent=translations[lang][k]; } } }); const ls=document.getElementById('langSelect'),lsm=document.getElementById('langSelectMobile'); if(ls)ls.value=lang; if(lsm)lsm.value=lang; document.documentElement.lang=lang; updateSaveButtonUI(); }
+            function applyTranslations(lang){ 
+                document.querySelectorAll('[data-i18n]').forEach(el=>{ 
+                    const k=el.getAttribute('data-i18n'); 
+                    if(translations[lang]&&translations[lang][k]){ 
+                        if(k==='team-note'||k==='hero-welcome'||k==='hotels-title'||k==='map-title'){ 
+                            el.innerHTML=translations[lang][k]; 
+                        }else{ 
+                            el.textContent=translations[lang][k]; 
+                        } 
+                    } 
+                }); 
+                const ls=document.getElementById('langSelect'),lsm=document.getElementById('langSelectMobile'); 
+                if(ls)ls.value=lang; 
+                if(lsm)lsm.value=lang; 
+                document.documentElement.lang=lang; 
+                updateSaveButtonUI(); 
+                // Re-init Nuitee widgets with new language
+                initNuiteeWidgets();
+            }
             function changeLanguage(lang){ if(lang===state.currentLang)return; state.currentLang=lang; localStorage.setItem(CONFIG.STORAGE_PREFIX+'lang',lang); applyTranslations(lang); if(state.cachedPostData) renderPost(state.cachedPostData); }
             function toggleMenu(){ const b=document.getElementById('burgerToggle'),m=document.getElementById('mobileMenu'); if(!m||!b)return; const o=m.classList.contains('open'); if(o){ m.classList.remove('open');b.classList.remove('open');b.setAttribute('aria-expanded','false');document.body.style.overflow=''; }else{ m.classList.add('open');b.classList.add('open');b.setAttribute('aria-expanded','true');document.body.style.overflow='hidden'; } }
 
-            async function fetchPost(retry=0){ if(state.isLoading)return; state.isLoading=true; applyTranslations(state.currentLang); const p=new URLSearchParams(window.location.search),id=p.get('id'); if(!id||!/^[a-zA-Z0-9-]+$/.test(id)){ showError('error-invalid-id');state.isLoading=false;return; } state.currentPostId=id; try{ const {data:post,error}=await supabaseClient.from('posts').select('*').eq('id',state.currentPostId).single(); if(error)throw error; if(!post)throw new Error('Article non trouve'); state.cachedPostData=post; renderPost(post); setupActionButtons(); }catch(e){ console.error('Erreur:',e); if(retry<2){ setTimeout(()=>fetchPost(retry+1),1000*(retry+1)); state.isLoading=false;return; } showError('error-network'); }finally{ state.isLoading=false; } }
+            // ===== NUITE WIDGETS =====
+            let nuiteeWidgetsInitialized = false;
+            let nuiteeWidgetsInitializing = false;
 
-            function renderPost(post){ try{ const isEN=state.currentLang==='en'; const title=isEN&&post.title_en?post.title_en:post.title; const cat=isEN&&post.category_en?post.category_en:(post.category||'News'); const content=isEN&&post.content_en?post.content_en:post.content; document.title=title+' - Travel Press'; document.getElementById('article-title').textContent=title; document.getElementById('article-cat').textContent=cat;
-            
-            // Images slider
-            const imgUrls = post.image_url ? post.image_url.split('||').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'];
-            const imgSlider = document.getElementById('article-img-slider');
-            const imgDots = document.getElementById('img-dots');
-            const arrowLeft = document.getElementById('img-arrow-left');
-            const arrowRight = document.getElementById('img-arrow-right');
-            
-            if (imgSlider && imgDots) {
-                imgSlider.innerHTML = imgUrls.map((url, i) => `<img class="article-main-img" src="${url}" alt="${title} - Image ${i+1}" loading="${i===0?'eager':'lazy'}">`).join('');
-                
-                if (imgUrls.length > 1) {
-                    // Plusieurs images : afficher dots et flèches
-                    imgDots.classList.add('visible');
-                    if (arrowLeft) arrowLeft.classList.add('visible');
-                    if (arrowRight) arrowRight.classList.add('visible');
-                    imgDots.innerHTML = imgUrls.map((_, i) => `<span class="img-dot${i===0?' active':''}" onclick="goToImg(${i})"></span>`).join('');
-                } else {
-                    // Une seule image : cacher dots et flèches
-                    imgDots.classList.remove('visible');
-                    if (arrowLeft) arrowLeft.classList.remove('visible');
-                    if (arrowRight) arrowRight.classList.remove('visible');
-                    imgDots.innerHTML = '';
+            function initNuiteeWidgets() {
+                if (nuiteeWidgetsInitializing) return;
+                if (typeof LiteAPI === 'undefined') {
+                    console.warn('LiteAPI SDK not loaded yet, retrying...');
+                    setTimeout(initNuiteeWidgets, 500);
+                    return;
                 }
-                imgSlider.scrollLeft = 0; currentImgIndex = 0;
+
+                nuiteeWidgetsInitializing = true;
+
+                try {
+                    // Initialize SDK
+                    if (typeof LiteAPI !== 'undefined' && !LiteAPI._initialized) {
+    LiteAPI.init({
+        domain: 'luviaplace.com',
+        deepLinkParams: 'language=' + state.currentLang + '&currency=EUR'
+    });
+    LiteAPI._initialized = true;
+}
+
+                    // Check if containers already exist
+                    const hotelContainer = document.getElementById('nuitee-hotels-list');
+                    const mapContainer = document.getElementById('nuitee-map-container');
+
+                    if (hotelContainer && !hotelContainer.hasChildNodes()) {
+                        LiteAPI.HotelsList.create({
+                            selector: '#nuitee-hotels-list',
+                            placeId: 'ChIJdd4hrwug2EcRmSrV3Vo6llI',
+                            primaryColor: '#0046e4',
+                            hasSearchBar: true,
+                            rows: 2,
+                            checkin: getDefaultCheckin(),
+                            checkout: getDefaultCheckout(),
+                            labelsOverride: {
+                                searchAction: state.currentLang === 'fr' ? 'Rechercher' : 'Search',
+                                placePlaceholderText: state.currentLang === 'fr' ? 'Rechercher une destination' : 'Search for a destination'
+                            }
+                        });
+                    }
+
+                    if (mapContainer && !mapContainer.hasChildNodes()) {
+                        LiteAPI.Map.create({
+                            selector: '#nuitee-map-container',
+                            placeId: 'ChIJdd4hrwug2EcRmSrV3Vo6llI',
+                            primaryColor: '#0046e4',
+                            checkin: getDefaultCheckin(),
+                            checkout: getDefaultCheckout(),
+                            popup: {
+                                titleColor: '#1a1a1a',
+                                textColor: '#333333',
+                                backgroundColor: '#ffffff'
+                            }
+                        });
+                    }
+
+                    nuiteeWidgetsInitialized = true;
+                } catch (e) {
+                    console.warn('Nuitee widgets initialization error:', e);
+                } finally {
+                    nuiteeWidgetsInitializing = false;
+                }
             }
-            
-            document.getElementById('article-date').textContent=new Date(post.created_at).toLocaleDateString(isEN?'en-US':'fr-FR',{month:'long',day:'numeric',year:'numeric'});
-            const metaDesc=document.querySelector('meta[name="description"]'); if(metaDesc) metaDesc.setAttribute('content',(post.excerpt||title).substring(0,160));
-            const canonical=document.querySelector('link[rel="canonical"]'); if(canonical) canonical.href=SITE_URL+'/post.html?id='+post.id;
-            const sd=document.getElementById('structured-data'); if(sd){ sd.textContent=JSON.stringify({"@context":"https://schema.org","@type":"NewsArticle","headline":title,"image":imgUrls[0],"datePublished":post.created_at,"dateModified":post.created_at,"author":{"@type":"Organization","name":"Travel Press"},"publisher":{"@type":"Organization","name":"Travel Press","logo":{"@type":"ImageObject","url":"https://press.luviaplace.com/logo.png"}}}); }
-            const raw=marked.parse(content||''); const clean=DOMPurify.sanitize(raw,{ALLOWED_TAGS:['p','br','strong','em','u','h1','h2','h3','h4','h5','h6','ul','ol','li','a','img','blockquote','code','pre','span','div','table','thead','tbody','tr','td','th'],ALLOWED_ATTR:['href','src','alt','class','target','rel','width','height']}); document.getElementById('article-body').innerHTML=clean; document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='block'; document.getElementById('error-container').style.display='none';
-            const articleBody=document.getElementById('article-body'); const widgetSlider=document.getElementById('widget-slider-container');
-            if(articleBody&&widgetSlider){ const paragraphs=articleBody.querySelectorAll('p'); if(paragraphs.length>=4){ paragraphs[3].parentNode.insertBefore(widgetSlider,paragraphs[3].nextSibling); }else if(paragraphs.length>=2){ const mid=paragraphs[Math.floor(paragraphs.length/2)]; mid.parentNode.insertBefore(widgetSlider,mid.nextSibling); }else{ articleBody.appendChild(widgetSlider); } widgetSlider.style.display='block'; }
-            updateSaveButtonUI(); }catch(e){ console.error('Erreur de rendu:',e); showError('error-not-found'); } }
-            function showError(t='error-not-found'){ document.getElementById('skeleton-view').style.display='none'; document.getElementById('article-view').style.display='none'; document.getElementById('error-container').style.display='block'; const m=document.getElementById('error-message'); if(m&&translations[state.currentLang]?.[t]) m.textContent=translations[state.currentLang][t]; }
-            function setupActionButtons(){ document.getElementById('btn-share')?.addEventListener('click',handleShare); document.getElementById('btn-save')?.addEventListener('click',toggleSavePost); updateSaveButtonUI(); }
-            async function handleShare(){ const url=state.currentPostId?SITE_URL+'/articles/'+state.currentPostId+'.html':window.location.href; if(navigator.share){ try{await navigator.share({title:document.title,url:url});}catch(e){if(e.name!=='AbortError')copyToClipboard(url);} }else{copyToClipboard(url);} }
-            function copyToClipboard(url){ url=url||window.location.href; navigator.clipboard.writeText(url).then(()=>showToast(translations[state.currentLang]['toast-copied'])).catch(()=>{ const t=document.createElement('textarea');t.value=url;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);showToast(translations[state.currentLang]['toast-copied']); }); }
-            function toggleSavePost(){ if(!state.currentPostId)return; let s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); const i=s.indexOf(state.currentPostId); if(i>-1){s.splice(i,1);showToast(translations[state.currentLang]['toast-removed']);}else{s.push(state.currentPostId);showToast(translations[state.currentLang]['toast-saved']);} localStorage.setItem(CONFIG.STORAGE_PREFIX+'saved-posts',JSON.stringify(s));updateSaveButtonUI(); }
-            function updateSaveButtonUI(){ if(!state.currentPostId)return; const b=document.getElementById('btn-save'),t=document.getElementById('text-save'); if(!b||!t)return; const s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); if(s.includes(state.currentPostId)){b.classList.add('saved');t.textContent=translations[state.currentLang]['btn-saved'];b.setAttribute('aria-pressed','true');}else{b.classList.remove('saved');t.textContent=translations[state.currentLang]['btn-save'];b.setAttribute('aria-pressed','false');} }
+
+            function getDefaultCheckin() {
+                const d = new Date();
+                d.setDate(d.getDate() + 1);
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+
+            function getDefaultCheckout() {
+                const d = new Date();
+                d.setDate(d.getDate() + 2);
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+
+            // ===== WIDGET SLIDER =====
+            function createWidgetSlider() {
+                const sliderContainer = document.createElement('div');
+                sliderContainer.className = 'widget-slider';
+                sliderContainer.id = 'widget-slider-container';
+
+                const title = document.createElement('p');
+                title.className = 'widget-slider-title';
+                title.setAttribute('data-i18n', 'widget-title');
+                title.textContent = translations[state.currentLang]['widget-title'] || 'Découvrez aussi';
+                sliderContainer.appendChild(title);
+
+                // Navigation dots
+                const nav = document.createElement('div');
+                nav.className = 'widget-nav';
+                nav.innerHTML = `
+                    <button class="widget-dot active" onclick="switchWidget(0)"></button>
+                    <button class="widget-dot" onclick="switchWidget(1)"></button>
+                    <button class="widget-dot" onclick="switchWidget(2)"></button>
+                    <button class="widget-dot" onclick="switchWidget(3)"></button>
+                `;
+                sliderContainer.appendChild(nav);
+
+                // Slide 0: Tiqets
+                const slide0 = document.createElement('div');
+                slide0.className = 'widget-slide active';
+                slide0.id = 'widget-slide-0';
+                slide0.innerHTML = `<div data-tiqets-widget="discovery" data-cards-layout="responsive" data-content-type="exhibition" data-item_count="4" data-destination-type="venue" data-destination-id="124297" data-slug-ids="" data-partner="luvia_travel_llc-187826" data-tq-campaign="Louvre experience"></div>`;
+                sliderContainer.appendChild(slide0);
+
+                // Slide 1: GetYourGuide
+                const slide1 = document.createElement('div');
+                slide1.className = 'widget-slide';
+                slide1.id = 'widget-slide-1';
+                slide1.innerHTML = `<div data-gyg-widget="auto" data-gyg-partner-id="TNCQUZX" data-gyg-cmp="Namibie : voyage de 3 jours tout compris à Sossusvlei"></div>`;
+                sliderContainer.appendChild(slide1);
+
+                // Slide 2: Nuitee Hotels List
+                const slide2 = document.createElement('div');
+                slide2.className = 'widget-slide';
+                slide2.id = 'widget-slide-2';
+                slide2.innerHTML = `
+                    <div class="nuitee-widget-container">
+                        <h3 data-i18n="hotels-title">${translations[state.currentLang]['hotels-title'] || 'Hébergements recommandés'}</h3>
+                        <div id="nuitee-hotels-list"></div>
+                    </div>
+                `;
+                sliderContainer.appendChild(slide2);
+
+                // Slide 3: Nuitee Map
+                const slide3 = document.createElement('div');
+                slide3.className = 'widget-slide';
+                slide3.id = 'widget-slide-3';
+                slide3.innerHTML = `
+                    <div class="nuitee-widget-container">
+                        <h3 data-i18n="map-title">${translations[state.currentLang]['map-title'] || 'Carte des hôtels'}</h3>
+                        <div id="nuitee-map-container"></div>
+                    </div>
+                `;
+                sliderContainer.appendChild(slide3);
+
+                return sliderContainer;
+            }
+
+            let currentWidget = 0;
+            window.switchWidget = function(index) {
+                document.querySelectorAll('.widget-slide').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.widget-dot').forEach(d => d.classList.remove('active'));
+                const slide = document.getElementById('widget-slide-' + index);
+                if (slide) slide.classList.add('active');
+                const dots = document.querySelectorAll('.widget-dot');
+                if (dots[index]) dots[index].classList.add('active');
+                currentWidget = index;
+
+                // Initialize Nuitee widgets when their slides become active
+                if (index === 2 || index === 3) {
+                    setTimeout(initNuiteeWidgets, 300);
+                }
+            };
+
+            // Auto-rotate widgets
+            let widgetInterval = null;
+            function startWidgetRotation() {
+                if (widgetInterval) clearInterval(widgetInterval);
+                widgetInterval = setInterval(() => {
+                    const container = document.getElementById('widget-slider-container');
+                    if (container && container.style.display !== 'none') {
+                        const total = document.querySelectorAll('.widget-slide').length;
+                        const next = (currentWidget + 1) % total;
+                        switchWidget(next);
+                    }
+                }, 8000);
+            }
+
+            // ===== ARTICLE FUNCTIONS =====
+            async function fetchPost(retry=0){ 
+                if(state.isLoading)return; 
+                state.isLoading=true; 
+                applyTranslations(state.currentLang); 
+                const p=new URLSearchParams(window.location.search),id=p.get('id'); 
+                if(!id||!/^[a-zA-Z0-9-]+$/.test(id)){ showError('error-invalid-id');state.isLoading=false;return; } 
+                state.currentPostId=id; 
+                try{ 
+                    const {data:post,error}=await supabaseClient.from('posts').select('*').eq('id',state.currentPostId).single(); 
+                    if(error)throw error; 
+                    if(!post)throw new Error('Article non trouve'); 
+                    state.cachedPostData=post; 
+                    renderPost(post); 
+                    setupActionButtons(); 
+                }catch(e){ 
+                    console.error('Erreur:',e); 
+                    if(retry<2){ 
+                        setTimeout(()=>fetchPost(retry+1),1000*(retry+1)); 
+                        state.isLoading=false;
+                        return; 
+                    } 
+                    showError('error-network'); 
+                }finally{ 
+                    state.isLoading=false; 
+                } 
+            }
+
+            function renderPost(post){ 
+                try{ 
+                    const isEN=state.currentLang==='en'; 
+                    const title=isEN&&post.title_en?post.title_en:post.title; 
+                    const cat=isEN&&post.category_en?post.category_en:(post.category||'News'); 
+                    const content=isEN&&post.content_en?post.content_en:post.content; 
+                    document.title=title+' - Travel Press'; 
+                    document.getElementById('article-title').textContent=title; 
+                    document.getElementById('article-cat').textContent=cat;
+                    
+                    const imgUrls = post.image_url ? post.image_url.split('||').map(u => u.trim()).filter(u => u) : ['https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200'];
+                    const imgSlider = document.getElementById('article-img-slider');
+                    const imgDots = document.getElementById('img-dots');
+                    const arrowLeft = document.getElementById('img-arrow-left');
+                    const arrowRight = document.getElementById('img-arrow-right');
+                    
+                    if (imgSlider && imgDots) {
+                        imgSlider.innerHTML = imgUrls.map((url, i) => `<img class="article-main-img" src="${url}" alt="${title} - Image ${i+1}" loading="${i===0?'eager':'lazy'}">`).join('');
+                        
+                        if (imgUrls.length > 1) {
+                            imgDots.classList.add('visible');
+                            if (arrowLeft) arrowLeft.classList.add('visible');
+                            if (arrowRight) arrowRight.classList.add('visible');
+                            imgDots.innerHTML = imgUrls.map((_, i) => `<span class="img-dot${i===0?' active':''}" onclick="goToImg(${i})"></span>`).join('');
+                        } else {
+                            imgDots.classList.remove('visible');
+                            if (arrowLeft) arrowLeft.classList.remove('visible');
+                            if (arrowRight) arrowRight.classList.remove('visible');
+                            imgDots.innerHTML = '';
+                        }
+                        imgSlider.scrollLeft = 0; 
+                        currentImgIndex = 0;
+                    }
+                    
+                    document.getElementById('article-date').textContent=new Date(post.created_at).toLocaleDateString(isEN?'en-US':'fr-FR',{month:'long',day:'numeric',year:'numeric'});
+                    const metaDesc=document.querySelector('meta[name="description"]'); 
+                    if(metaDesc) metaDesc.setAttribute('content',(post.excerpt||title).substring(0,160));
+                    const canonical=document.querySelector('link[rel="canonical"]'); 
+                    if(canonical) canonical.href=SITE_URL+'/post.html?id='+post.id;
+                    const sd=document.getElementById('structured-data'); 
+                    if(sd){ 
+                        sd.textContent=JSON.stringify({
+                            "@context":"https://schema.org",
+                            "@type":"NewsArticle",
+                            "headline":title,
+                            "image":imgUrls[0],
+                            "datePublished":post.created_at,
+                            "dateModified":post.created_at,
+                            "author":{"@type":"Organization","name":"Travel Press"},
+                            "publisher":{"@type":"Organization","name":"Travel Press","logo":{"@type":"ImageObject","url":"https://press.luviaplace.com/logo.png"}}
+                        }); 
+                    }
+                    
+                    const raw=marked.parse(content||''); 
+                    const clean=DOMPurify.sanitize(raw,{
+                        ALLOWED_TAGS:['p','br','strong','em','u','h1','h2','h3','h4','h5','h6','ul','ol','li','a','img','blockquote','code','pre','span','div','table','thead','tbody','tr','td','th'],
+                        ALLOWED_ATTR:['href','src','alt','class','target','rel','width','height']
+                    }); 
+                    
+                    const articleBody = document.getElementById('article-body');
+                    articleBody.innerHTML = clean;
+                    
+                    // Inject widget slider after 3rd paragraph
+                    const paragraphs = articleBody.querySelectorAll('p');
+                    const widgetSlider = createWidgetSlider();
+                    
+                    if (paragraphs.length >= 3) {
+                        paragraphs[2].parentNode.insertBefore(widgetSlider, paragraphs[2].nextSibling);
+                    } else if (paragraphs.length >= 1) {
+                        const last = paragraphs[paragraphs.length - 1];
+                        last.parentNode.insertBefore(widgetSlider, last.nextSibling);
+                    } else {
+                        articleBody.appendChild(widgetSlider);
+                    }
+                    
+                    document.getElementById('skeleton-view').style.display='none'; 
+                    document.getElementById('article-view').style.display='block'; 
+                    document.getElementById('error-container').style.display='none';
+                    
+                    // Init widgets after render
+                    setTimeout(() => {
+                        initNuiteeWidgets();
+                        // Trigger Tiqets and GYG widgets
+                        if (window.Tiqets) window.Tiqets.load();
+                        //if (window.GYG) window.GYG.init();
+                        startWidgetRotation();
+                    }, 1000);
+                    
+                    updateSaveButtonUI(); 
+                }catch(e){ 
+                    console.error('Erreur de rendu:',e); 
+                    showError('error-not-found'); 
+                } 
+            }
+
+            function showError(t='error-not-found'){ 
+                document.getElementById('skeleton-view').style.display='none'; 
+                document.getElementById('article-view').style.display='none'; 
+                document.getElementById('error-container').style.display='block'; 
+                const m=document.getElementById('error-message'); 
+                if(m&&translations[state.currentLang]?.[t]) m.textContent=translations[state.currentLang][t]; 
+            }
+
+            function setupActionButtons(){ 
+                document.getElementById('btn-share')?.addEventListener('click',handleShare); 
+                document.getElementById('btn-save')?.addEventListener('click',toggleSavePost); 
+                updateSaveButtonUI(); 
+            }
+
+            async function handleShare(){ 
+                const url=state.currentPostId?SITE_URL+'/articles/'+state.currentPostId+'.html':window.location.href; 
+                if(navigator.share){ 
+                    try{await navigator.share({title:document.title,url:url});}catch(e){if(e.name!=='AbortError')copyToClipboard(url);} 
+                }else{copyToClipboard(url);} 
+            }
+
+            function copyToClipboard(url){ 
+                url=url||window.location.href; 
+                navigator.clipboard.writeText(url).then(()=>showToast(translations[state.currentLang]['toast-copied'])).catch(()=>{ 
+                    const t=document.createElement('textarea');
+                    t.value=url;
+                    t.style.position='fixed';
+                    t.style.opacity='0';
+                    document.body.appendChild(t);
+                    t.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(t);
+                    showToast(translations[state.currentLang]['toast-copied']); 
+                }); 
+            }
+
+            function toggleSavePost(){ 
+                if(!state.currentPostId)return; 
+                let s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); 
+                const i=s.indexOf(state.currentPostId); 
+                if(i>-1){s.splice(i,1);showToast(translations[state.currentLang]['toast-removed']);}else{s.push(state.currentPostId);showToast(translations[state.currentLang]['toast-saved']);} 
+                localStorage.setItem(CONFIG.STORAGE_PREFIX+'saved-posts',JSON.stringify(s));
+                updateSaveButtonUI(); 
+            }
+
+            function updateSaveButtonUI(){ 
+                if(!state.currentPostId)return; 
+                const b=document.getElementById('btn-save'),t=document.getElementById('text-save'); 
+                if(!b||!t)return; 
+                const s=JSON.parse(localStorage.getItem(CONFIG.STORAGE_PREFIX+'saved-posts')||'[]'); 
+                if(s.includes(state.currentPostId)){b.classList.add('saved');t.textContent=translations[state.currentLang]['btn-saved'];b.setAttribute('aria-pressed','true');}else{b.classList.remove('saved');t.textContent=translations[state.currentLang]['btn-save'];b.setAttribute('aria-pressed','false');} 
+            }
 
             // Image Slider
             let currentImgIndex = 0;
-            window.slideImg = function(dir) { const sl=document.getElementById('article-img-slider'); const imgs=sl.querySelectorAll('.article-main-img'); if(!imgs.length)return; currentImgIndex=Math.max(0,Math.min(currentImgIndex+dir,imgs.length-1)); imgs[currentImgIndex].scrollIntoView({behavior:'smooth',block:'nearest'}); updateImgDots(); };
-            window.goToImg = function(idx) { const sl=document.getElementById('article-img-slider'); const imgs=sl.querySelectorAll('.article-main-img'); if(!imgs.length)return; currentImgIndex=idx; imgs[idx].scrollIntoView({behavior:'smooth',block:'nearest'}); updateImgDots(); };
-            function updateImgDots(){ document.querySelectorAll('.img-dot').forEach((d,i)=>d.classList.toggle('active',i===currentImgIndex)); }
-            document.addEventListener('DOMContentLoaded',()=>{ const sl=document.getElementById('article-img-slider'); if(sl){ sl.addEventListener('scroll',()=>{ const imgs=sl.querySelectorAll('.article-main-img'); if(!imgs.length)return; const pos=sl.scrollLeft+sl.offsetWidth/2; let idx=0; imgs.forEach((img,i)=>{if(pos>img.offsetLeft)idx=i;}); if(idx!==currentImgIndex){currentImgIndex=idx;updateImgDots();} }); } });
+            window.slideImg = function(dir) { 
+                const sl=document.getElementById('article-img-slider'); 
+                const imgs=sl.querySelectorAll('.article-main-img'); 
+                if(!imgs.length)return; 
+                currentImgIndex=Math.max(0,Math.min(currentImgIndex+dir,imgs.length-1)); 
+                imgs[currentImgIndex].scrollIntoView({behavior:'smooth',block:'nearest'}); 
+                updateImgDots(); 
+            };
+            window.goToImg = function(idx) { 
+                const sl=document.getElementById('article-img-slider'); 
+                const imgs=sl.querySelectorAll('.article-main-img'); 
+                if(!imgs.length)return; 
+                currentImgIndex=idx; 
+                imgs[idx].scrollIntoView({behavior:'smooth',block:'nearest'}); 
+                updateImgDots(); 
+            };
+            function updateImgDots(){ 
+                document.querySelectorAll('.img-dot').forEach((d,i)=>d.classList.toggle('active',i===currentImgIndex)); 
+            }
 
-            // Widget Slider
-            let currentWidget = 0;
-            window.switchWidget = function(index) { document.querySelectorAll('.widget-slide').forEach(s=>s.classList.remove('active')); document.querySelectorAll('.widget-dot').forEach(d=>d.classList.remove('active')); document.getElementById('widget-slide-'+index).classList.add('active'); document.querySelectorAll('.widget-dot')[index].classList.add('active'); currentWidget=index; };
-            setInterval(()=>{ const c=document.getElementById('widget-slider-container'); if(c&&c.style.display!=='none'){ const n=currentWidget===1?0:currentWidget+1; switchWidget(n); } },8000);
-
+            // Event Listeners
             document.getElementById('burgerToggle')?.addEventListener('click',toggleMenu);
-            document.querySelectorAll('.nav-mobile a').forEach(l=>l.addEventListener('click',()=>{ if(document.getElementById('mobileMenu')?.classList.contains('open'))toggleMenu(); }));
+            document.querySelectorAll('.nav-mobile a').forEach(l=>l.addEventListener('click',()=>{ 
+                if(document.getElementById('mobileMenu')?.classList.contains('open'))toggleMenu(); 
+            }));
             document.getElementById('langSelect')?.addEventListener('change',e=>changeLanguage(e.target.value));
-            document.getElementById('langSelectMobile')?.addEventListener('change',e=>{ document.getElementById('langSelect').value=e.target.value;changeLanguage(e.target.value); });
-            document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&document.getElementById('mobileMenu')?.classList.contains('open'))toggleMenu(); });
-            document.addEventListener('click',e=>{ const m=document.getElementById('mobileMenu'),b=document.getElementById('burgerToggle'); if(m?.classList.contains('open')&&!m.contains(e.target)&&!b.contains(e.target))toggleMenu(); });
-            window.addEventListener('DOMContentLoaded',()=>{ fetchPost(); });
+            document.getElementById('langSelectMobile')?.addEventListener('change',e=>{ 
+                document.getElementById('langSelect').value=e.target.value;
+                changeLanguage(e.target.value); 
+            });
+            document.addEventListener('keydown',e=>{ 
+                if(e.key==='Escape'&&document.getElementById('mobileMenu')?.classList.contains('open'))toggleMenu(); 
+            });
+            document.addEventListener('click',e=>{ 
+                const m=document.getElementById('mobileMenu'),b=document.getElementById('burgerToggle'); 
+                if(m?.classList.contains('open')&&!m.contains(e.target)&&!b.contains(e.target))toggleMenu(); 
+            });
+            
+            // Init
+            window.addEventListener('DOMContentLoaded',()=>{ 
+                fetchPost(); 
+            });
+
+            // Expose functions globally
+            window.changeLanguage = changeLanguage;
+            window.toggleMenu = toggleMenu;
+            window.switchWidget = switchWidget;
+
         })();
 
-        fetch('footer.html').then(r=>r.text()).then(d=>{ document.getElementById('footer-placeholder').innerHTML=d; }).catch(()=>{ document.getElementById('footer-placeholder').innerHTML='<p style="text-align:center;padding:2rem;color:#999;">© 2024 Travel Press</p>'; });
+        fetch('footer.html').then(r=>r.text()).then(d=>{ 
+            document.getElementById('footer-placeholder').innerHTML=d; 
+        }).catch(()=>{ 
+            document.getElementById('footer-placeholder').innerHTML='<p style="text-align:center;padding:2rem;color:#999;">© 2024 Travel Press</p>'; 
+        });
     </script>
 </body>
 </html>
