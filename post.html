@@ -61,9 +61,6 @@
     <!-- Nuitee Connect SDK -->
     <script src="https://components.liteapi.travel/v1.0/sdk.umd.js"></script>
 
-    <!-- Tiqets Widget -->
-    <script defer src="https://widgets.tiqets.com/loader.js"></script>
-
     <!-- GetYourGuide Widget -->
     <script async defer src="https://widget.getyourguide.com/dist/pa.umd.production.min.js" data-gyg-partner-id="TNCQUZX"></script>
 
@@ -159,12 +156,6 @@
             text-align: left;
             margin-bottom: 1rem;
             color: var(--ink);
-        }
-        #nuitee-map-container {
-            height: 400px;
-            min-height: 400px;
-            width: 100%;
-            overflow: hidden;
         }
         #nuitee-hotels-list {
             min-height: 300px;
@@ -281,13 +272,9 @@
             .article-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             footer { margin-top: 3rem; padding: 1.5rem 1rem; font-size: 0.75rem; }
             .widget-slider { margin: 2rem 0; padding: 1.5rem 0; }
-            #nuitee-map-container { height: 300px; min-height: 300px; }
             .masthead-top-inner { padding: 0.4rem 1.2rem; }
             .nav-container { padding: 0 1.2rem; height: 66px; }
             .logo-img { height: 34px; }
-        }
-        @media (max-width: 480px) {
-            #nuitee-map-container { height: 250px; min-height: 250px; }
         }
     </style>
 </head>
@@ -412,7 +399,6 @@
                     "toast-copied":"Lien copié !",
                     "widget-title":"Découvrez aussi",
                     "hotels-title":"Hébergements recommandés",
-                    "map-title":"Carte des hôtels",
                     "team-note":"<strong>Travel Press</strong><br>Analyse & rédaction par notre équipe éditoriale"
                 },
                 en: { 
@@ -437,7 +423,6 @@
                     "toast-copied":"Link copied!",
                     "widget-title":"Discover also",
                     "hotels-title":"Recommended accommodations",
-                    "map-title":"Hotel map",
                     "team-note":"<strong>Travel Press</strong><br>Analysis & writing by our editorial team"
                 }
             };
@@ -451,7 +436,7 @@
                 document.querySelectorAll('[data-i18n]').forEach(el=>{ 
                     const k=el.getAttribute('data-i18n'); 
                     if(translations[lang]&&translations[lang][k]){ 
-                        if(k==='team-note'||k==='hero-welcome'||k==='hotels-title'||k==='map-title'){ 
+                        if(k==='team-note'||k==='hero-welcome'||k==='hotels-title'){ 
                             el.innerHTML=translations[lang][k]; 
                         }else{ 
                             el.textContent=translations[lang][k]; 
@@ -464,7 +449,6 @@
                 document.documentElement.lang=lang; 
                 setMastheadDate(lang);
                 updateSaveButtonUI(); 
-                // Re-init Nuitee widgets with new language
                 initNuiteeWidgets();
             }
             function changeLanguage(lang){ if(lang===state.currentLang)return; state.currentLang=lang; localStorage.setItem(CONFIG.STORAGE_PREFIX+'lang',lang); applyTranslations(lang); if(state.cachedPostData) renderPost(state.cachedPostData); }
@@ -485,18 +469,15 @@
                 nuiteeWidgetsInitializing = true;
 
                 try {
-                    // Initialize SDK
                     if (typeof LiteAPI !== 'undefined' && !LiteAPI._initialized) {
-    LiteAPI.init({
-        domain: 'luviaplace.com',
-        deepLinkParams: 'language=' + state.currentLang + '&currency=EUR'
-    });
-    LiteAPI._initialized = true;
-}
+                        LiteAPI.init({
+                            domain: 'luviaplace.com',
+                            deepLinkParams: 'language=' + state.currentLang + '&currency=EUR'
+                        });
+                        LiteAPI._initialized = true;
+                    }
 
-                    // Check if containers already exist
                     const hotelContainer = document.getElementById('nuitee-hotels-list');
-                    const mapContainer = document.getElementById('nuitee-map-container');
 
                     if (hotelContainer && !hotelContainer.hasChildNodes()) {
                         LiteAPI.HotelsList.create({
@@ -510,21 +491,6 @@
                             labelsOverride: {
                                 searchAction: state.currentLang === 'fr' ? 'Rechercher' : 'Search',
                                 placePlaceholderText: state.currentLang === 'fr' ? 'Rechercher une destination' : 'Search for a destination'
-                            }
-                        });
-                    }
-
-                    if (mapContainer && !mapContainer.hasChildNodes()) {
-                        LiteAPI.Map.create({
-                            selector: '#nuitee-map-container',
-                            placeId: 'ChIJdd4hrwug2EcRmSrV3Vo6llI',
-                            primaryColor: '#ac1118',
-                            checkin: getDefaultCheckin(),
-                            checkout: getDefaultCheckout(),
-                            popup: {
-                                titleColor: '#131313',
-                                textColor: '#333333',
-                                backgroundColor: '#ffffff'
                             }
                         });
                     }
@@ -555,7 +521,7 @@
                 return year + '-' + month + '-' + day;
             }
 
-            // ===== WIDGET SLIDER =====
+            // ===== WIDGET SLIDER (2 slides : GYG + Hotels) =====
             function createWidgetSlider() {
                 const sliderContainer = document.createElement('div');
                 sliderContainer.className = 'widget-slider';
@@ -567,54 +533,33 @@
                 title.textContent = translations[state.currentLang]['widget-title'] || 'Découvrez aussi';
                 sliderContainer.appendChild(title);
 
-                // Navigation dots
+                // Navigation dots (2 seulement)
                 const nav = document.createElement('div');
                 nav.className = 'widget-nav';
                 nav.innerHTML = `
                     <button class="widget-dot active" onclick="switchWidget(0)"></button>
                     <button class="widget-dot" onclick="switchWidget(1)"></button>
-                    <button class="widget-dot" onclick="switchWidget(2)"></button>
-                    <button class="widget-dot" onclick="switchWidget(3)"></button>
                 `;
                 sliderContainer.appendChild(nav);
 
-                // Slide 0: Tiqets
+                // Slide 0: GetYourGuide
                 const slide0 = document.createElement('div');
                 slide0.className = 'widget-slide active';
                 slide0.id = 'widget-slide-0';
-                slide0.innerHTML = `<div data-tiqets-widget="discovery" data-cards-layout="responsive" data-content-type="exhibition" data-item_count="4" data-destination-type="venue" data-destination-id="124297" data-slug-ids="" data-partner="luvia_travel_llc-187826" data-tq-campaign="Louvre experience"></div>`;
+                slide0.innerHTML = `<div data-gyg-widget="auto" data-gyg-partner-id="TNCQUZX" data-gyg-cmp="Namibie : voyage de 3 jours tout compris à Sossusvlei"></div>`;
                 sliderContainer.appendChild(slide0);
 
-                // Slide 1: GetYourGuide
+                // Slide 1: Nuitee Hotels List
                 const slide1 = document.createElement('div');
                 slide1.className = 'widget-slide';
                 slide1.id = 'widget-slide-1';
-                slide1.innerHTML = `<div data-gyg-widget="auto" data-gyg-partner-id="TNCQUZX" data-gyg-cmp="Namibie : voyage de 3 jours tout compris à Sossusvlei"></div>`;
-                sliderContainer.appendChild(slide1);
-
-                // Slide 2: Nuitee Hotels List
-                const slide2 = document.createElement('div');
-                slide2.className = 'widget-slide';
-                slide2.id = 'widget-slide-2';
-                slide2.innerHTML = `
+                slide1.innerHTML = `
                     <div class="nuitee-widget-container">
                         <h3 data-i18n="hotels-title">${translations[state.currentLang]['hotels-title'] || 'Hébergements recommandés'}</h3>
                         <div id="nuitee-hotels-list"></div>
                     </div>
                 `;
-                sliderContainer.appendChild(slide2);
-
-                // Slide 3: Nuitee Map
-                const slide3 = document.createElement('div');
-                slide3.className = 'widget-slide';
-                slide3.id = 'widget-slide-3';
-                slide3.innerHTML = `
-                    <div class="nuitee-widget-container">
-                        <h3 data-i18n="map-title">${translations[state.currentLang]['map-title'] || 'Carte des hôtels'}</h3>
-                        <div id="nuitee-map-container"></div>
-                    </div>
-                `;
-                sliderContainer.appendChild(slide3);
+                sliderContainer.appendChild(slide1);
 
                 return sliderContainer;
             }
@@ -629,13 +574,13 @@
                 if (dots[index]) dots[index].classList.add('active');
                 currentWidget = index;
 
-                // Initialize Nuitee widgets when their slides become active
-                if (index === 2 || index === 3) {
+                // Initialize Nuitee widgets when slide becomes active
+                if (index === 1) {
                     setTimeout(initNuiteeWidgets, 300);
                 }
             };
 
-            // Auto-rotate widgets
+            // Auto-rotation SILENCIEUSE (sans scroll)
             let widgetInterval = null;
             function startWidgetRotation() {
                 if (widgetInterval) clearInterval(widgetInterval);
@@ -759,9 +704,7 @@
                     // Init widgets after render
                     setTimeout(() => {
                         initNuiteeWidgets();
-                        // Trigger Tiqets and GYG widgets
-                        if (window.Tiqets) window.Tiqets.load();
-                        //if (window.GYG) window.GYG.init();
+                        if (window.GYG) window.GYG.init();
                         startWidgetRotation();
                     }, 1000);
                     
